@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class UserInterface extends JFrame {
 
-    public UserInterface() throws IOException {
+    private UserInterface() throws IOException {
 
         JLabel month = new JLabel("Month");
         JButton previousMonth = new JButton("Previous");
@@ -35,7 +35,7 @@ public class UserInterface extends JFrame {
         buttonPanel.add(eastPanel);
         JPanel tableHeader = new JPanel();
         tableHeader.add(table.getTableHeader());
-        scrollPane.setPreferredSize(new Dimension(800,600));
+        scrollPane.setPreferredSize(new Dimension(1200,950));
         tableHeader.add(scrollPane);
         tableHeader.setAutoscrolls(true);
 
