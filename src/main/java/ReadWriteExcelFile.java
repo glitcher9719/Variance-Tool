@@ -2,9 +2,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.*;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -20,79 +18,23 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.swing.*;
 
-public class ReadWriteExcelFile {
+class ReadWriteExcelFile {
 
-    public static void readXLSFile() throws IOException
-    {
-        InputStream ExcelFileToRead = new FileInputStream("C:/Test.xls");
-        HSSFWorkbook wb = new HSSFWorkbook(ExcelFileToRead);
+    private static Vector<Vector<Object>> tableData = new Vector<Vector<Object>>();
+    private static String[] columnNames = new String[23];
+    private static Vector<Object> costCodeNames;
+    private static Object[] ccNames;
+    static String[] ccFinal;
+    private static int x = 0;
+    private static int y = 0;
 
-        HSSFSheet sheet=wb.getSheetAt(0);
-        HSSFRow row;
-        HSSFCell cell;
 
-        Iterator rows = sheet.rowIterator();
-
-        while (rows.hasNext())
-        {
-            row=(HSSFRow) rows.next();
-            Iterator cells = row.cellIterator();
-
-            while (cells.hasNext())
-            {
-                cell=(HSSFCell) cells.next();
-
-                if (cell.getCellType() == HSSFCell.CELL_TYPE_STRING)
-                {
-                    System.out.print(cell.getStringCellValue()+" ");
-                }
-                else if(cell.getCellType() == HSSFCell.CELL_TYPE_NUMERIC)
-                {
-                    System.out.print(cell.getNumericCellValue()+" ");
-                }
-                else
-                {
-                    //U Can Handel Boolean, Formula, Errors
-                }
-            }
-            System.out.println();
-        }
-
-    }
-
-    public static void writeXLSFile() throws IOException {
-
-        String excelFileName = "C:/Test.xls";//name of excel file
-
-        String sheetName = "Sheet1";//name of sheet
-
-        HSSFWorkbook wb = new HSSFWorkbook();
-        HSSFSheet sheet = wb.createSheet(sheetName) ;
-
-        //iterating r number of rows
-        for (int r=0;r < 5; r++ )
-        {
-            HSSFRow row = sheet.createRow(r);
-
-            //iterating c number of columns
-            for (int c=0;c < 5; c++ )
-            {
-                HSSFCell cell = row.createCell(c);
-
-                cell.setCellValue("Cell "+r+" "+c);
-            }
-        }
-
-        FileOutputStream fileOut = new FileOutputStream(excelFileName);
-
-        //write this workbook to an Outputstream.
-        wb.write(fileOut);
-        fileOut.flush();
-        fileOut.close();
-    }
-
-    public static JTable readXLSXFile() throws IOException
-    {
+    /***
+     * Method for overview
+     * @return JTable with all of the data
+     * @throws IOException - for file not found
+     */
+    static JTable createTable() throws IOException {
 
         InputStream ExcelFileToRead = new FileInputStream("C:\\Users\\Dan\\Downloads\\Book1.xlsx");
         XSSFWorkbook  wb = new XSSFWorkbook(ExcelFileToRead);
@@ -106,7 +48,6 @@ public class ReadWriteExcelFile {
         Iterator rows = sheet.rowIterator();
         XSSFRow tableHeaders = (XSSFRow)rows.next();
         Iterator it = tableHeaders.cellIterator();
-        String[] columnNames = new String[23];
         int i = 0;
         while (it.hasNext()) {
             cell=(XSSFCell) it.next();
@@ -136,10 +77,6 @@ public class ReadWriteExcelFile {
                 }
             }
         }
-
-        int x = 0;
-        int y = 0;
-        Vector<Vector<Object>> tableData = new Vector<Vector<Object>>();
 
         while (rows.hasNext())
         {
@@ -182,6 +119,8 @@ public class ReadWriteExcelFile {
 
         }
 
+        // Converting a vector of vectors which contain all elements from imported data into a double-dim array for
+        // creating a new JPanel
         Object[][] dataSet = new Object[y][x];
         for (int a = 0; a< y; a++) {
             for (int b = 0; b< x; b++){
@@ -193,45 +132,42 @@ public class ReadWriteExcelFile {
 
     }
 
-    public static void writeXLSXFile() throws IOException {
+    static JTable createSpecificTable(String costCode) {
 
-        String excelFileName = "C:/Test.xlsx";//name of excel file
+        // Separate each vector in vector of vectors with the same cost code
+        Object currentCostCode = "";
+        HashMap<Object, Vector<Vector<Object>>> costCodeMap = new HashMap<Object, Vector<Vector<Object>>>();
+        Vector<Vector<Object>> vector = new Vector<Vector<Object>>();
+        for (int a = 0; a< y; a++) {
+            if (!(tableData.get(a).get(0).toString().equals(currentCostCode))) {
+                costCodeMap.put(currentCostCode, vector);
+                vector = new Vector<Vector<Object>>();
+                costCodeNames.add(currentCostCode);
+                currentCostCode = tableData.get(a).get(0);
+                vector.add(tableData.get(a));
+            }
 
-        String sheetName = "Sheet1";//name of sheet
-
-        XSSFWorkbook wb = new XSSFWorkbook();
-        XSSFSheet sheet = wb.createSheet(sheetName) ;
-
-        //iterating r number of rows
-        for (int r=0;r < 5; r++ )
-        {
-            XSSFRow row = sheet.createRow(r);
-
-            //iterating c number of columns
-            for (int c=0;c < 5; c++ )
-            {
-                XSSFCell cell = row.createCell(c);
-
-                cell.setCellValue("Cell "+r+" "+c);
+            else {
+                vector.add(tableData.get(a));
             }
         }
+        costCodeMap.remove("");
+        costCodeNames.remove(0);
+        ccNames =  costCodeNames.toArray();
+        ccFinal = new String[ccNames.length-1];
+        int i = 0;
+        for (Object x: ccNames) {
+            ccFinal[i] = x.toString();
+            i++;
+        }
+        Vector<Vector<Object>> vectorCostCode = costCodeMap.get(costCode);
+        Object[][] array = new Object[vectorCostCode.size()][vectorCostCode.get(0).size()];
+        for (int a = 0; a< vectorCostCode.size(); a++) {
+            for (int b = 0; b< vectorCostCode.get(0).size(); b++){
+                array[a][b] = tableData.get(a).get(b);
+            }
+        }
+        return new JTable(array, columnNames);
 
-        FileOutputStream fileOut = new FileOutputStream(excelFileName);
-
-        //write this workbook to an Outputstream.
-        wb.write(fileOut);
-        fileOut.flush();
-        fileOut.close();
     }
-
-    public static void main(String[] args) throws IOException {
-
-       /* writeXLSFile();
-        readXLSFile();
-
-        writeXLSXFile();*/
-        readXLSXFile();
-
-    }
-
 }
