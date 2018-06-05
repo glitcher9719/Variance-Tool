@@ -6,6 +6,11 @@ import java.io.IOException;
 
 public class UserInterface extends JFrame {
 
+    // default values for department view
+    private String currentCostCode = "U020";
+    private String period = "171801";
+
+
     private UserInterface() {
 
         JLabel month = new JLabel("Month");
@@ -36,6 +41,7 @@ public class UserInterface extends JFrame {
         setLayout(new BorderLayout());
         final JPanel buttonPanel = new JPanel();
         final BoxLayout boxLayoutButton = new BoxLayout(buttonPanel, BoxLayout.X_AXIS);
+
 
         if (overview.isSelected()) {
             System.out.println("Overview view selected");
@@ -110,11 +116,18 @@ public class UserInterface extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Department view selected");
                 getContentPane().removeAll();
-                JTable table = ReadWriteExcelFile.createSpecificTable("U020");
+                JTable table = ReadWriteExcelFile.createSpecificTable(currentCostCode, period);
                 JScrollPane scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-                JComboBox costCodeList = new JComboBox(ReadWriteExcelFile.ccFinal);
+                JComboBox costCodeList = new JComboBox(ReadWriteExcelFile.ccNames);
                 costCodeList.setSelectedIndex(0);
+                costCodeList.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        JComboBox box = (JComboBox) e.getSource();
+                        currentCostCode = (String) box.getSelectedItem();
+                        getContentPane().repaint();
+                    }
+                });
                 JPanel listView= new JPanel();
                 listView.add(costCodeList);
                 add(listView, BorderLayout.EAST);

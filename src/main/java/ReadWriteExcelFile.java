@@ -1,15 +1,7 @@
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-
-import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -20,27 +12,31 @@ import javax.swing.*;
 
 class ReadWriteExcelFile {
 
-    private static Vector<Vector<Object>> tableData = new Vector<Vector<Object>>();
-    private static String[] columnNames = new String[23];
-    private static Vector<Object> costCodeNames;
-    private static Object[] ccNames;
-    static String[] ccFinal;
-    private static int x = 0;
-    private static int y = 0;
+    // data for tables
+    private static Vector<Vector<String>> tableData;
 
+    // cost code names
+    static Vector<String> ccNames = new Vector<String>();
+
+    // table headers
+    private static Vector<String> tableHeaders = new Vector<String>();
+
+    // static counters for the code
+    private static int x;
+    private static int y ;
 
     /***
      * Method for overview
      * @return JTable with all of the data
      * @throws IOException - for file not found
      */
+
     static JTable createTable() throws IOException {
-
-        InputStream ExcelFileToRead = new FileInputStream("C:\\Users\\Dan\\Downloads\\Book1.xlsx");
+        x = 0;
+        y = 0;
+        tableData = new Vector<Vector<String>>();
+        InputStream ExcelFileToRead = new FileInputStream("src\\main\\resources\\Book1.xlsx");
         XSSFWorkbook  wb = new XSSFWorkbook(ExcelFileToRead);
-
-        XSSFWorkbook test = new XSSFWorkbook();
-
         XSSFSheet sheet = wb.getSheetAt(0);
         XSSFRow row;
         XSSFCell cell;
@@ -52,56 +48,54 @@ class ReadWriteExcelFile {
         while (it.hasNext()) {
             cell=(XSSFCell) it.next();
 
-            if (cell.getCellType() == XSSFCell.CELL_TYPE_STRING)
-            {
-                columnNames[i] = cell.getStringCellValue();
+            if (cell.getCellTypeEnum() == CellType.STRING) {
+                ReadWriteExcelFile.tableHeaders.add(i, cell.getStringCellValue());
                 i++;
             }
-            else if(cell.getCellType() == XSSFCell.CELL_TYPE_NUMERIC)
-            {
-                columnNames[i] = String.valueOf(cell.getNumericCellValue());
-                i++;
-            }
-            else if (cell.getCellType() == XSSFCell.CELL_TYPE_FORMULA)
-            {
-                switch(cell.getCachedFormulaResultType()) {
 
-                    case Cell.CELL_TYPE_NUMERIC:
-                        columnNames[i] = String.valueOf(cell.getNumericCellValue());
+            else if(cell.getCellTypeEnum() == CellType.NUMERIC) {
+                ReadWriteExcelFile.tableHeaders.add(i, String.valueOf(cell.getNumericCellValue()));
+                i++;
+            }
+
+            else if (cell.getCellTypeEnum() == CellType.FORMULA) {
+                switch(cell.getCachedFormulaResultTypeEnum()) {
+
+                    case NUMERIC:
+                        ReadWriteExcelFile.tableHeaders.add(i, String.valueOf(cell.getNumericCellValue()));
                         i++;
 
-                    case Cell.CELL_TYPE_STRING:
-                        columnNames[i] = cell.getStringCellValue();
+                    case STRING:
+                        ReadWriteExcelFile.tableHeaders.add(i, cell.getStringCellValue());
                         i++;
 
                 }
             }
         }
 
-        while (rows.hasNext())
-        {
+        while (rows.hasNext()) {
             row=(XSSFRow) rows.next();
             Iterator cells = row.cellIterator();
-            Vector<Object> currentRow = new Vector<Object>();
-            while (cells.hasNext())
-            {
+            Vector<String> currentRow = new Vector<String>();
+
+            while (cells.hasNext()) {
 
                 cell=(XSSFCell) cells.next();
 
-                if (cell.getCellType() == XSSFCell.CELL_TYPE_STRING) {
+                if (cell.getCellTypeEnum() == CellType.STRING) {
 
                     currentRow.add(x, cell.getStringCellValue());
                     x++;
 
                 }
 
-                else if(cell.getCellType() == XSSFCell.CELL_TYPE_NUMERIC) {
+                else if (cell.getCellTypeEnum() == CellType.NUMERIC) {
                     currentRow.add(x, String.valueOf(cell.getNumericCellValue()));
                     x++;
 
                 }
 
-                else if (cell.getCellType() == XSSFCell.CELL_TYPE_FORMULA)
+                else if (cell.getCellTypeEnum() == CellType.FORMULA)
                 {
                     currentRow.add(x, String.valueOf(cell.getRawValue()));
                     x++;
@@ -110,6 +104,7 @@ class ReadWriteExcelFile {
 
                 }
             }
+
             tableData.add(y, currentRow);
             y++;
             if (!rows.hasNext()){
@@ -119,55 +114,39 @@ class ReadWriteExcelFile {
 
         }
 
-        // Converting a vector of vectors which contain all elements from imported data into a double-dim array for
-        // creating a new JPanel
-        Object[][] dataSet = new Object[y][x];
-        for (int a = 0; a< y; a++) {
-            for (int b = 0; b< x; b++){
-                dataSet[a][b] = tableData.get(a).get(b);
-            }
+        // Calculating Variance
+        ReadWriteExcelFile.tableHeaders.add(7, "Variance");
+        for (int s = 0; s< y; s++) {
+            double budget = Double.parseDouble(tableData.get(s).get(5));
+            double actual = Double.parseDouble(tableData.get(s).get(6));
+            double variance = Math.round(budget-actual);
+            tableData.get(s).add(7, String.valueOf(variance));
         }
 
-        return new JTable(dataSet, columnNames);
+        return new JTable(tableData, ReadWriteExcelFile.tableHeaders);
 
     }
 
-    static JTable createSpecificTable(String costCode) {
+    static JTable createSpecificTable(String costCode, String period) {
 
-        // Separate each vector in vector of vectors with the same cost code
-        Object currentCostCode = "";
-        HashMap<Object, Vector<Vector<Object>>> costCodeMap = new HashMap<Object, Vector<Vector<Object>>>();
-        Vector<Vector<Object>> vector = new Vector<Vector<Object>>();
+        // generate cost code name drop menu
+        String currentCostCode = "";
         for (int a = 0; a< y; a++) {
-            if (!(tableData.get(a).get(0).toString().equals(currentCostCode))) {
-                costCodeMap.put(currentCostCode, vector);
-                vector = new Vector<Vector<Object>>();
-                costCodeNames.add(currentCostCode);
+            if (!(tableData.get(a).get(0).equals(currentCostCode) && ccNames.contains(currentCostCode))) {
+                ccNames.add(tableData.get(a).get(0));
                 currentCostCode = tableData.get(a).get(0);
-                vector.add(tableData.get(a));
             }
+        }
 
-            else {
-                vector.add(tableData.get(a));
+        // Sort each vector to match cost code and period parameters
+        Vector<Vector<String>> sortedVector = new Vector<Vector<String>>();
+        for (int a = 0; a< y; a++) {
+            if (tableData.get(a).get(0).equals(costCode) && tableData.get(a).get(3).equals(period)) {
+                sortedVector.add(tableData.get(a));
             }
         }
-        costCodeMap.remove("");
-        costCodeNames.remove(0);
-        ccNames =  costCodeNames.toArray();
-        ccFinal = new String[ccNames.length-1];
-        int i = 0;
-        for (Object x: ccNames) {
-            ccFinal[i] = x.toString();
-            i++;
-        }
-        Vector<Vector<Object>> vectorCostCode = costCodeMap.get(costCode);
-        Object[][] array = new Object[vectorCostCode.size()][vectorCostCode.get(0).size()];
-        for (int a = 0; a< vectorCostCode.size(); a++) {
-            for (int b = 0; b< vectorCostCode.get(0).size(); b++){
-                array[a][b] = tableData.get(a).get(b);
-            }
-        }
-        return new JTable(array, columnNames);
+
+        return new JTable(tableData, tableHeaders);
 
     }
 }
