@@ -16,7 +16,10 @@ class ReadWriteExcelFile {
     private static Vector<Vector<String>> tableData;
 
     // cost code names
-    static Vector<String> ccNames = new Vector<String>();
+    static LinkedHashSet<Object> ccNames = new LinkedHashSet<Object>();
+
+    // period names
+    static LinkedHashSet<Object> periodNames = new LinkedHashSet<Object>();
 
     // table headers
     private static Vector<String> tableHeaders = new Vector<String>();
@@ -24,6 +27,7 @@ class ReadWriteExcelFile {
     // static counters for the code
     private static int x;
     private static int y ;
+
 
     /***
      * Method for overview
@@ -123,30 +127,33 @@ class ReadWriteExcelFile {
             tableData.get(s).add(7, String.valueOf(variance));
         }
 
+        // generate cost code names set
+        for (int a = 0; a< y; a++) {
+            ccNames.add(tableData.get(a).get(0));
+        }
+
+        // generate period names set
+        for (int a = 0; a< y; a++) {
+            periodNames.add(tableData.get(a).get(2));
+        }
+
         return new JTable(tableData, ReadWriteExcelFile.tableHeaders);
 
     }
 
-    static JTable createSpecificTable(String costCode, String period) {
-
-        // generate cost code name drop menu
-        String currentCostCode = "";
-        for (int a = 0; a< y; a++) {
-            if (!(tableData.get(a).get(0).equals(currentCostCode) && ccNames.contains(currentCostCode))) {
-                ccNames.add(tableData.get(a).get(0));
-                currentCostCode = tableData.get(a).get(0);
-            }
-        }
+    static JTable createSpecificTable(Object costCode, Object period) {
 
         // Sort each vector to match cost code and period parameters
         Vector<Vector<String>> sortedVector = new Vector<Vector<String>>();
         for (int a = 0; a< y; a++) {
-            if (tableData.get(a).get(0).equals(costCode) && tableData.get(a).get(3).equals(period)) {
+            String x = tableData.get(a).get(0);
+            String y = tableData.get(a).get(2);
+            if (x.equals(costCode.toString()) && y.equals(period.toString())) {
                 sortedVector.add(tableData.get(a));
             }
         }
 
-        return new JTable(tableData, tableHeaders);
+        return new JTable(sortedVector, tableHeaders);
 
     }
 }
