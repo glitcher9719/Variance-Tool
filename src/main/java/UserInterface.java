@@ -9,7 +9,6 @@ public class UserInterface extends JFrame {
     // default values for department view
     private JTable departmentTable;
     private JScrollPane scrollPane2;
-    private JPanel tableHeader2;
     private CardLayout cardLayout = new CardLayout();
     private JLabel ccLabel;
     private JLabel periodLabel;
@@ -19,15 +18,16 @@ public class UserInterface extends JFrame {
 
     {
         try {
-            table = ReadWriteExcelFile.createTable();
+            table = DataImport.createTable();
+            table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
 
-    private Object[] ccNames = ReadWriteExcelFile.ccNames.toArray();
-    private Object[] periodNames = ReadWriteExcelFile.periodNames.toArray();
+    private Object[] ccNames = DataImport.ccNames.toArray();
+    private Object[] periodNames = DataImport.periodNames.toArray();
     private int ccCounter = 0;
     private int pCounter = 0;
     private Object currentCostCode = ccNames[ccCounter];
@@ -50,16 +50,13 @@ public class UserInterface extends JFrame {
         period = periodNames[pCounter];
         ccLabel.setText(currentCostCode.toString());
         periodLabel.setText(period.toString());
-        departmentCard.remove(tableHeader2);
-        departmentTable = ReadWriteExcelFile.createSpecificTable(currentCostCode, period);
+        departmentCard.remove(scrollPane2);
+        departmentTable = DataImport.createSpecificTable(currentCostCode, period);
         scrollPane2 = new JScrollPane(departmentTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        tableHeader2 = new JPanel();
-        tableHeader2.add(departmentTable.getTableHeader());
-        tableHeader2.setAutoscrolls(true);
-        scrollPane2.setPreferredSize(new Dimension(1500, 950));
-        tableHeader2.add(scrollPane2);
-        departmentCard.add(tableHeader2, BorderLayout.CENTER);
+        add(departmentTable.getTableHeader());
+        scrollPane2.setPreferredSize(new Dimension(1900, 950));
+        departmentCard.add(scrollPane2, BorderLayout.CENTER);
         ccLabel.setText(currentCostCode.toString());
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
@@ -70,6 +67,7 @@ public class UserInterface extends JFrame {
         contentPanel = new JPanel(cardLayout);
         JPanel overviewCard = new JPanel(new BorderLayout());
         departmentCard = new JPanel(new BorderLayout());
+        JPanel north = new JPanel();
 
          /*
             -------- Buttons for switching between cards ---------
@@ -82,7 +80,8 @@ public class UserInterface extends JFrame {
         final JPanel radioButtons = new JPanel();
         radioButtons.add(overview);
         radioButtons.add(departmentView);
-        add(radioButtons, BorderLayout.NORTH);
+        JPanel centerNorth = new JPanel();
+        centerNorth.add(radioButtons);
 
         /*
             -------- Overview ---------
@@ -90,45 +89,44 @@ public class UserInterface extends JFrame {
 
 
         JScrollPane scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        JPanel tableHeader = new JPanel();
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         if (table != null) {
-            tableHeader.add(table.getTableHeader());
+            add(table.getTableHeader());
         }
 
         else {
             System.out.println("Can't get data!");
         }
 
-        tableHeader.setAutoscrolls(true);
-        scrollPane.setPreferredSize(new Dimension(1500, 950));
-        tableHeader.add(scrollPane);
-        overviewCard.add(tableHeader, BorderLayout.CENTER);
+        scrollPane.setPreferredSize(new Dimension(1900, 950));
+        overviewCard.add(scrollPane, BorderLayout.CENTER);
 
         /*
            -------- Department view ---------
         */
 
-        departmentTable = ReadWriteExcelFile.createSpecificTable(currentCostCode, period);
+        departmentTable = DataImport.createSpecificTable(currentCostCode, period);
+        departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         scrollPane2 = new JScrollPane(departmentTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        costCodeList = new JComboBox(ReadWriteExcelFile.ccNames.toArray());
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        costCodeList = new JComboBox(DataImport.ccNames.toArray());
         costCodeList.setSelectedIndex(0);
+
         JPanel listView= new JPanel();
         listView.add(costCodeList);
-        departmentCard.add(listView, BorderLayout.WEST);
-        tableHeader2 = new JPanel();
-        tableHeader2.add(departmentTable.getTableHeader());
-        tableHeader2.setAutoscrolls(true);
-        scrollPane2.setPreferredSize(new Dimension(1600, 950));
-        tableHeader2.add(scrollPane2);
+        north.add(listView);
+
+        add(departmentTable.getTableHeader());
+        scrollPane2.setPreferredSize(new Dimension(1900, 950));
+        add(scrollPane2, BorderLayout.CENTER);
         JPanel label = new JPanel();
         ccLabel = new JLabel(currentCostCode.toString());
         periodLabel = new JLabel(period.toString());
         label.add(ccLabel);
         label.add(periodLabel);
-        departmentCard.add(label, BorderLayout.NORTH);
-        departmentCard.add(tableHeader2, BorderLayout.CENTER);
+        add(radioButtons, BorderLayout.NORTH);
+        north.add(label);
+        departmentCard.add(scrollPane2, BorderLayout.CENTER);
 
         costCodeList.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -149,16 +147,14 @@ public class UserInterface extends JFrame {
                 }
                 ccCounter = pk;
                 currentCostCode = ccNames[ccCounter];
-                departmentCard.remove(tableHeader2);
-                departmentTable = ReadWriteExcelFile.createSpecificTable(currentCostCode, period);
+                departmentCard.remove(scrollPane2);
+                departmentTable = DataImport.createSpecificTable(currentCostCode, period);
                 scrollPane2 = new JScrollPane(departmentTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-                tableHeader2 = new JPanel();
-                tableHeader2.add(departmentTable.getTableHeader());
-                tableHeader2.setAutoscrolls(true);
-                scrollPane2.setPreferredSize(new Dimension(1500, 950));
-                tableHeader2.add(scrollPane2);
-                departmentCard.add(tableHeader2, BorderLayout.CENTER);
+                        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                add(departmentTable.getTableHeader());
+                departmentTable.getTableHeader().setAutoscrolls(true);
+                scrollPane2.setPreferredSize(new Dimension(1900, 950));
+                departmentCard.add(scrollPane2, BorderLayout.CENTER);
                 ccLabel.setText(currentCostCode.toString());
             }
         });
@@ -234,11 +230,10 @@ public class UserInterface extends JFrame {
         eastPanel.add(department);
         eastPanel.add(previousDepartment);
         eastPanel.add(nextDepartment);
-        JPanel buttons = new JPanel();
-        buttons.add(westPanel);
-        buttons.add(eastPanel);
-        buttons.setLayout(new BoxLayout(buttons, BoxLayout.PAGE_AXIS));
-        departmentCard.add(buttons, BorderLayout.EAST);
+        north.add(eastPanel);
+        north.add(westPanel);
+        departmentCard.add(north, BorderLayout.NORTH);
+
 
         /*
         Card Layout
@@ -261,7 +256,10 @@ public class UserInterface extends JFrame {
             }
         });
 
+
+        setLocationRelativeTo(null);
         setVisible(true);
+        pack();
         getDefaultCloseOperation();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
