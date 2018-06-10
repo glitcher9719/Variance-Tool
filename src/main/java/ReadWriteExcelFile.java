@@ -104,8 +104,6 @@ class ReadWriteExcelFile {
                     currentRow.add(x, String.valueOf(cell.getRawValue()));
                     x++;
 
-
-
                 }
             }
 
@@ -125,6 +123,46 @@ class ReadWriteExcelFile {
             double actual = Double.parseDouble(tableData.get(s).get(6));
             double variance = Math.round(budget-actual);
             tableData.get(s).add(7, String.valueOf(variance));
+        }
+
+        // Calculating YTD
+        ReadWriteExcelFile.tableHeaders.add(8, "Budget YTD");
+        ReadWriteExcelFile.tableHeaders.add(9, "Actual YTD");
+        ReadWriteExcelFile.tableHeaders.add(10, "Variance YTD");
+        double budgetYTD = 0;
+        double actualYTD = 0;
+        Object currentCostCode = tableData.get(0).get(0);
+        for (int s = 0; s< y; s++) {
+            if (currentCostCode.equals(tableData.get(s).get(0))) {
+
+                double currentBudget = Double.parseDouble(tableData.get(s).get(5));
+                budgetYTD += currentBudget;
+                tableData.get(s).add(8, String.valueOf(budgetYTD));
+
+                double currentActual = Double.parseDouble(tableData.get(s).get(6));
+                actualYTD += currentActual;
+                tableData.get(s).add(9, String.valueOf(actualYTD));
+
+                double varianceYTD = budgetYTD - actualYTD;
+                tableData.get(s).add(10, String.valueOf(varianceYTD));
+            }
+
+            else {
+                currentCostCode = tableData.get(s).get(0);
+                budgetYTD = 0;
+                actualYTD = 0;
+
+                double currentBudget = Double.parseDouble(tableData.get(s).get(5));
+                budgetYTD += currentBudget;
+                tableData.get(s).add(8, String.valueOf(budgetYTD));
+
+                double currentActual = Double.parseDouble(tableData.get(s).get(6));
+                actualYTD += currentActual;
+                tableData.get(s).add(9, String.valueOf(actualYTD));
+
+                double varianceYTD = budgetYTD - actualYTD;
+                tableData.get(s).add(10, String.valueOf(varianceYTD));
+            }
         }
 
         // generate cost code names set

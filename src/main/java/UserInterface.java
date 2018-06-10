@@ -3,8 +3,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
 
 public class UserInterface extends JFrame {
 
@@ -15,9 +13,9 @@ public class UserInterface extends JFrame {
     private CardLayout cardLayout = new CardLayout();
     private JLabel ccLabel;
     private JLabel periodLabel;
-    JTable table;
-    JPanel departmentCard;
-    JComboBox costCodeList;
+    private JTable table;
+    private JPanel departmentCard;
+    private JComboBox costCodeList;
 
     {
         try {
@@ -38,7 +36,16 @@ public class UserInterface extends JFrame {
     private JPanel contentPanel;
 
     private void tableRenew() {
-        costCodeList.setSelectedIndex(ccCounter);
+        try {
+            costCodeList.setSelectedIndex(ccCounter);
+        }
+
+        catch (IllegalArgumentException exc) {
+            ccCounter = 0;
+            costCodeList.setSelectedIndex(ccCounter);
+
+        }
+
         currentCostCode = ccNames[ccCounter];
         period = periodNames[pCounter];
         ccLabel.setText(currentCostCode.toString());
@@ -55,6 +62,7 @@ public class UserInterface extends JFrame {
         departmentCard.add(tableHeader2, BorderLayout.CENTER);
         ccLabel.setText(currentCostCode.toString());
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+
     }
 
     private UserInterface() {
@@ -126,14 +134,18 @@ public class UserInterface extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 JComboBox combo = (JComboBox)e.getSource();
                 int pk = 0;
-                for (Object x: ccNames) {
-                    if (combo.getSelectedItem().equals(x)) {
-                        break;
+                try {
+                    for (Object x : ccNames) {
+                        if (combo.getSelectedItem().equals(x)) {
+                            break;
+                        } else {
+                            pk++;
+                        }
                     }
+                }
 
-                    else {
-                        pk++;
-                    }
+                catch (NullPointerException nul) {
+                    pk = 0;
                 }
                 ccCounter = pk;
                 currentCostCode = ccNames[ccCounter];
@@ -157,15 +169,29 @@ public class UserInterface extends JFrame {
         JButton nextMonth = new JButton("Next");
         previousMonth.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                pCounter--;
-                tableRenew();
+                try {
+                    pCounter--;
+                    tableRenew();
+                }
+
+                catch (ArrayIndexOutOfBoundsException error) {
+                    pCounter = 0;
+                    tableRenew();
+                }
             }
         });
 
         nextMonth.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                pCounter++;
-                tableRenew();
+                try {
+                    pCounter++;
+                    tableRenew();
+                }
+
+                catch (ArrayIndexOutOfBoundsException error) {
+                    pCounter = 0;
+                    tableRenew();
+                }
             }
         });
         final JPanel westPanel = new JPanel();
@@ -177,15 +203,31 @@ public class UserInterface extends JFrame {
         JButton previousDepartment = new JButton("Previous");
         previousDepartment.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ccCounter--;
-                tableRenew();
+                try {
+                    ccCounter--;
+                    tableRenew();
+                }
+
+
+                catch(ArrayIndexOutOfBoundsException error){
+                        ccCounter = 0;
+                        tableRenew();
+                    }
+
             }
         });
         JButton nextDepartment = new JButton("Next");
         nextDepartment.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ccCounter++;
-                tableRenew();
+                try {
+                    ccCounter++;
+                    tableRenew();
+                }
+
+                catch (ArrayIndexOutOfBoundsException error) {
+                    ccCounter = 0;
+                    tableRenew();
+                }
             }
         });
         final JPanel eastPanel = new JPanel();
