@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+//TODO: solve the bug when resizing windows
 public class UserInterface extends JFrame {
 
     // default values for department view
@@ -53,13 +54,11 @@ public class UserInterface extends JFrame {
         departmentCard.remove(scrollPane2);
         departmentTable = DataImport.createSpecificTable(currentCostCode, period);
         scrollPane2 = new JScrollPane(departmentTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         add(departmentTable.getTableHeader());
         scrollPane2.setPreferredSize(new Dimension(1900, 950));
         departmentCard.add(scrollPane2, BorderLayout.CENTER);
         ccLabel.setText(currentCostCode.toString());
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-
     }
 
     private UserInterface() {
@@ -118,7 +117,7 @@ public class UserInterface extends JFrame {
 
         add(departmentTable.getTableHeader());
         scrollPane2.setPreferredSize(new Dimension(1900, 950));
-        add(scrollPane2, BorderLayout.CENTER);
+        departmentCard.add(scrollPane2, BorderLayout.CENTER);
         JPanel label = new JPanel();
         ccLabel = new JLabel(currentCostCode.toString());
         periodLabel = new JLabel(period.toString());

@@ -192,111 +192,146 @@ class DataImport {
         }
 
         // Totals of PAY, NON PAY, INCOME and GRAND TOTAL
-        //TODO: Create the vectors with the data calculated and add them to the specific table
-        //TODO: Find a way to solve the duplicate code used to calculate the rows
+        //TODO: The totals should be displayed under each type of pay final row
 
-        //PAY
+        class Total {
 
-        double totalPayYTDBudget = 0;
-        double totalPayYTDActual = 0;
-        double totalPayYTDVariance = 0;
+            private String name;
 
-        double totalPayBudget = 0;
-        double totalPayActual = 0;
-        double totalPayVariance = 0;
+            private double budget;
+            private double actual;
+            private double variance;
 
+            private double YTDBudget;
+            private double YTDActual;
+            private double YTDVariance;
 
-        double totalPayWTEBudget = 0;
-        double totalPayWTEContracted = 0;
-        double totalPayWTEWorked = 0;
+            private double WTEBudget;
+            private double WTEContracted;
+            private double WTEWorked;
 
-        //NON PAY
-
-        double totalNonPayYTDBudget = 0;
-        double totalNonPayYTDActual = 0;
-        double totalNonPayYTDVariance = 0;
-
-        double totalNonPayBudget = 0;
-        double totalNonPayActual = 0;
-        double totalNonPayVariance = 0;
-
-
-        double totalNonPayWTEBudget = 0;
-        double totalNonPayWTEContracted = 0;
-        double totalNonPayWTEWorked = 0;
-
-        //Income
-
-        double totalIncomeYTDBudget = 0;
-        double totalIncomeYTDActual = 0;
-        double totalIncomeYTDVariance = 0;
-
-        double totalIncomeBudget = 0;
-        double totalIncomeActual = 0;
-        double totalIncomeVariance = 0;
-
-
-        double totalIncomeWTEBudget = 0;
-        double totalIncomeWTEContracted = 0;
-        double totalIncomeWTEWorked = 0;
-
-
-        for (int x = 0; x<sortedVector.size(); x++) {
-            if (sortedVector.get(x).get(26).equals("Pay")) {
-                totalPayBudget += Double.parseDouble(sortedVector.get(x).get(5));
-                totalPayActual += Double.parseDouble(sortedVector.get(x).get(6));
-                totalPayVariance += Double.parseDouble(sortedVector.get(x).get(7));
-                totalPayYTDBudget += Double.parseDouble(sortedVector.get(x).get(8));
-                totalPayYTDActual += Double.parseDouble(sortedVector.get(x).get(9));
-                totalPayYTDVariance += Double.parseDouble(sortedVector.get(x).get(10));
-                totalPayWTEBudget += Double.parseDouble(sortedVector.get(x).get(11));
-                totalPayWTEContracted += Double.parseDouble(sortedVector.get(x).get(12));
-                totalPayWTEWorked += Double.parseDouble(sortedVector.get(x).get(13));
+            private Total(String n) {
+                this.name = n;
+                this.budget = 0;
+                this.actual = 0;
+                this.variance = 0;
+                this.YTDBudget = 0;
+                this.YTDActual = 0;
+                this.YTDVariance = 0;
+                this.WTEBudget = 0;
+                this.WTEContracted = 0;
+                this.WTEWorked = 0;
             }
 
-            if (sortedVector.get(x).get(26).equals("Non Pay")) {
-                totalNonPayBudget += Double.parseDouble(sortedVector.get(x).get(5));
-                totalNonPayActual += Double.parseDouble(sortedVector.get(x).get(6));
-                totalNonPayVariance += Double.parseDouble(sortedVector.get(x).get(7));
-                totalNonPayYTDBudget += Double.parseDouble(sortedVector.get(x).get(8));
-                totalNonPayYTDActual += Double.parseDouble(sortedVector.get(x).get(9));
-                totalNonPayYTDVariance += Double.parseDouble(sortedVector.get(x).get(10));
-                totalNonPayWTEBudget += Double.parseDouble(sortedVector.get(x).get(11));
-                totalNonPayWTEContracted += Double.parseDouble(sortedVector.get(x).get(12));
-                totalNonPayWTEWorked += Double.parseDouble(sortedVector.get(x).get(13));
+            private void budgetAdd(double b) {
+                budget += b;
             }
 
-            if (sortedVector.get(x).get(26).equals("Income")) {
-                totalIncomeBudget += Double.parseDouble(sortedVector.get(x).get(5));
-                totalIncomeActual += Double.parseDouble(sortedVector.get(x).get(6));
-                totalIncomeVariance += Double.parseDouble(sortedVector.get(x).get(7));
-                totalIncomeYTDBudget += Double.parseDouble(sortedVector.get(x).get(8));
-                totalIncomeYTDActual += Double.parseDouble(sortedVector.get(x).get(9));
-                totalIncomeYTDVariance += Double.parseDouble(sortedVector.get(x).get(10));
-                totalIncomeWTEBudget += Double.parseDouble(sortedVector.get(x).get(11));
-                totalIncomeWTEContracted += Double.parseDouble(sortedVector.get(x).get(12));
-                totalIncomeWTEWorked += Double.parseDouble(sortedVector.get(x).get(13));
+            private void actualAdd(double a) {
+                actual += a;
             }
+
+            private void varianceAdd(double v) {
+                variance += v;
+            }
+
+            private void YTDBudgetAdd(double yb) {
+                YTDBudget += yb;
+            }
+
+            private void YTDActualAdd(double ya) {
+                YTDActual += ya;
+            }
+
+            private void YTDVarianceAdd(double yv) {
+                YTDVariance += yv;
+            }
+
+            private void WTEBudgetAdd(double wb) {
+                WTEBudget += wb;
+            }
+
+            private void WTEContractedAdd(double wc) {
+                WTEContracted += wc;
+            }
+
+            private void WTEWorkedAdd(double ww) {
+                WTEWorked += ww;
+            }
+
+            private Vector<String> getTotal (Total object) {
+                Vector<String> vector = new Vector<String>();
+                vector.add(object.name);
+                vector.add(null);
+                vector.add(null);
+                vector.add(null);
+                vector.add(null);
+                vector.add(String.valueOf(object.budget));
+                vector.add(String.valueOf(object.actual));
+                vector.add(String.valueOf(object.variance));
+                vector.add(String.valueOf(object.YTDBudget));
+                vector.add(String.valueOf(object.YTDActual));
+                vector.add(String.valueOf(object.YTDVariance));
+                vector.add(String.valueOf(object.WTEBudget));
+                vector.add(String.valueOf(object.WTEContracted));
+                vector.add(String.valueOf(object.WTEWorked));
+
+                return vector;
+            }
+        }
+
+        Total pay = new Total("PAY");
+        Total nonPay = new Total("NON PAY");
+        Total income = new Total("INCOME");
+        Total grandTotal = new Total("GRAND TOTAL");
+
+        for (Vector<String> aSortedVector : sortedVector) {
+            Total varTotal;
+
+            if (aSortedVector.get(26).equals("Pay")) {
+                varTotal = pay;
+            } else if (aSortedVector.get(26).equals("Non Pay")) {
+                varTotal = nonPay;
+            } else {
+                varTotal = income;
+            }
+
+            varTotal.budgetAdd(Double.parseDouble(aSortedVector.get(5)));
+            varTotal.actualAdd(Double.parseDouble(aSortedVector.get(6)));
+            varTotal.varianceAdd(Double.parseDouble(aSortedVector.get(7)));
+            varTotal.YTDBudgetAdd(Double.parseDouble(aSortedVector.get(8)));
+            varTotal.YTDActualAdd(Double.parseDouble(aSortedVector.get(9)));
+            varTotal.YTDVarianceAdd(Double.parseDouble(aSortedVector.get(10)));
+            varTotal.WTEBudgetAdd(Double.parseDouble(aSortedVector.get(11)));
+            varTotal.WTEContractedAdd(Double.parseDouble(aSortedVector.get(12)));
+            varTotal.WTEWorkedAdd(Double.parseDouble(aSortedVector.get(13)));
         }
 
         //GrandTotal
 
-        double totalGrandTotalYTDBudget = totalPayYTDBudget + totalNonPayYTDBudget + totalIncomeYTDBudget;
-        double totalGrandTotalYTDActual = totalPayYTDActual + totalNonPayYTDActual + totalIncomeYTDActual;
-        double totalGrandTotalYTDVariance = totalPayYTDVariance + totalNonPayYTDVariance + totalIncomeYTDVariance;
+        grandTotal.budgetAdd(pay.budget + nonPay.budget + income.budget);
+        grandTotal.actualAdd(pay.actual + nonPay.actual + income.actual);
+        grandTotal.varianceAdd(pay.variance + nonPay.variance + income.variance);
+        grandTotal.YTDBudgetAdd(pay.YTDBudget + nonPay.YTDBudget + income.YTDBudget);
+        grandTotal.YTDActualAdd(pay.YTDActual + nonPay.YTDActual + income.YTDActual);
+        grandTotal.YTDVarianceAdd(pay.YTDVariance + nonPay.YTDVariance + income.YTDVariance);
+        grandTotal.WTEBudgetAdd(pay.WTEBudget + nonPay.WTEBudget + income.WTEBudget);
+        grandTotal.WTEContractedAdd(pay.WTEContracted + nonPay.WTEContracted + income.WTEContracted);
+        grandTotal.WTEWorkedAdd(pay.WTEWorked + nonPay.WTEWorked + income.WTEWorked);
 
-        double totalGrandTotalBudget = totalPayBudget + totalNonPayBudget + totalIncomeBudget;
-        double totalGrandTotalActual = totalPayActual + totalNonPayActual + totalIncomeActual;
-        double totalGrandTotalVariance = totalPayVariance + totalNonPayVariance + totalIncomeVariance;
+        Vector<String> payVect = pay.getTotal(pay);
 
-        double totalGrandTotalWTEBudget = totalPayWTEBudget + totalNonPayWTEBudget + totalIncomeWTEBudget;
-        double totalGrandTotalWTEContracted = totalPayWTEContracted + totalNonPayWTEContracted + totalIncomeWTEContracted;
-        double totalGrandTotalWTEWorked = totalPayWTEWorked + totalNonPayWTEWorked + totalIncomeWTEWorked;
+        Vector<String> nonpayVect = nonPay.getTotal(nonPay);
 
-        Vector<Object> pay = new Vector<Object>();
-        Vector<Object> nonpay = new Vector<Object>();
-        Vector<Object> income = new Vector<Object>();
-        Vector<Object> grandtotal = new Vector<Object>();
+        Vector<String> incomeVect = income.getTotal(income);
+
+        Vector<String> grandtotalVect = grandTotal.getTotal(grandTotal);
+
+        sortedVector.add(payVect);
+        sortedVector.add(nonpayVect);
+        sortedVector.add(incomeVect);
+        sortedVector.add(grandtotalVect);
+
 
         return new JTable(sortedVector, tableHeaders);
 
