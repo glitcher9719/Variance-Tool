@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-//TODO: solve the bug when resizing windows
 public class UserInterface extends JFrame {
 
     // default values for department view
@@ -53,9 +52,9 @@ public class UserInterface extends JFrame {
         periodLabel.setText(period.toString());
         departmentCard.remove(scrollPane2);
         departmentTable = DataImport.createSpecificTable(currentCostCode, period);
+        departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         scrollPane2 = new JScrollPane(departmentTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        add(departmentTable.getTableHeader());
         scrollPane2.setPreferredSize(new Dimension(1900, 950));
         departmentCard.add(scrollPane2, BorderLayout.CENTER);
         ccLabel.setText(currentCostCode.toString());
@@ -148,10 +147,9 @@ public class UserInterface extends JFrame {
                 currentCostCode = ccNames[ccCounter];
                 departmentCard.remove(scrollPane2);
                 departmentTable = DataImport.createSpecificTable(currentCostCode, period);
+                departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
                 scrollPane2 = new JScrollPane(departmentTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-                add(departmentTable.getTableHeader());
-                departmentTable.getTableHeader().setAutoscrolls(true);
                 scrollPane2.setPreferredSize(new Dimension(1900, 950));
                 departmentCard.add(scrollPane2, BorderLayout.CENTER);
                 ccLabel.setText(currentCostCode.toString());

@@ -192,7 +192,6 @@ class DataImport {
         }
 
         // Totals of PAY, NON PAY, INCOME and GRAND TOTAL
-        //TODO: The totals should be displayed under each type of pay final row
 
         class Total {
 
@@ -285,14 +284,23 @@ class DataImport {
         Total income = new Total("INCOME");
         Total grandTotal = new Total("GRAND TOTAL");
 
+        int payCounter = 0;
+        int nonPayCounter= 0;
+        int incomeCounter = 0;
+
         for (Vector<String> aSortedVector : sortedVector) {
             Total varTotal;
 
             if (aSortedVector.get(26).equals("Pay")) {
                 varTotal = pay;
+                payCounter++;
             } else if (aSortedVector.get(26).equals("Non Pay")) {
+
+                nonPayCounter++;
                 varTotal = nonPay;
+
             } else {
+                incomeCounter++;
                 varTotal = income;
             }
 
@@ -327,9 +335,37 @@ class DataImport {
 
         Vector<String> grandtotalVect = grandTotal.getTotal(grandTotal);
 
-        sortedVector.add(payVect);
-        sortedVector.add(nonpayVect);
-        sortedVector.add(incomeVect);
+        // Logic behind totals counters
+
+        if (incomeCounter != 0) {
+            sortedVector.add(incomeCounter, incomeVect);
+            payCounter += incomeCounter;
+            payCounter++;
+        }
+
+        else {
+            sortedVector.add(incomeVect);
+        }
+
+        if (!(payCounter<=incomeCounter+1)) {
+            sortedVector.add(payCounter, payVect);
+            nonPayCounter+= payCounter;
+            nonPayCounter++;
+        }
+
+        else {
+            sortedVector.add(payVect);
+        }
+
+        if (nonPayCounter != 0) {
+            sortedVector.add(nonPayCounter, nonpayVect);
+        }
+
+        else {
+            sortedVector.add(nonpayVect);
+
+        }
+
         sortedVector.add(grandtotalVect);
 
 
