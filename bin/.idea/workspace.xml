@@ -3,7 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="9ec3fa37-6308-4677-acb1-392265eb16cf" name="Default" comment="">
       <change afterPath="$PROJECT_DIR$/src/main/java/DatabaseConn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Variance Tool.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Variance Tool.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/DataImport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DataImport.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/UserInterface.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/DataImport$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DataImport$1.class" afterDir="false" />
@@ -33,19 +36,43 @@
       <file leaf-file-name="DataImport.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/DataImport.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3187">
-              <caret line="346" selection-start-line="346" selection-end-line="346" />
+            <state relative-caret-position="1139">
+              <caret line="197" column="13" lean-forward="true" selection-start-line="197" selection-start-column="13" selection-end-line="197" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#571#579#0" expanded="true" />
-                <element signature="e#668#676#0" expanded="true" />
-                <element signature="e#761#769#0" expanded="true" />
-                <element signature="e#2829#2837#0" expanded="true" />
-                <element signature="e#3737#3745#0" expanded="true" />
-                <element signature="e#8420#8436#0" expanded="true" />
-                <element signature="e#8708#8716#0" expanded="true" />
-                <element signature="e#11080#11088#0" expanded="true" />
-                <element signature="e#15343#15351#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Double.java" pinned="false" current-in-tab="false">
+        <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/java/lang/Double.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="8636">
+              <caret line="537" selection-start-line="537" selection-end-line="537" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FloatingDecimal.class" pinned="false" current-in-tab="false">
+        <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/jre/lib/rt.jar!/sun/misc/FloatingDecimal.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="952">
+              <caret line="69" selection-start-line="69" selection-end-line="69" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Vector.java" pinned="false" current-in-tab="false">
+        <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/java/util/Vector.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="11900">
+              <caret line="749" selection-start-line="749" selection-end-line="749" />
+              <folding>
+                <element signature="e#27935#27936#0" expanded="true" />
+                <element signature="e#27980#27981#0" expanded="true" />
+                <element signature="e#30749#30750#0" expanded="true" />
+                <element signature="e#30796#30797#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -58,7 +85,46 @@
               <caret line="8" selection-start-line="8" selection-end-line="8" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#10578#10687#0" expanded="true" />
+                <element signature="e#10686#10687#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DatabaseConn.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/DatabaseConn.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="68">
+              <caret line="4" column="48" selection-start-line="4" selection-start-column="48" selection-end-line="4" selection-end-column="48" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="JComponent.java" pinned="false" current-in-tab="false">
+        <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/javax/swing/JComponent.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="44234">
+              <caret line="2730" column="16" selection-start-line="2730" selection-start-column="16" selection-end-line="2730" selection-end-column="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor />
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="527">
+              <caret line="31" column="10" selection-start-line="31" selection-start-column="10" selection-end-line="31" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -84,13 +150,10 @@
       <find>Income</find>
       <find>label</find>
       <find>variance</find>
-      <find>println</find>
-      <find>U0203918A000</find>
     </findStrings>
     <replaceStrings>
       <replace>Income</replace>
       <replace>GrandTotal</replace>
-      <replace>print</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -103,13 +166,12 @@
       <list>
         <option value="$PROJECT_DIR$/src/UserInterface.java" />
         <option value="$PROJECT_DIR$/src/ReadWriteExcelFile.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/DataProcessor.java" />
         <option value="$PROJECT_DIR$/src/main/java/Item.java" />
         <option value="$PROJECT_DIR$/src/main/java/ReadWriteExcelFile.java" />
         <option value="$PROJECT_DIR$/src/main/java/UserInterface.java" />
         <option value="$PROJECT_DIR$/src/main/java/DatabaseConn.java" />
-        <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/Variance Tool.iml" />
         <option value="$PROJECT_DIR$/src/main/java/DataImport.java" />
       </list>
     </option>
@@ -133,11 +195,10 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="464" />
-    <option name="y" value="13" />
-    <option name="width" value="974" />
-    <option name="height" value="882" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="358" />
+    <option name="width" value="1569" />
+    <option name="height" value="1047" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -342,10 +403,6 @@
       <workItem from="1529662162717" duration="8318000" />
       <workItem from="1529683198777" duration="3442000" />
       <workItem from="1529688049185" duration="902000" />
-      <workItem from="1529689449163" duration="2166000" />
-      <workItem from="1529753814826" duration="4043000" />
-      <workItem from="1529763944305" duration="1804000" />
-      <workItem from="1529771118900" duration="3436000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit (2)">
       <created>1525109752678</created>
@@ -365,34 +422,34 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="175935000" />
+    <option name="totallyTimeSpent" value="164486000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="464" y="13" width="974" height="882" extended-state="0" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="7" />
-      <window_info anchor="bottom" id="Messages" order="12" weight="0.28225806" />
+      <window_info anchor="bottom" id="Messages" order="12" weight="0.2869288" />
       <window_info anchor="right" id="Palette&#9;" order="8" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" weight="0.32943678" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="right" id="Maven Projects" order="7" weight="0.32985386" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="11" weight="0.32943678" />
-      <window_info anchor="bottom" id="Run" order="3" weight="0.37096775" />
-      <window_info anchor="bottom" id="Terminal" order="9" weight="0.32897604" />
+      <window_info anchor="bottom" id="Run" order="3" weight="0.38894793" />
+      <window_info anchor="bottom" id="Terminal" order="9" />
       <window_info id="Capture Tool" order="6" />
       <window_info id="Designer" order="3" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.34901533" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14427084" />
       <window_info anchor="right" id="Database" order="6" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="4" />
       <window_info anchor="right" id="Theme Preview" order="5" />
       <window_info id="Favorites" order="5" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="4" weight="0.37908497" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.37938362" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="bottom" id="Inspection Results" order="0" weight="0.32943678" />
@@ -405,32 +462,32 @@
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
-      <window_info anchor="bottom" id="Version Control" order="11" weight="0.32943678" />
+      <window_info anchor="bottom" id="Run" order="3" weight="0.38682252" />
       <window_info anchor="right" id="Theme Preview" order="5" />
-      <window_info id="Image Layers" order="2" />
+      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info anchor="bottom" id="Messages" order="12" weight="0.2901169" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14479166" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="7" />
-      <window_info anchor="bottom" id="Run" order="3" weight="0.38682252" />
+      <window_info id="Favorites" order="5" side_tool="true" />
       <window_info anchor="bottom" id="Inspection Results" order="0" weight="0.32943678" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
-      <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14479166" />
+      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="right" id="Database" order="6" />
       <window_info anchor="right" id="Palette&#9;" order="8" />
       <window_info anchor="bottom" id="Terminal" order="9" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.37938362" />
       <window_info anchor="bottom" id="Find" order="2" />
-      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info anchor="bottom" id="Version Control" order="11" weight="0.32943678" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info id="Capture Tool" order="6" />
       <window_info anchor="bottom" id="Message" order="1" />
-      <window_info anchor="bottom" id="Messages" order="12" weight="0.2901169" />
+      <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Maven Projects" order="7" weight="0.32985386" />
-      <window_info id="Favorites" order="5" side_tool="true" />
+      <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -456,19 +513,240 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>161</line>
+          <properties />
+          <option name="timeStamp" value="351" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>162</line>
+          <properties />
+          <option name="timeStamp" value="352" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>163</line>
+          <properties />
+          <option name="timeStamp" value="353" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>164</line>
+          <properties />
+          <option name="timeStamp" value="354" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>165</line>
+          <properties />
+          <option name="timeStamp" value="355" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>166</line>
+          <properties />
+          <option name="timeStamp" value="356" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>167</line>
+          <properties />
+          <option name="timeStamp" value="357" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>168</line>
+          <properties />
+          <option name="timeStamp" value="358" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>169</line>
+          <properties />
+          <option name="timeStamp" value="359" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>170</line>
+          <properties />
+          <option name="timeStamp" value="360" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>171</line>
+          <properties />
+          <option name="timeStamp" value="364" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>146</line>
+          <properties />
+          <option name="timeStamp" value="371" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>147</line>
+          <properties />
+          <option name="timeStamp" value="372" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>172</line>
+          <properties />
+          <option name="timeStamp" value="373" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>173</line>
+          <properties />
+          <option name="timeStamp" value="374" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>177</line>
+          <properties />
+          <option name="timeStamp" value="375" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>178</line>
+          <properties />
+          <option name="timeStamp" value="376" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>179</line>
+          <properties />
+          <option name="timeStamp" value="377" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>180</line>
+          <properties />
+          <option name="timeStamp" value="378" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>181</line>
+          <properties />
+          <option name="timeStamp" value="379" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>182</line>
+          <properties />
+          <option name="timeStamp" value="380" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>183</line>
+          <properties />
+          <option name="timeStamp" value="381" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>184</line>
+          <properties />
+          <option name="timeStamp" value="382" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>185</line>
+          <properties />
+          <option name="timeStamp" value="383" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>187</line>
+          <properties />
+          <option name="timeStamp" value="384" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>188</line>
+          <properties />
+          <option name="timeStamp" value="385" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>189</line>
+          <properties />
+          <option name="timeStamp" value="386" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>192</line>
+          <properties />
+          <option name="timeStamp" value="389" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>193</line>
+          <properties />
+          <option name="timeStamp" value="390" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>191</line>
+          <properties />
+          <option name="timeStamp" value="391" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>195</line>
+          <properties />
+          <option name="timeStamp" value="392" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <dependency master-id="0" />
+          <url />
+          <line>196</line>
+          <properties />
+          <option name="timeStamp" value="393" />
+        </line-breakpoint>
+      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="413" />
+      <option name="time" value="394" />
     </breakpoint-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="breakpointCondition">
-      <expression>
-        <expression-string>s&gt;=782</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
       <expression>
         <expression-string>s &gt;= 935</expression-string>
         <language-id>JAVA</language-id>
@@ -512,17 +790,34 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/pom.xml">
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/javax/swing/JTable.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="35" selection-start-line="8" selection-start-column="35" selection-end-line="8" selection-end-column="35" />
+        <state relative-caret-position="11679">
+          <caret line="687" selection-start-line="687" selection-end-line="687" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Variance Tool.iml">
+    <entry file="file://$PROJECT_DIR$/src/main/java/DataImport.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" selection-start-line="2" selection-end-line="2" />
+        <state relative-caret-position="2516">
+          <caret line="168" column="73" selection-start-line="168" selection-start-column="73" selection-end-line="168" selection-end-column="73" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/javax/swing/plaf/basic/BasicTableUI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="35921">
+          <caret line="2113" selection-start-line="2113" selection-end-line="2113" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/java/util/ArrayList.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6698">
+          <caret line="432" selection-start-line="432" selection-end-line="432" />
         </state>
       </provider>
     </entry>
@@ -553,6 +848,8 @@
           <caret line="25" column="50" selection-start-line="25" selection-start-column="50" selection-end-line="25" selection-end-column="50" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#10578#10687#0" expanded="true" />
+            <element signature="e#10686#10687#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -584,15 +881,6 @@
           <caret line="168" column="73" lean-forward="true" selection-start-line="168" selection-start-column="73" selection-end-line="168" selection-end-column="73" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#571#579#0" expanded="true" />
-            <element signature="e#668#676#0" expanded="true" />
-            <element signature="e#761#769#0" expanded="true" />
-            <element signature="e#2829#2837#0" expanded="true" />
-            <element signature="e#3737#3745#0" expanded="true" />
-            <element signature="e#8420#8436#0" expanded="true" />
-            <element signature="e#8708#8716#0" expanded="true" />
-            <element signature="e#11080#11088#0" expanded="true" />
-            <element signature="e#15343#15351#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -638,6 +926,8 @@
           <caret line="24" column="57" selection-start-line="24" selection-start-column="57" selection-end-line="24" selection-end-column="57" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#10578#10687#0" expanded="true" />
+            <element signature="e#10686#10687#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -676,15 +966,6 @@
           <caret line="165" column="46" lean-forward="true" selection-start-line="165" selection-start-column="46" selection-end-line="165" selection-end-column="46" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#571#579#0" expanded="true" />
-            <element signature="e#668#676#0" expanded="true" />
-            <element signature="e#761#769#0" expanded="true" />
-            <element signature="e#2829#2837#0" expanded="true" />
-            <element signature="e#3737#3745#0" expanded="true" />
-            <element signature="e#8420#8436#0" expanded="true" />
-            <element signature="e#8708#8716#0" expanded="true" />
-            <element signature="e#11080#11088#0" expanded="true" />
-            <element signature="e#15343#15351#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -694,6 +975,8 @@
         <state>
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#10578#10687#0" expanded="true" />
+            <element signature="e#10686#10687#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -704,15 +987,6 @@
           <caret line="11" column="36" selection-start-line="11" selection-start-column="27" selection-end-line="11" selection-end-column="36" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#571#579#0" expanded="true" />
-            <element signature="e#668#676#0" expanded="true" />
-            <element signature="e#761#769#0" expanded="true" />
-            <element signature="e#2829#2837#0" expanded="true" />
-            <element signature="e#3737#3745#0" expanded="true" />
-            <element signature="e#8420#8436#0" expanded="true" />
-            <element signature="e#8708#8716#0" expanded="true" />
-            <element signature="e#11080#11088#0" expanded="true" />
-            <element signature="e#15343#15351#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -824,11 +1098,25 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="527">
+          <caret line="31" column="10" selection-start-line="31" selection-start-column="10" selection-end-line="31" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
           <first_editor />
           <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/java/lang/Double.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8636">
+          <caret line="537" selection-start-line="537" selection-end-line="537" />
         </state>
       </provider>
     </entry>
@@ -866,59 +1154,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="35" selection-start-line="8" selection-start-column="35" selection-end-line="8" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Variance Tool.iml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" selection-start-line="2" selection-end-line="2" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/UserInterface.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
           <caret line="8" selection-start-line="8" selection-end-line="8" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#10578#10687#0" expanded="true" />
+            <element signature="e#10686#10687#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/java/lang/Double.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="537" selection-start-line="537" selection-end-line="537" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/java/util/TreeMap.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="103">
-          <caret line="534" column="13" selection-start-line="534" selection-start-column="13" selection-end-line="534" selection-end-column="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/DataImport.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3187">
-          <caret line="346" selection-start-line="346" selection-end-line="346" />
+        <state relative-caret-position="1139">
+          <caret line="197" column="13" lean-forward="true" selection-start-line="197" selection-start-column="13" selection-end-line="197" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#571#579#0" expanded="true" />
-            <element signature="e#668#676#0" expanded="true" />
-            <element signature="e#761#769#0" expanded="true" />
-            <element signature="e#2829#2837#0" expanded="true" />
-            <element signature="e#3737#3745#0" expanded="true" />
-            <element signature="e#8420#8436#0" expanded="true" />
-            <element signature="e#8708#8716#0" expanded="true" />
-            <element signature="e#11080#11088#0" expanded="true" />
-            <element signature="e#15343#15351#0" expanded="true" />
           </folding>
         </state>
       </provider>

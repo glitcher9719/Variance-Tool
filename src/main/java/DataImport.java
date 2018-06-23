@@ -7,6 +7,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import sun.reflect.generics.tree.Tree;
 
 import javax.swing.*;
 
@@ -28,6 +29,14 @@ class DataImport {
     private static int x;
     private static int y ;
 
+    // department description
+
+    static String name;
+
+    private static String roundOffTo2DecPlaces(double val)
+    {
+        return String.format("%.2f", val).replace(',','.');
+    }
 
     /***
      * Method for overview
@@ -35,7 +44,7 @@ class DataImport {
      * @throws IOException - for file not found
      */
 
-    static JTable createTable() throws IOException {
+     static JTable createTable() throws IOException {
         x = 0;
         y = 0;
         tableData = new Vector<Vector<String>>();
@@ -116,70 +125,57 @@ class DataImport {
 
         }
 
+        LinkedHashSet<String> head = new LinkedHashSet<String>();
+         // generating lists
+         for (int a = 0; a< y; a++) {
+             head.add(tableData.get(a).get(0) + tableData.get(a).get(1));
+             ccNames.add(tableData.get(a).get(0));
+             periodNames.add(tableData.get(a).get(2));
+         }
+
         // Calculating Variance
         DataImport.tableHeaders.add(7, "Variance");
         for (int s = 0; s< y; s++) {
             double budget = Double.parseDouble(tableData.get(s).get(5));
             double actual = Double.parseDouble(tableData.get(s).get(6));
-            double variance = Math.round(budget-actual);
-            tableData.get(s).add(7, String.valueOf(variance));
+            double variance = budget-actual;
+            tableData.get(s).add(7, roundOffTo2DecPlaces(variance));
         }
 
         // Calculating YTD
         DataImport.tableHeaders.add(8, "Budget YTD");
         DataImport.tableHeaders.add(9, "Actual YTD");
         DataImport.tableHeaders.add(10, "Variance YTD");
-        double budgetYTD = 0;
-        double actualYTD = 0;
-        Object currentCostCode = tableData.get(0).get(0);
-        for (int s = 0; s< y; s++) {
-            if (currentCostCode.equals(tableData.get(s).get(0))) {
+
+
+        for (String element : head) {
+            double budgetYTD = 0;
+            double actualYTD = 0;
+            for (int s = 0; s < y; s++) {
 
                 double currentBudget = Double.parseDouble(tableData.get(s).get(5));
-                budgetYTD += currentBudget;
-                tableData.get(s).add(8, String.valueOf(budgetYTD));
-
                 double currentActual = Double.parseDouble(tableData.get(s).get(6));
-                actualYTD += currentActual;
-                tableData.get(s).add(9, String.valueOf(actualYTD));
 
-                double varianceYTD = budgetYTD - actualYTD;
-                tableData.get(s).add(10, String.valueOf(varianceYTD));
+                if (element.equals(tableData.get(s).get(0) + tableData.get(s).get(1))) {
+
+                    budgetYTD += currentBudget;
+                    tableData.get(s).add(8, roundOffTo2DecPlaces(budgetYTD));
+
+                    actualYTD += currentActual;
+                    tableData.get(s).add(9, roundOffTo2DecPlaces(actualYTD));
+
+                    double varianceYTD = budgetYTD - actualYTD;
+                    tableData.get(s).add(10, roundOffTo2DecPlaces(varianceYTD));
+
+                }
             }
-
-            else {
-                currentCostCode = tableData.get(s).get(0);
-                budgetYTD = 0;
-                actualYTD = 0;
-
-                double currentBudget = Double.parseDouble(tableData.get(s).get(5));
-                budgetYTD += currentBudget;
-                tableData.get(s).add(8, String.valueOf(budgetYTD));
-
-                double currentActual = Double.parseDouble(tableData.get(s).get(6));
-                actualYTD += currentActual;
-                tableData.get(s).add(9, String.valueOf(actualYTD));
-
-                double varianceYTD = budgetYTD - actualYTD;
-                tableData.get(s).add(10, String.valueOf(varianceYTD));
-            }
-        }
-
-        // generate cost code names set
-        for (int a = 0; a< y; a++) {
-            ccNames.add(tableData.get(a).get(0));
-        }
-
-        // generate period names set
-        for (int a = 0; a< y; a++) {
-            periodNames.add(tableData.get(a).get(2));
         }
 
         return new JTable(tableData, DataImport.tableHeaders);
 
     }
 
-    static JTable createSpecificTable(Object costCode, Object period) {
+     static JTable createSpecificTable(Object costCode, Object period) {
 
         // Sort each vector to match cost code and period parameters
         Vector<Vector<String>> sortedVector = new Vector<Vector<String>>();
@@ -187,11 +183,23 @@ class DataImport {
             String x = tableData.get(a).get(0);
             String y = tableData.get(a).get(2);
             if (x.equals(costCode.toString()) && y.equals(period.toString())) {
-                sortedVector.add(tableData.get(a));
+                Vector<String> tableVector = new Vector<String>(tableData.get(a));
+                name = tableVector.get(16);
+                tableVector.remove(16);
+                tableVector.remove(16);
+                tableVector.remove(16);
+                tableVector.remove(16);
+                tableVector.remove(16);
+                tableVector.remove(16);
+                tableVector.remove(16);
+                tableVector.remove(16);
+                tableVector.remove(14);
+
+                sortedVector.add(tableVector);
             }
         }
 
-        // Totals of PAY, NON PAY, INCOME and GRAND TOTAL
+        // Total class for PAY, NON PAY, INCOME and GRAND TOTAL
 
         class Total {
 
@@ -265,15 +273,15 @@ class DataImport {
                 vector.add(null);
                 vector.add(null);
                 vector.add(null);
-                vector.add(String.valueOf(object.budget));
-                vector.add(String.valueOf(object.actual));
-                vector.add(String.valueOf(object.variance));
-                vector.add(String.valueOf(object.YTDBudget));
-                vector.add(String.valueOf(object.YTDActual));
-                vector.add(String.valueOf(object.YTDVariance));
-                vector.add(String.valueOf(object.WTEBudget));
-                vector.add(String.valueOf(object.WTEContracted));
-                vector.add(String.valueOf(object.WTEWorked));
+                vector.add(roundOffTo2DecPlaces(object.budget));
+                vector.add(roundOffTo2DecPlaces(object.actual));
+                vector.add(roundOffTo2DecPlaces(object.variance));
+                vector.add(roundOffTo2DecPlaces(object.YTDBudget));
+                vector.add(roundOffTo2DecPlaces(object.YTDActual));
+                vector.add(roundOffTo2DecPlaces(object.YTDVariance));
+                vector.add(roundOffTo2DecPlaces(object.WTEBudget));
+                vector.add(roundOffTo2DecPlaces(object.WTEContracted));
+                vector.add(roundOffTo2DecPlaces(object.WTEWorked));
 
                 return vector;
             }
@@ -291,10 +299,10 @@ class DataImport {
         for (Vector<String> aSortedVector : sortedVector) {
             Total varTotal;
 
-            if (aSortedVector.get(26).equals("Pay")) {
+            if (aSortedVector.get(17).equals("Pay")) {
                 varTotal = pay;
                 payCounter++;
-            } else if (aSortedVector.get(26).equals("Non Pay")) {
+            } else if (aSortedVector.get(17).equals("Non Pay")) {
 
                 nonPayCounter++;
                 varTotal = nonPay;
@@ -315,7 +323,7 @@ class DataImport {
             varTotal.WTEWorkedAdd(Double.parseDouble(aSortedVector.get(13)));
         }
 
-        //GrandTotal
+        // Grand total calculation
 
         grandTotal.budgetAdd(pay.budget + nonPay.budget + income.budget);
         grandTotal.actualAdd(pay.actual + nonPay.actual + income.actual);
@@ -327,49 +335,59 @@ class DataImport {
         grandTotal.WTEContractedAdd(pay.WTEContracted + nonPay.WTEContracted + income.WTEContracted);
         grandTotal.WTEWorkedAdd(pay.WTEWorked + nonPay.WTEWorked + income.WTEWorked);
 
-        Vector<String> payVect = pay.getTotal(pay);
+        Vector<String> payVector = pay.getTotal(pay);
 
-        Vector<String> nonpayVect = nonPay.getTotal(nonPay);
+        Vector<String> nonPayVector = nonPay.getTotal(nonPay);
 
-        Vector<String> incomeVect = income.getTotal(income);
+        Vector<String> incomeVector = income.getTotal(income);
 
-        Vector<String> grandtotalVect = grandTotal.getTotal(grandTotal);
+        Vector<String> grandTotalVector = grandTotal.getTotal(grandTotal);
 
-        // Logic behind totals counters
+        // Logic behind totals counters and totals position in table
 
         if (incomeCounter != 0) {
-            sortedVector.add(incomeCounter, incomeVect);
+            sortedVector.add(incomeCounter, incomeVector);
             payCounter += incomeCounter;
             payCounter++;
         }
 
         else {
-            sortedVector.add(incomeVect);
+            sortedVector.add(incomeVector);
         }
 
         if (!(payCounter<=incomeCounter+1)) {
-            sortedVector.add(payCounter, payVect);
+            sortedVector.add(payCounter, payVector);
             nonPayCounter+= payCounter;
             nonPayCounter++;
         }
 
         else {
-            sortedVector.add(payVect);
+            sortedVector.add(payVector);
         }
 
         if (nonPayCounter != 0) {
-            sortedVector.add(nonPayCounter, nonpayVect);
+            sortedVector.add(nonPayCounter, nonPayVector);
         }
 
         else {
-            sortedVector.add(nonpayVect);
+            sortedVector.add(nonPayVector);
 
         }
 
-        sortedVector.add(grandtotalVect);
+        sortedVector.add(grandTotalVector);
 
+        Vector<String> tableHeadersTruncated = new Vector<String>(tableHeaders);
+        tableHeadersTruncated.remove(16);
+        tableHeadersTruncated.remove(16);
+        tableHeadersTruncated.remove(16);
+        tableHeadersTruncated.remove(16);
+        tableHeadersTruncated.remove(16);
+        tableHeadersTruncated.remove(16);
+        tableHeadersTruncated.remove(16);
+        tableHeadersTruncated.remove(16);
+         tableHeadersTruncated.remove(14);
 
-        return new JTable(sortedVector, tableHeaders);
+        return new JTable(sortedVector, tableHeadersTruncated);
 
     }
 }

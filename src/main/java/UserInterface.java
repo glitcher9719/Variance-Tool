@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +14,7 @@ public class UserInterface extends JFrame {
     private CardLayout cardLayout = new CardLayout();
     private JLabel ccLabel;
     private JLabel periodLabel;
+    private JLabel descriptionLabel;
     private JTable table;
     private JPanel departmentCard;
     private JComboBox costCodeList;
@@ -25,7 +28,6 @@ public class UserInterface extends JFrame {
         }
     }
 
-
     private Object[] ccNames = DataImport.ccNames.toArray();
     private Object[] periodNames = DataImport.periodNames.toArray();
     private int ccCounter = 0;
@@ -36,6 +38,7 @@ public class UserInterface extends JFrame {
     private JPanel contentPanel;
 
     private void tableRenew() {
+
         try {
             costCodeList.setSelectedIndex(ccCounter);
         }
@@ -48,16 +51,32 @@ public class UserInterface extends JFrame {
 
         currentCostCode = ccNames[ccCounter];
         period = periodNames[pCounter];
-        ccLabel.setText(currentCostCode.toString());
-        periodLabel.setText(period.toString());
+        ccLabel.setText("Cost code: " + currentCostCode.toString());
+        descriptionLabel.setText("Description: " + DataImport.name);
+        periodLabel.setText("Month: " + period.toString());
         departmentCard.remove(scrollPane2);
         departmentTable = DataImport.createSpecificTable(currentCostCode, period);
-        departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        resizeColumnWidth(departmentTable);
+        departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         scrollPane2 = new JScrollPane(departmentTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane2.setPreferredSize(new Dimension(1900, 950));
         departmentCard.add(scrollPane2, BorderLayout.CENTER);
-        ccLabel.setText(currentCostCode.toString());
+    }
+
+    private void resizeColumnWidth(JTable table) {
+        final TableColumnModel columnModel = table.getColumnModel();
+        for (int column = 0; column < table.getColumnCount(); column++) {
+            int width = 15; // Min width
+            for (int row = 0; row < table.getRowCount(); row++) {
+                TableCellRenderer renderer = table.getCellRenderer(row, column);
+                Component comp = table.prepareRenderer(renderer, row, column);
+                width = Math.max(comp.getPreferredSize().width +1 , width);
+            }
+            if(width > 300)
+                width=300;
+            columnModel.getColumn(column).setPreferredWidth(width);
+        }
     }
 
     private UserInterface() {
@@ -65,7 +84,7 @@ public class UserInterface extends JFrame {
         contentPanel = new JPanel(cardLayout);
         JPanel overviewCard = new JPanel(new BorderLayout());
         departmentCard = new JPanel(new BorderLayout());
-        JPanel north = new JPanel();
+        JPanel north = new JPanel(new BorderLayout());
 
          /*
             -------- Buttons for switching between cards ---------
@@ -85,7 +104,6 @@ public class UserInterface extends JFrame {
             -------- Overview ---------
          */
 
-
         JScrollPane scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         if (table != null) {
@@ -104,7 +122,8 @@ public class UserInterface extends JFrame {
         */
 
         departmentTable = DataImport.createSpecificTable(currentCostCode, period);
-        departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        resizeColumnWidth(departmentTable);
+        departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         scrollPane2 = new JScrollPane(departmentTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         costCodeList = new JComboBox(DataImport.ccNames.toArray());
@@ -112,18 +131,22 @@ public class UserInterface extends JFrame {
 
         JPanel listView= new JPanel();
         listView.add(costCodeList);
-        north.add(listView);
 
         add(departmentTable.getTableHeader());
         scrollPane2.setPreferredSize(new Dimension(1900, 950));
         departmentCard.add(scrollPane2, BorderLayout.CENTER);
         JPanel label = new JPanel();
-        ccLabel = new JLabel(currentCostCode.toString());
-        periodLabel = new JLabel(period.toString());
+        label.setLayout(new BoxLayout(label, BoxLayout.Y_AXIS));
+        ccLabel = new JLabel("Cost code: " + currentCostCode.toString());
+        descriptionLabel = new JLabel("Description: " + DataImport.name);
+        periodLabel = new JLabel("Month: " + period.toString());
         label.add(ccLabel);
+        label.add(descriptionLabel);
         label.add(periodLabel);
+        JPanel labelPanel = new JPanel();
+        labelPanel.add(label);
         add(radioButtons, BorderLayout.NORTH);
-        north.add(label);
+        north.add(labelPanel, BorderLayout.CENTER);
         departmentCard.add(scrollPane2, BorderLayout.CENTER);
 
         costCodeList.addActionListener(new ActionListener() {
@@ -147,21 +170,23 @@ public class UserInterface extends JFrame {
                 currentCostCode = ccNames[ccCounter];
                 departmentCard.remove(scrollPane2);
                 departmentTable = DataImport.createSpecificTable(currentCostCode, period);
-                departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                resizeColumnWidth(departmentTable);
+                departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
                 scrollPane2 = new JScrollPane(departmentTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
                 scrollPane2.setPreferredSize(new Dimension(1900, 950));
                 departmentCard.add(scrollPane2, BorderLayout.CENTER);
-                ccLabel.setText(currentCostCode.toString());
+                ccLabel.setText("Cost code: " + currentCostCode.toString());
+                descriptionLabel.setText("Description: " + DataImport.name);
             }
         });
-
 
         JLabel month = new JLabel("Month");
         JButton previousMonth = new JButton("Previous");
         JButton nextMonth = new JButton("Next");
         previousMonth.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
                 try {
                     pCounter--;
                     tableRenew();
@@ -187,10 +212,10 @@ public class UserInterface extends JFrame {
                 }
             }
         });
-        final JPanel westPanel = new JPanel();
-        westPanel.add(month);
-        westPanel.add(previousMonth);
-        westPanel.add(nextMonth);
+        final JPanel eastPanel = new JPanel();
+        eastPanel.add(month);
+        eastPanel.add(previousMonth);
+        eastPanel.add(nextMonth);
 
         JLabel department = new JLabel("Department");
         JButton previousDepartment = new JButton("Previous");
@@ -223,18 +248,21 @@ public class UserInterface extends JFrame {
                 }
             }
         });
-        final JPanel eastPanel = new JPanel();
-        eastPanel.add(department);
-        eastPanel.add(previousDepartment);
-        eastPanel.add(nextDepartment);
-        north.add(eastPanel);
-        north.add(westPanel);
+        final JPanel westPanel = new JPanel();
+        westPanel.add(department);
+        westPanel.add(previousDepartment);
+        westPanel.add(nextDepartment);
+        north.add(eastPanel, BorderLayout.EAST);
+        JPanel westP = new JPanel();
+        westP.add(westPanel);
+        westP.add(listView);
+        north.add(westP, BorderLayout.WEST);
         departmentCard.add(north, BorderLayout.NORTH);
-
 
         /*
         Card Layout
          */
+
         contentPanel.add(overviewCard, "1");
         contentPanel.add(departmentCard, "2");
 
@@ -252,7 +280,6 @@ public class UserInterface extends JFrame {
                 cardLayout.show(contentPanel, "2");
             }
         });
-
 
         setLocationRelativeTo(null);
         setVisible(true);
