@@ -4,6 +4,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 
 public class UserInterface extends JFrame {
@@ -21,15 +22,16 @@ public class UserInterface extends JFrame {
 
     {
         try {
-            table = DataImport.createTable();
-            table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        } catch (IOException e) {
+            table = DatabaseConn.generateDataFromDB();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
     }
 
-    private Object[] ccNames = DataImport.ccNames.toArray();
-    private Object[] periodNames = DataImport.periodNames.toArray();
+    private Object[] ccNames = DatabaseConn.ccNames.toArray();
+    private Object[] periodNames = DatabaseConn.periodNames.toArray();
     private int ccCounter = 0;
     private int pCounter = 0;
     private Object currentCostCode = ccNames[ccCounter];
@@ -52,10 +54,10 @@ public class UserInterface extends JFrame {
         currentCostCode = ccNames[ccCounter];
         period = periodNames[pCounter];
         ccLabel.setText("Cost code: " + currentCostCode.toString());
-        descriptionLabel.setText("Description: " + DataImport.name);
+        descriptionLabel.setText("Description: " + DatabaseConn.name);
         periodLabel.setText("Month: " + period.toString());
         departmentCard.remove(scrollPane2);
-        departmentTable = DataImport.createSpecificTable(currentCostCode, period);
+        departmentTable = DatabaseConn.createSpecificTable(currentCostCode, period);
         resizeColumnWidth(departmentTable);
         departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         scrollPane2 = new JScrollPane(departmentTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -97,8 +99,6 @@ public class UserInterface extends JFrame {
         final JPanel radioButtons = new JPanel();
         radioButtons.add(overview);
         radioButtons.add(departmentView);
-        JPanel centerNorth = new JPanel();
-        centerNorth.add(radioButtons);
 
         /*
             -------- Overview ---------
@@ -121,12 +121,12 @@ public class UserInterface extends JFrame {
            -------- Department view ---------
         */
 
-        departmentTable = DataImport.createSpecificTable(currentCostCode, period);
+        departmentTable = DatabaseConn.createSpecificTable(currentCostCode, period);
         resizeColumnWidth(departmentTable);
         departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         scrollPane2 = new JScrollPane(departmentTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        costCodeList = new JComboBox(DataImport.ccNames.toArray());
+        costCodeList = new JComboBox(DatabaseConn.ccNames.toArray());
         costCodeList.setSelectedIndex(0);
 
         JPanel listView= new JPanel();
@@ -138,13 +138,34 @@ public class UserInterface extends JFrame {
         JPanel label = new JPanel();
         label.setLayout(new BoxLayout(label, BoxLayout.Y_AXIS));
         ccLabel = new JLabel("Cost code: " + currentCostCode.toString());
-        descriptionLabel = new JLabel("Description: " + DataImport.name);
+        descriptionLabel = new JLabel("Description: " + DatabaseConn.name);
         periodLabel = new JLabel("Month: " + period.toString());
         label.add(ccLabel);
         label.add(descriptionLabel);
         label.add(periodLabel);
         JPanel labelPanel = new JPanel();
         labelPanel.add(label);
+        JButton importSpreadsheet = new JButton("Import Spreadsheet");
+        importSpreadsheet.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                final JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+                int returnValue = fileChooser.showOpenDialog(null);
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    String filePath = file.getAbsolutePath();
+
+                    try {
+                        DatabaseConn.importSpreadsheet(filePath);
+                    }
+
+                    catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        });
+        radioButtons.add(importSpreadsheet, BorderLayout.SOUTH);
         add(radioButtons, BorderLayout.NORTH);
         north.add(labelPanel, BorderLayout.CENTER);
         departmentCard.add(scrollPane2, BorderLayout.CENTER);
@@ -169,7 +190,7 @@ public class UserInterface extends JFrame {
                 ccCounter = pk;
                 currentCostCode = ccNames[ccCounter];
                 departmentCard.remove(scrollPane2);
-                departmentTable = DataImport.createSpecificTable(currentCostCode, period);
+                departmentTable = DatabaseConn.createSpecificTable(currentCostCode, period);
                 resizeColumnWidth(departmentTable);
                 departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
                 scrollPane2 = new JScrollPane(departmentTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -177,7 +198,7 @@ public class UserInterface extends JFrame {
                 scrollPane2.setPreferredSize(new Dimension(1900, 950));
                 departmentCard.add(scrollPane2, BorderLayout.CENTER);
                 ccLabel.setText("Cost code: " + currentCostCode.toString());
-                descriptionLabel.setText("Description: " + DataImport.name);
+                descriptionLabel.setText("Description: " + DatabaseConn.name);
             }
         });
 
