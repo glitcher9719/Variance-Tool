@@ -5,59 +5,78 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Vector;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.*;
 
 class DatabaseConn {
+
+    enum SortType {
+        Name, Division, CDG
+    }
     // JDBC driver name and database URL
-    private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/experimental-db?useSSL=false";
-    static Vector<Vector<Object>> databaseEntries = new Vector<Vector<Object>>();
-    static Vector<String> hd = new Vector<String>();
+    final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
+    final String DB_URL = "jdbc:mysql://localhost:3306/experimental-db?useSSL=false";
+    private Vector<Vector<String>> databaseEntries = new Vector<Vector<String>>();
+    private Vector<Vector<String>> sortedVector = new Vector<Vector<String>>();
+    private Vector<String> hd = new Vector<String>();
+    LinkedHashSet<Object> ccNames = new LinkedHashSet<Object>();
+    LinkedHashSet<Object> periodNames = new LinkedHashSet<Object>();
+    LinkedHashSet<Object> names = new LinkedHashSet<Object>();
+    LinkedHashSet<Object> divisions = new LinkedHashSet<Object>();
+    LinkedHashSet<Object> CDGs = new LinkedHashSet<Object>();
+    int numberOfRows;
+    DefaultTableModel model;
+    DecimalFormat nf = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
+    private DecimalFormatSymbols symbols = nf.getDecimalFormatSymbols();
 
-    static Vector<Vector<String>> tableData;
-
-    // cost code names
-    static LinkedHashSet<Object> ccNames = new LinkedHashSet<Object>();
-
-    // period names
-    static LinkedHashSet<Object> periodNames = new LinkedHashSet<Object>();
-
-    // table headers
-    private static Vector<String> tableHeadersExcel = new Vector<String>();
+    private int rowsCompleted;
 
     // department description
 
-    static String name;
+    String name;
 
-    private static String roundOffTo2DecPlaces(double val)
-    {
-        return String.format("%.2f", val).replace(',','.');
+    // flush
+    private boolean bol = false;
+
+    private static String roundOffTo2DecPlaces(double val) {
+        return String.format("%.2f", val).replace(',', '.');
     }
 
-    static JTable generateDataFromDB() throws ClassNotFoundException {
+    JTable generateDataFromDB() throws ClassNotFoundException {
         Connection conn;
         Statement stmt;
+        symbols.setCurrencySymbol(""); // Don't use null.
+        nf.setDecimalFormatSymbols(symbols);
         try {
+            databaseEntries.clear();
             Class.forName(JDBC_DRIVER);
-            conn = DriverManager.getConnection(DB_URL,"dan","ParolaMea123");
+            conn = DriverManager.getConnection(DB_URL, "dan", "ParolaMea123");
             stmt = conn.createStatement();
             String dataSQL;
             dataSQL = "SELECT * FROM data;";
             ResultSet rs = stmt.executeQuery(dataSQL);
-            ResultSetMetaData headers = rs.getMetaData();
-            int columnCount = headers.getColumnCount();
-            for (int i = 1; i<= columnCount; i++) {
-                hd.add(headers.getColumnName(i));
+
+            if (!bol) {
+                ResultSetMetaData headers = rs.getMetaData();
+                int columnCount = headers.getColumnCount();
+                for (int i = 1; i <= columnCount; i++) {
+                    hd.add(headers.getColumnName(i));
+                }
+
+                bol = true;
             }
 
-            while(rs.next()) {
-                Vector<Object> element = new Vector<Object >();
+            while (rs.next()) {
+                Vector<String> element = new Vector<String>();
                 String uniqueKey = rs.getString("Unique Key");
                 String costCentre = rs.getString("Cost Centre");
                 String expenseHead = rs.getString("Expense Header");
@@ -85,22 +104,23 @@ class DatabaseConn {
                 String expenseDescription = rs.getString("Expense Description");
                 String expenseGrouping = rs.getString("Expense Grouping");
                 String expenseType = rs.getString("Expense Type");
+                String note = rs.getString("Note");
                 element.add(uniqueKey);
                 element.add(costCentre);
                 element.add(expenseHead);
-                element.add(periodAndMonth);
-                element.add(month);
-                element.add(year);
-                element.add(budget);
-                element.add(actuals);
-                element.add(variance);
-                element.add(budgetYTD);
-                element.add(actualsYTD);
-                element.add(varianceYTD);
-                element.add(WTEBud);
-                element.add(WTECon);
-                element.add(WTEWork);
-                element.add(WTEPaid);
+                element.add(String.valueOf(periodAndMonth));
+                element.add(String.valueOf(month));
+                element.add(String.valueOf(year));
+                element.add(nf.format(budget));
+                element.add(nf.format(actuals));
+                element.add(nf.format(variance));
+                element.add(nf.format(budgetYTD));
+                element.add(nf.format(actualsYTD));
+                element.add(nf.format(varianceYTD));
+                element.add(nf.format(WTEBud));
+                element.add(nf.format(WTECon));
+                element.add(nf.format(WTEWork));
+                element.add(nf.format(WTEPaid));
                 element.add(department);
                 element.add(group);
                 element.add(division);
@@ -112,6 +132,13 @@ class DatabaseConn {
                 element.add(expenseDescription);
                 element.add(expenseGrouping);
                 element.add(expenseType);
+                element.add(note);
+
+                ccNames.add(costCentre);
+                periodNames.add(String.valueOf(periodAndMonth));
+                divisions.add(division);
+                CDGs.add(CDG);
+                names.add(name);
                 databaseEntries.add(element);
             }
 
@@ -119,88 +146,47 @@ class DatabaseConn {
             rs.close();
             stmt.close();
             conn.close();
-        }
-
-        catch(SQLException se) {
+        } catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();
-        }
-
-        // generating lists
-        for (Vector<Object> databaseEntry : databaseEntries) {
-            ccNames.add(databaseEntry.get(1));
-            periodNames.add(databaseEntry.get(3));
         }
 
         return new JTable(databaseEntries, hd);
     }
 
-    static void importSpreadsheet(String path) throws IOException {
+    void importSpreadsheet(String path) throws IOException {
+        long start = System.currentTimeMillis();
         int x = 0;
         int y = 0;
-        tableData = new Vector<Vector<String>>();
+        Vector<Vector<String>> tableData = new Vector<Vector<String>>();
+        TreeMap<String, Vector<Double>> head = new TreeMap<String, Vector<Double>>();
         InputStream ExcelFileToRead = new FileInputStream(path);
         XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
         XSSFSheet sheet = wb.getSheetAt(0);
+        numberOfRows = sheet.getPhysicalNumberOfRows();
         XSSFRow row;
         XSSFCell cell;
-
         Iterator rows = sheet.rowIterator();
-        XSSFRow tableHeaders = (XSSFRow)rows.next();
-        Iterator it = tableHeaders.cellIterator();
-        int i = 0;
-        while (it.hasNext()) {
-            cell=(XSSFCell) it.next();
-
-            if (cell.getCellTypeEnum() == CellType.STRING) {
-                tableHeadersExcel.add(i, cell.getStringCellValue());
-                i++;
-            }
-
-            else if(cell.getCellTypeEnum() == CellType.NUMERIC) {
-                tableHeadersExcel.add(i, String.valueOf(cell.getNumericCellValue()));
-                i++;
-            }
-
-            else if (cell.getCellTypeEnum() == CellType.FORMULA) {
-                switch(cell.getCachedFormulaResultTypeEnum()) {
-
-                    case NUMERIC:
-                        tableHeadersExcel.add(i, String.valueOf(cell.getNumericCellValue()));
-                        i++;
-
-                    case STRING:
-                        tableHeadersExcel.add(i, cell.getStringCellValue());
-                        i++;
-
-                }
-            }
-        }
-
+        rows.next();
         while (rows.hasNext()) {
-            row=(XSSFRow) rows.next();
+            row = (XSSFRow) rows.next();
             Iterator cells = row.cellIterator();
             Vector<String> currentRow = new Vector<String>();
 
             while (cells.hasNext()) {
 
-                cell=(XSSFCell) cells.next();
+                cell = (XSSFCell) cells.next();
 
                 if (cell.getCellTypeEnum() == CellType.STRING) {
 
                     currentRow.add(x, cell.getStringCellValue());
                     x++;
 
-                }
-
-                else if (cell.getCellTypeEnum() == CellType.NUMERIC) {
+                } else if (cell.getCellTypeEnum() == CellType.NUMERIC) {
                     currentRow.add(x, String.valueOf(cell.getNumericCellValue()));
                     x++;
 
-                }
-
-                else if (cell.getCellTypeEnum() == CellType.FORMULA)
-                {
+                } else if (cell.getCellTypeEnum() == CellType.FORMULA) {
                     currentRow.add(x, String.valueOf(cell.getRawValue()));
                     x++;
 
@@ -208,64 +194,65 @@ class DatabaseConn {
             }
 
             tableData.add(y, currentRow);
+
+            // Calculating variance
+            double budget = Double.parseDouble(tableData.get(y).get(5));
+            double actual = Double.parseDouble(tableData.get(y).get(6));
+            double variance = budget - actual;
+            tableData.get(y).add(7, roundOffTo2DecPlaces(variance));
+
+            // Calculating YTD
+            if (head.containsKey(tableData.get(y).get(0) + tableData.get(y).get(1))) {
+                Vector<Double> currentValues = head.get(tableData.get(y).get(0) + tableData.get(y).get(1));
+                double budgetYTD = currentValues.get(0);
+                double actualYTD = currentValues.get(1);
+                double varianceYTD = currentValues.get(2);
+
+                double currentBudget = Double.parseDouble(tableData.get(y).get(5));
+                double currentActual = Double.parseDouble(tableData.get(y).get(6));
+
+                budgetYTD += currentBudget;
+                actualYTD += currentActual;
+                varianceYTD += budgetYTD - actualYTD;
+
+                head.get(tableData.get(y).get(0) + tableData.get(y).get(1)).clear();
+                head.get(tableData.get(y).get(0) + tableData.get(y).get(1)).add(budgetYTD);
+                head.get(tableData.get(y).get(0) + tableData.get(y).get(1)).add(actualYTD);
+                head.get(tableData.get(y).get(0) + tableData.get(y).get(1)).add(varianceYTD);
+
+                tableData.get(y).add(8, roundOffTo2DecPlaces(budgetYTD));
+                tableData.get(y).add(9, roundOffTo2DecPlaces(actualYTD));
+                tableData.get(y).add(10, roundOffTo2DecPlaces(varianceYTD));
+            } else {
+                double budgetYTD = Double.parseDouble(tableData.get(y).get(5));
+                double actualYTD = Double.parseDouble(tableData.get(y).get(6));
+                double varianceYTD = budgetYTD - actualYTD;
+                Vector<Double> newYTD = new Vector<Double>();
+                newYTD.add(budgetYTD);
+                newYTD.add(actualYTD);
+                newYTD.add(varianceYTD);
+                head.put(tableData.get(y).get(0) + tableData.get(y).get(1), newYTD);
+
+                tableData.get(y).add(8, roundOffTo2DecPlaces(budgetYTD));
+                tableData.get(y).add(9, roundOffTo2DecPlaces(actualYTD));
+                tableData.get(y).add(10, roundOffTo2DecPlaces(varianceYTD));
+            }
+
             y++;
-            if (!rows.hasNext()){
+            if (!rows.hasNext()) {
                 break;
             }
             x = 0;
-
+            rowsCompleted++;
         }
-
-        LinkedHashSet<String> head = new LinkedHashSet<String>();
-        // generating lists
-        for (int a = 0; a< y; a++) {
-            head.add(tableData.get(a).get(0) + tableData.get(a).get(1));
-            ccNames.add(tableData.get(a).get(0));
-            periodNames.add(tableData.get(a).get(2));
-        }
-
-        // Calculating Variance
-        tableHeadersExcel.add(7, "Variance");
-        for (int s = 0; s< y; s++) {
-            double budget = Double.parseDouble(tableData.get(s).get(5));
-            double actual = Double.parseDouble(tableData.get(s).get(6));
-            double variance = budget-actual;
-            tableData.get(s).add(7, roundOffTo2DecPlaces(variance));
-        }
-
-        // Calculating YTD
-        tableHeadersExcel.add(8, "Budget YTD");
-        tableHeadersExcel.add(9, "Actual YTD");
-        tableHeadersExcel.add(10, "Variance YTD");
-
-
-        for (String element : head) {
-            double budgetYTD = 0;
-            double actualYTD = 0;
-            for (int s = 0; s < y; s++) {
-
-                double currentBudget = Double.parseDouble(tableData.get(s).get(5));
-                double currentActual = Double.parseDouble(tableData.get(s).get(6));
-
-                if (element.equals(tableData.get(s).get(0) + tableData.get(s).get(1))) {
-
-                    budgetYTD += currentBudget;
-                    tableData.get(s).add(8, roundOffTo2DecPlaces(budgetYTD));
-
-                    actualYTD += currentActual;
-                    tableData.get(s).add(9, roundOffTo2DecPlaces(actualYTD));
-
-                    double varianceYTD = budgetYTD - actualYTD;
-                    tableData.get(s).add(10, roundOffTo2DecPlaces(varianceYTD));
-
-                }
-            }
-        }
+        long process = System.currentTimeMillis();
+        System.out.println("Processing time: " + (process - start));
         Connection conn = null;
-        Statement stmt = null;
+        Statement stmt;
+
         try {
             Class.forName(JDBC_DRIVER);
-            conn = DriverManager.getConnection(DB_URL,"dan","ParolaMea123");
+            conn = DriverManager.getConnection(DB_URL, "dan", "ParolaMea123");
             stmt = conn.createStatement();
             String checkSQL;
             checkSQL = "SELECT `Unique Key` FROM data;";
@@ -273,60 +260,61 @@ class DatabaseConn {
 
             //STEP 5: Extract data from result set
 
-            Vector<String> uniqueKeys = new Vector<String >();
-            while(rs.next()) {
+            Vector<String> uniqueKeys = new Vector<String>();
+            while (rs.next()) {
                 if (uniqueKeys.contains(rs.getString("Unique Key"))) {
                     throw new Exception("Invalid entries in database, unique keys should not contain duplicates!");
-                }
-
-                else {
+                } else {
                     uniqueKeys.add(rs.getString("Unique Key"));
                 }
             }
 
+            final int BATCH_SIZE = 1000;
+            int currentBatch = 0;
+
+            String insertSQL = "INSERT INTO data VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            PreparedStatement preparedStatement = conn.prepareStatement(insertSQL);
+            conn.setAutoCommit(false);
 
             for (Vector<String> k : tableData) {
-                if (uniqueKeys.contains(k.get(15))){
-                    String updateSQL =  "UPDATE data " +
-                                        "SET `Cost Centre` = '" + k.get(0) +
-                                        "', `Expense Header` = '" + k.get(1) +
-                                        "', `Period and Month` = '" + k.get(2) +
-                                        "', `Month` = '" + k.get(3) +
-                                        "', `Year` = '" + k.get(4) +
-                                        "', `Budget` = '" + k.get(5) +
-                                        "', `Actuals` = '" + k.get(6) +
-                                        "', `Variance` = '" + k.get(7) +
-                                        "', `Budget YTD` = '" + k.get(8) +
-                                        "', `Actual YTD` = '" + k.get(9) +
-                                        "', `VarianceYTD` = '" + k.get(10) +
-                                        "', `WTE Bud` = '" + k.get(11) +
-                                        "', `WTE Con` = '" + k.get(12) +
-                                        "', `WTE Work` = '" + k.get(13) +
-                                        "', `WTE Paid` = '" + k.get(14) +
-                                        "', `Department` = '" + k.get(16) +
-                                        "', `Group` = '" + k.get(17) +
-                                        "', `Division` = '" + k.get(18) +
-                                        "', `CDG` = '" + k.get(19) +
-                                        "', `Service` = '" + k.get(20) +
-                                        "', `National Specialty` = '" + k.get(21) +
-                                        "', `Name` = '" + k.get(22) +
-                                        "', `Investigation Limit` = '" + k.get(23) +
-                                        "', `Expense Description` = '" + k.get(24) +
-                                        "', `Expense Grouping` = '" + k.get(25) +
-                                        "', `Expense Type` = '" + k.get(26) +
-                                        "'WHERE `Unique Key` = '" + k.get(15) + "';";
-                                        stmt.executeUpdate(updateSQL);
-                }
-
-                else {
-                    String insertSQL = "INSERT INTO data VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-                    PreparedStatement preparedStatement = conn.prepareStatement(insertSQL);
+                if (uniqueKeys.contains(k.get(15))) {
+                    String updateSQL = "UPDATE data " +
+                            "SET `Cost Centre` = '" + k.get(0) +
+                            "', `Expense Header` = '" + k.get(1) +
+                            "', `Period and Month` = '" + k.get(2) +
+                            "', `Month` = '" + k.get(3) +
+                            "', `Year` = '" + k.get(4) +
+                            "', `Budget` = '" + k.get(5) +
+                            "', `Actuals` = '" + k.get(6) +
+                            "', `Variance` = '" + k.get(7) +
+                            "', `Budget YTD` = '" + k.get(8) +
+                            "', `Actual YTD` = '" + k.get(9) +
+                            "', `VarianceYTD` = '" + k.get(10) +
+                            "', `WTE Bud` = '" + k.get(11) +
+                            "', `WTE Con` = '" + k.get(12) +
+                            "', `WTE Work` = '" + k.get(13) +
+                            "', `WTE Paid` = '" + k.get(14) +
+                            "', `Department` = '" + k.get(16) +
+                            "', `Group` = '" + k.get(17) +
+                            "', `Division` = '" + k.get(18) +
+                            "', `CDG` = '" + k.get(19) +
+                            "', `Service` = '" + k.get(20) +
+                            "', `National Specialty` = '" + k.get(21) +
+                            "', `Name` = '" + k.get(22) +
+                            "', `Investigation Limit` = '" + k.get(23) +
+                            "', `Expense Description` = '" + k.get(24) +
+                            "', `Expense Grouping` = '" + k.get(25) +
+                            "', `Expense Type` = '" + k.get(26) +
+                            "' WHERE `Unique Key` = '" + k.get(15) + "';";
+                    stmt.executeUpdate(updateSQL);
+                    conn.commit();
+                } else {
                     preparedStatement.setString(1, k.get(15));
                     preparedStatement.setString(2, k.get(0));
                     preparedStatement.setString(3, k.get(1));
-                    preparedStatement.setInt(4, Integer.parseInt(k.get(2)));
-                    preparedStatement.setInt(5, Integer.parseInt(k.get(3)));
-                    preparedStatement.setInt(6, Integer.parseInt(k.get(4)));
+                    preparedStatement.setInt(4, (int) Math.round(Double.parseDouble(k.get(2))));
+                    preparedStatement.setInt(5, (int) Math.round(Double.parseDouble(k.get(3))));
+                    preparedStatement.setInt(6, (int) Math.round(Double.parseDouble(k.get(4))));
                     preparedStatement.setDouble(7, Double.parseDouble(k.get(5)));
                     preparedStatement.setDouble(8, Double.parseDouble(k.get(6)));
                     preparedStatement.setDouble(9, Double.parseDouble(k.get(7)));
@@ -348,70 +336,50 @@ class DatabaseConn {
                     preparedStatement.setString(25, k.get(24));
                     preparedStatement.setString(26, k.get(25));
                     preparedStatement.setString(27, k.get(26));
+                    preparedStatement.setString(28, null);
                     preparedStatement.executeUpdate();
+                    currentBatch++;
+
+                    if (currentBatch >= BATCH_SIZE) {
+                        preparedStatement.executeBatch();
+                        conn.commit();
+                        currentBatch = 0;
+                    }
                 }
             }
+
+            preparedStatement.executeBatch();
+            conn.commit();
+
             //STEP 6: Clean-up environment
             rs.close();
             stmt.close();
             conn.close();
-        }
-
-        catch(SQLException se) {
+        } catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();
-        }
-
-        catch(Exception e) {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-        }
-
-        finally {
+        } finally {
             //finally block used to close resources
 
 
             try {
-                if(conn!=null) conn.close();
-            }
-
-            catch(SQLException se) {
+                if (conn != null) conn.close();
+            } catch (SQLException se) {
                 se.printStackTrace();
             }
         }
+        long finish = System.currentTimeMillis();
+        System.out.println("Database fetching: " + (finish - process));
+        System.out.println("Total time: " + (finish - start));
 
     }
 
-    static JTable createSpecificTable(Object costCode, Object period) {
-
-        // Sort each vector to match cost code and period parameters
-        Vector<Vector<Object>> sortedVector = new Vector<Vector<Object>>();
-        for (int a = 0; a < databaseEntries.size(); a++) {
-            Object x = DatabaseConn.databaseEntries.get(a).get(1);
-            Object y = DatabaseConn.databaseEntries.get(a).get(3);
-            if (x.equals(costCode) && y.equals(period)) {
-                Vector<Object> tableVector = new Vector<Object>(DatabaseConn.databaseEntries.get(a));
-                name = tableVector.get(16).toString();
-                tableVector.remove(0);
-                tableVector.remove(14);
-                tableVector.remove(14);
-                tableVector.remove(14);
-                tableVector.remove(14);
-                tableVector.remove(14);
-                tableVector.remove(14);
-                tableVector.remove(14);
-                tableVector.remove(14);
-                tableVector.remove(14);
-                tableVector.remove(2);
-                tableVector.remove(2);
-                tableVector.remove(2);
-
-                sortedVector.add(tableVector);
-            }
-        }
+    private void addTotals(Vector<Vector<String>> vector) throws ParseException {
 
         // Total class for PAY, NON PAY, INCOME and GRAND TOTAL
-
         class Total {
 
             private String name;
@@ -477,19 +445,35 @@ class DatabaseConn {
                 WTEWorked += ww;
             }
 
-            private Vector<Object> getTotal (Total object) {
-                Vector<Object> vector = new Vector<Object>();
+            private Vector<String> getTotal(Total object) {
+                Vector<String> vector = new Vector<String>();
+                vector.add(null);
                 vector.add(object.name);
                 vector.add(null);
-                vector.add(roundOffTo2DecPlaces(object.budget));
-                vector.add(roundOffTo2DecPlaces(object.actual));
-                vector.add(roundOffTo2DecPlaces(object.variance));
-                vector.add(roundOffTo2DecPlaces(object.YTDBudget));
-                vector.add(roundOffTo2DecPlaces(object.YTDActual));
-                vector.add(roundOffTo2DecPlaces(object.YTDVariance));
-                vector.add(roundOffTo2DecPlaces(object.WTEBudget));
-                vector.add(roundOffTo2DecPlaces(object.WTEContracted));
-                vector.add(roundOffTo2DecPlaces(object.WTEWorked));
+                vector.add(null);
+                vector.add(null);
+                vector.add(null);
+                vector.add(nf.format(Double.parseDouble(String.valueOf(object.budget))));
+                vector.add(nf.format((Double.parseDouble(String.valueOf(object.actual)))));
+                vector.add(nf.format((Double.parseDouble(String.valueOf(object.variance)))));
+                vector.add(nf.format((Double.parseDouble(String.valueOf(object.YTDBudget)))));
+                vector.add(nf.format((Double.parseDouble(String.valueOf(object.YTDActual)))));
+                vector.add(nf.format((Double.parseDouble(String.valueOf(object.YTDVariance)))));
+                vector.add(nf.format((Double.parseDouble(String.valueOf(object.WTEBudget)))));
+                vector.add(nf.format((Double.parseDouble(String.valueOf(object.WTEContracted)))));
+                vector.add(nf.format((Double.parseDouble(String.valueOf(object.WTEWorked)))));
+                vector.add(null);
+                vector.add(null);
+                vector.add(null);
+                vector.add(null);
+                vector.add(null);
+                vector.add(null);
+                vector.add(null);
+                vector.add(null);
+                vector.add(null);
+                vector.add(null);
+                vector.add(null);
+                vector.add(null);
 
                 return vector;
             }
@@ -501,16 +485,16 @@ class DatabaseConn {
         Total grandTotal = new Total("GRAND TOTAL");
 
         int payCounter = 0;
-        int nonPayCounter= 0;
+        int nonPayCounter = 0;
         int incomeCounter = 0;
 
-        for (Vector<Object> aSortedVector : sortedVector) {
+        for (Vector<String> aSortedVector : vector) {
             Total varTotal;
 
-            if (aSortedVector.get(13).equals("Pay")) {
+            if (aSortedVector.get(26).equals("Pay")) {
                 varTotal = pay;
                 payCounter++;
-            } else if (aSortedVector.get(13).equals("Non Pay")) {
+            } else if (aSortedVector.get(26).equals("Non Pay")) {
 
                 nonPayCounter++;
                 varTotal = nonPay;
@@ -520,15 +504,15 @@ class DatabaseConn {
                 varTotal = income;
             }
 
-            varTotal.budgetAdd((Double) aSortedVector.get(2));
-            varTotal.actualAdd((Double) aSortedVector.get(3));
-            varTotal.varianceAdd((Double) aSortedVector.get(4));
-            varTotal.YTDBudgetAdd((Double) aSortedVector.get(5));
-            varTotal.YTDActualAdd((Double) aSortedVector.get(6));
-            varTotal.YTDVarianceAdd((Double) aSortedVector.get(7));
-            varTotal.WTEBudgetAdd((Double) aSortedVector.get(8));
-            varTotal.WTEContractedAdd((Double) aSortedVector.get(9));
-            varTotal.WTEWorkedAdd((Double) aSortedVector.get(10));
+            varTotal.budgetAdd(nf.parse(aSortedVector.get(6)).doubleValue());
+            varTotal.actualAdd(nf.parse(aSortedVector.get(7)).doubleValue());
+            varTotal.varianceAdd(nf.parse(aSortedVector.get(8)).doubleValue());
+            varTotal.YTDBudgetAdd(nf.parse(aSortedVector.get(9)).doubleValue());
+            varTotal.YTDActualAdd(nf.parse(aSortedVector.get(10)).doubleValue());
+            varTotal.YTDVarianceAdd(nf.parse(aSortedVector.get(11)).doubleValue());
+            varTotal.WTEBudgetAdd(nf.parse(aSortedVector.get(12)).doubleValue());
+            varTotal.WTEContractedAdd(nf.parse(aSortedVector.get(13)).doubleValue());
+            varTotal.WTEWorkedAdd(nf.parse(aSortedVector.get(14)).doubleValue());
         }
 
         // Grand total calculation
@@ -543,64 +527,104 @@ class DatabaseConn {
         grandTotal.WTEContractedAdd(pay.WTEContracted + nonPay.WTEContracted + income.WTEContracted);
         grandTotal.WTEWorkedAdd(pay.WTEWorked + nonPay.WTEWorked + income.WTEWorked);
 
-        Vector<Object> payVector = pay.getTotal(pay);
+        Vector<String> payVector = pay.getTotal(pay);
 
-        Vector<Object> nonPayVector = nonPay.getTotal(nonPay);
+        Vector<String> nonPayVector = nonPay.getTotal(nonPay);
 
-        Vector<Object> incomeVector = income.getTotal(income);
+        Vector<String> incomeVector = income.getTotal(income);
 
-        Vector<Object> grandTotalVector = grandTotal.getTotal(grandTotal);
+        Vector<String> grandTotalVector = grandTotal.getTotal(grandTotal);
 
         // Logic behind totals counters and totals position in table
 
         if (incomeCounter != 0) {
-            sortedVector.add(incomeCounter, incomeVector);
+            vector.add(incomeCounter, incomeVector);
             payCounter += incomeCounter;
             payCounter++;
+        } else {
+            vector.add(incomeVector);
         }
 
-        else {
-            sortedVector.add(incomeVector);
-        }
-
-        if (!(payCounter<=incomeCounter+1)) {
-            sortedVector.add(payCounter, payVector);
-            nonPayCounter+= payCounter;
+        if (!(payCounter <= incomeCounter + 1)) {
+            vector.add(payCounter, payVector);
+            nonPayCounter += payCounter;
             nonPayCounter++;
-        }
-
-        else {
-            sortedVector.add(payVector);
+        } else {
+            vector.add(payVector);
         }
 
         if (nonPayCounter != 0) {
-            sortedVector.add(nonPayCounter, nonPayVector);
-        }
-
-        else {
-            sortedVector.add(nonPayVector);
+            vector.add(nonPayCounter, nonPayVector);
+        } else {
+            vector.add(nonPayVector);
 
         }
 
-        sortedVector.add(grandTotalVector);
+        vector.add(grandTotalVector);
+    }
 
-        Vector<String> tableHeadersTruncated = new Vector<String>(DatabaseConn.hd);
-        tableHeadersTruncated.remove(0);
-        tableHeadersTruncated.remove(14);
-        tableHeadersTruncated.remove(14);
-        tableHeadersTruncated.remove(14);
-        tableHeadersTruncated.remove(14);
-        tableHeadersTruncated.remove(14);
-        tableHeadersTruncated.remove(14);
-        tableHeadersTruncated.remove(14);
-        tableHeadersTruncated.remove(14);
-        tableHeadersTruncated.remove(14);
-        tableHeadersTruncated.remove(2);
-        tableHeadersTruncated.remove(2);
-        tableHeadersTruncated.remove(2);
+    JTable createSpecificTable(Object costCode, Object period) throws ParseException {
 
+        // Sort each vector to match cost code and period parameters
+        sortedVector.clear();
+        for (Vector<String> databaseEntry : databaseEntries) {
+            Object x = databaseEntry.get(1);
+            Object y = databaseEntry.get(3);
+            if (x.equals(costCode) && y.equals(period)) {
+                Vector<String> tableVector = new Vector<String>(databaseEntry);
+                name = tableVector.get(16);
+                sortedVector.add(tableVector);
+            }
+        }
 
-        return new JTable(sortedVector, tableHeadersTruncated);
+        addTotals(sortedVector);
+        model = new DefaultTableModel(sortedVector, hd);
+        return removeColumns(new JTable(model));
+    }
 
+    void drillTable(JTable table, Object name, SortType type) throws ParseException {
+        Vector<Vector<String>> newVector = new Vector<Vector<String>>();
+        for (Vector<String> vector : sortedVector) {
+            Object x = new Object();
+
+            if (type == SortType.Name) x = vector.get(22);
+            else if (type == SortType.CDG) x = vector.get(19);
+            else if (type == SortType.Division) x = vector.get(18);
+
+            if (x == null) continue;
+            if (x.equals(name)) newVector.add(vector);
+        }
+
+        addTotals(newVector);
+        for (Vector<String> vector : newVector) {
+            System.out.println(vector.toString());
+        }
+        sortedVector = newVector;
+        model = new DefaultTableModel(sortedVector, hd);
+        table.setModel(model);
+        removeColumns(table);
+    }
+
+    private JTable removeColumns(JTable table) {
+        TableColumnModel columnModel = table.getColumnModel();
+        int count = columnModel.getColumnCount();
+        for (int i = 0; i<count; i++) {
+            columnModel.getColumn(i).setIdentifier(table.getColumnName(i));
+        }
+        table.removeColumn(table.getColumn("Unique Key"));
+        table.removeColumn(table.getColumn("Period and Month"));
+        table.removeColumn(table.getColumn("Month"));
+        table.removeColumn(table.getColumn("Year"));
+        table.removeColumn(table.getColumn("Department"));
+        table.removeColumn(table.getColumn("Group"));
+        table.removeColumn(table.getColumn("Division"));
+        table.removeColumn(table.getColumn("CDG"));
+        table.removeColumn(table.getColumn("Service"));
+        table.removeColumn(table.getColumn("National Specialty"));
+        table.removeColumn(table.getColumn("Name"));
+        table.removeColumn(table.getColumn("Investigation Limit"));
+        table.removeColumn(table.getColumn("WTE Paid"));
+
+        return table;
     }
 }
