@@ -374,6 +374,7 @@ public class UserInterface extends JFrame {
 
             }
         });
+
         JButton nextDepartment = new JButton("Next");
         nextDepartment.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -396,6 +397,7 @@ public class UserInterface extends JFrame {
                 }
             }
         });
+
         final JPanel westPanel = new JPanel();
         westPanel.add(department);
         westPanel.add(previousDepartment);
@@ -573,5 +575,3 @@ public class UserInterface extends JFrame {
     }
 
 }
-
-

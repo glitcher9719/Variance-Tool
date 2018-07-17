@@ -34,8 +34,8 @@ class DatabaseConn {
     LinkedHashSet<Object> divisions = new LinkedHashSet<Object>();
     LinkedHashSet<Object> CDGs = new LinkedHashSet<Object>();
     int numberOfRows;
-    DefaultTableModel model;
-    DecimalFormat nf = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
+    private DefaultTableModel model;
+    private DecimalFormat nf = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
     private DecimalFormatSymbols symbols = nf.getDecimalFormatSymbols();
 
     private int rowsCompleted;
