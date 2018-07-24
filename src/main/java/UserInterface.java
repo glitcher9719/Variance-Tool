@@ -1,17 +1,12 @@
 import javax.swing.*;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class UserInterface extends JFrame {
 
@@ -30,19 +25,20 @@ public class UserInterface extends JFrame {
     private Object[] ccNames;
     private Object[] periodNames;
 
-    // TODO: DRILLING
-    private ArrayList<Object> names;
-    private ArrayList<Object> divisions;
-    private ArrayList<Object> CDGs;
-    private JComboBox nameList;
-    private JComboBox cdgList;
-    private JComboBox divisionList;
+    private JComboBox<Object> nameList;
+    private JComboBox<Object> cdgList;
+    private JComboBox<Object> divisionList;
 
     private int ccCounter = 0;
     private int pCounter = 0;
     private Object currentCostCode;
     private Object period;
     private JPanel contentPanel;
+
+    private Object currentSelectedName;
+    private Object currentSelectedDivision;
+    private Object currentSelectedCDG;
+
     private DatabaseConn databaseConn;
 
     // TODO: PROGRESS BAR
@@ -58,22 +54,8 @@ public class UserInterface extends JFrame {
         if (ccNames.length < 1) {
             ccNames = new Object[]{"No cost codes available"};
             periodNames = new Object[]{"No periods available"};
-            names = new ArrayList<Object>();
-            names.add("No names available");
-            divisions = new ArrayList<Object>();
-            divisions.add("No divisions available");
-            CDGs = new ArrayList<Object>();
-            CDGs.add("No CDGs available");
         }
 
-        else {
-            names = new ArrayList<Object>(Arrays.asList(databaseConn.names.toArray()));
-            names.add(0, "ALL");
-            divisions = new ArrayList<Object>(Arrays.asList(databaseConn.divisions.toArray()));
-            divisions.add(0, "ALL");
-            CDGs = new ArrayList<Object>(Arrays.asList(databaseConn.CDGs.toArray()));
-            CDGs.add(0, "ALL");
-        }
         currentCostCode = ccNames[ccCounter];
         period = periodNames[pCounter];
         contentPanel = new JPanel(cardLayout);
@@ -115,6 +97,7 @@ public class UserInterface extends JFrame {
         */
 
         departmentTable = databaseConn.createSpecificTable(currentCostCode, period);
+        departmentTable.setDefaultRenderer(Object.class, new BoardTableCellRenderer());
         departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         departmentTable.getColumnModel().getColumn(14).setMinWidth(200);
         departmentTable.getColumnModel().getColumn(13).setMinWidth(50);
@@ -129,18 +112,18 @@ public class UserInterface extends JFrame {
         costCodeList = new JComboBox(ccNames);
         costCodeList.setSelectedIndex(0);
 
-        Object currentName = null;
-        Object currentDivision = null;
-        Object currentCDG = null;
-
-        nameList = new JComboBox(names.toArray());
+        nameList = new JComboBox(databaseConn.names.toArray());
         nameList.setSelectedIndex(0);
 
-        divisionList = new JComboBox(divisions.toArray());
+        divisionList = new JComboBox(databaseConn.divisions.toArray());
         divisionList.setSelectedIndex(0);
 
-        cdgList = new JComboBox(CDGs.toArray());
+        cdgList = new JComboBox(databaseConn.CDGs.toArray());
         cdgList.setSelectedIndex(0);
+
+        currentSelectedName = null;
+        currentSelectedDivision = null;
+        currentSelectedCDG = null;
 
         JPanel listView= new JPanel();
         listView.add(costCodeList);
@@ -162,30 +145,22 @@ public class UserInterface extends JFrame {
         JPanel labelPanel = new JPanel();
         labelPanel.add(label);
         JButton importSpreadsheet = new JButton("Import Spreadsheet");
-        importSpreadsheet.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                final JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-                int returnValue = fileChooser.showOpenDialog(null);
-                if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    File file = fileChooser.getSelectedFile();
-                    String filePath = file.getAbsolutePath();
+        importSpreadsheet.addActionListener(e -> {
+            final JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            int returnValue = fileChooser.showOpenDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                String filePath = file.getAbsolutePath();
 
-                    try {
-                        databaseConn.importSpreadsheet(filePath);
-                        dispose();
-                        new UserInterface();
-                    }
+                try {
+                    databaseConn.importSpreadsheet(filePath);
+                    dispose();
+                    new UserInterface();
+                }
 
-                    catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-
-                    catch (ClassNotFoundException e1) {
-                        e1.printStackTrace();
-                    } catch (ParseException e1) {
-                        e1.printStackTrace();
-                    }
+                catch (IOException | ClassNotFoundException | ParseException e1) {
+                    e1.printStackTrace();
                 }
             }
         });
@@ -194,156 +169,162 @@ public class UserInterface extends JFrame {
         north.add(labelPanel, BorderLayout.CENTER);
         departmentCard.add(scrollPane2, BorderLayout.CENTER);
 
-        costCodeList.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JComboBox combo = (JComboBox)e.getSource();
-                int pk = 0;
-                try {
-                    for (Object x : ccNames) {
-                        if (combo.getSelectedItem().equals(x)) {
-                            break;
-                        } else {
-                            pk++;
-                        }
+        costCodeList.addActionListener(e -> {
+            JComboBox combo = (JComboBox)e.getSource();
+            int pk = 0;
+            try {
+                for (Object x : ccNames) {
+                    if (Objects.equals(combo.getSelectedItem(), x)) {
+                        break;
+                    } else {
+                        pk++;
                     }
                 }
+            }
 
-                catch (NullPointerException nul) {
-                    pk = 0;
-                }
-                ccCounter = pk;
-                currentCostCode = ccNames[ccCounter];
-                departmentCard.remove(scrollPane2);
-                try {
-                    departmentTable = databaseConn.createSpecificTable(currentCostCode, period);
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
-                departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-                departmentTable.getColumnModel().getColumn(14).setMinWidth(200);
-                departmentTable.getColumnModel().getColumn(13).setMinWidth(50);
-                departmentTable.getColumnModel().getColumn(12).setMinWidth(150);
-                departmentTable.getColumnModel().getColumn(11).setMinWidth(150);
-                departmentTable.getColumnModel().getColumn(10).setMinWidth(30);
-                departmentTable.getColumnModel().getColumn(9).setMinWidth(30);
-                departmentTable.getColumnModel().getColumn(8).setMinWidth(30);
-                scrollPane2 = new JScrollPane(departmentTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-                scrollPane2.setPreferredSize(new Dimension(1900, 950));
-                departmentCard.add(scrollPane2, BorderLayout.CENTER);
-                ccLabel.setText("Cost code: " + currentCostCode.toString());
-                descriptionLabel.setText("Description: " + databaseConn.name);
-                departmentTable.getModel().addTableModelListener(new TableModelListener() {
-                    @Override
-                    public void tableChanged(TableModelEvent e) {
-                        if (e.getColumn() == 14) {
-                            int row = e.getFirstRow();
-                            int column = e.getColumn();
-                            TableModel model = (TableModel) e.getSource();
-                            Object value = model.getValueAt(row, column);
-                            String uniqueKey = period.toString() + currentCostCode.toString() + departmentTable.getValueAt(row, 1).toString();
-                            Connection conn;
-                            Statement stmt;
-                            try {
-                                Class.forName(databaseConn.JDBC_DRIVER);
-                                conn = DriverManager.getConnection(databaseConn.DB_URL, "dan", "ParolaMea123");
-                                stmt = conn.createStatement();
-                                String noteSQL;
-                                noteSQL =   "UPDATE data " +
-                                        "SET `Note`= +'" + value +
-                                        "'WHERE `Unique Key`='" +  uniqueKey + "';";
-                                stmt.executeUpdate(noteSQL);
-                                stmt.close();
-                                conn.close();
-                                table = databaseConn.generateDataFromDB();
-                            } catch (ClassNotFoundException e1) {
-                                e1.printStackTrace();
-                            } catch (SQLException e1) {
-                                e1.printStackTrace();
-                            }
-                        }
+            catch (NullPointerException nul) {
+                pk = 0;
+            }
+            ccCounter = pk;
+            currentCostCode = ccNames[ccCounter];
+            departmentCard.remove(scrollPane2);
+            try {
+                departmentTable = databaseConn.createSpecificTable(currentCostCode, period);
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+            }
+
+            departmentTable.setDefaultRenderer(Object.class, new BoardTableCellRenderer());
+            nameList.setModel(new DefaultComboBoxModel<>(databaseConn.names.toArray()));
+            divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.divisions.toArray()));
+            cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.CDGs.toArray()));
+
+            currentSelectedName = null;
+            currentSelectedCDG = null;
+            currentSelectedDivision = null;
+
+            departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+            departmentTable.getColumnModel().getColumn(14).setMinWidth(200);
+            departmentTable.getColumnModel().getColumn(13).setMinWidth(50);
+            departmentTable.getColumnModel().getColumn(12).setMinWidth(150);
+            departmentTable.getColumnModel().getColumn(11).setMinWidth(150);
+            departmentTable.getColumnModel().getColumn(10).setMinWidth(30);
+            departmentTable.getColumnModel().getColumn(9).setMinWidth(30);
+            departmentTable.getColumnModel().getColumn(8).setMinWidth(30);
+            scrollPane2 = new JScrollPane(departmentTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            scrollPane2.setPreferredSize(new Dimension(1900, 950));
+            departmentCard.add(scrollPane2, BorderLayout.CENTER);
+            ccLabel.setText("Cost code: " + currentCostCode.toString());
+            descriptionLabel.setText("Description: " + databaseConn.name);
+            departmentTable.getModel().addTableModelListener(e12 -> {
+                if (e12.getColumn() == 27) {
+                    int row = e12.getFirstRow();
+                    int column = e12.getColumn();
+                    TableModel model = (TableModel) e12.getSource();
+                    Object value = model.getValueAt(row, column);
+                    String uniqueKey = period.toString() + currentCostCode.toString() + departmentTable.getValueAt(row, 1).toString();
+                    Connection conn;
+                    Statement stmt;
+                    try {
+                        Class.forName(databaseConn.JDBC_DRIVER);
+                        conn = DriverManager.getConnection(databaseConn.DB_URL, "dan", "ParolaMea123");
+                        stmt = conn.createStatement();
+                        String noteSQL;
+                        noteSQL =   "UPDATE data " +
+                                "SET `Note`= +'" + value +
+                                "'WHERE `Unique Key`='" +  uniqueKey + "';";
+                        stmt.executeUpdate(noteSQL);
+                        stmt.close();
+                        conn.close();
+                        table = databaseConn.generateDataFromDB();
+                    } catch (ClassNotFoundException | SQLException e1) {
+                        e1.printStackTrace();
                     }
-                });
+                }
+            });
+        });
+
+        nameList.addActionListener(e -> {
+            if (Objects.requireNonNull(nameList.getSelectedItem()).toString().equals("ALL")) {
+                currentSelectedName = null;
+            }
+            else {
+                currentSelectedName = nameList.getSelectedItem();
+            }
+            try {
+                databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+            }
+
+        });
+
+        divisionList.addActionListener(e -> {
+            if (Objects.requireNonNull(divisionList.getSelectedItem()).toString().equals("ALL")) {
+                currentSelectedDivision = null;
+            }
+            else {
+                currentSelectedDivision = divisionList.getSelectedItem();
+            }
+            try {
+                databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
+            } catch (ParseException e1) {
+                e1.printStackTrace();
             }
         });
 
-        nameList.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Object selection = nameList.getSelectedItem();
-                try {
-                    databaseConn.drillTable(departmentTable, selection, DatabaseConn.SortType.Name);
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
+        cdgList.addActionListener(e -> {
+            if (Objects.requireNonNull(cdgList.getSelectedItem()).toString().equals("ALL")) {
+                currentSelectedCDG = null;
             }
-        });
-
-        divisionList.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Object selection = divisionList.getSelectedItem();
-                try {
-                    databaseConn.drillTable(departmentTable, selection, DatabaseConn.SortType.Division);
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
+            else {
+                currentSelectedCDG = cdgList.getSelectedItem();
             }
-        });
-
-        cdgList.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Object selection = cdgList.getSelectedItem();
-                try {
-                    databaseConn.drillTable(departmentTable, selection, DatabaseConn.SortType.CDG);
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
+            try {
+                databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
+            } catch (ParseException e1) {
+                e1.printStackTrace();
             }
         });
 
         JLabel month = new JLabel("Month");
         JButton previousMonth = new JButton("Previous");
         JButton nextMonth = new JButton("Next");
-        previousMonth.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        previousMonth.addActionListener(e -> {
 
+            try {
+                pCounter--;
+                tableRenew();
+            }
+
+            catch (ArrayIndexOutOfBoundsException error) {
+                pCounter = 0;
                 try {
-                    pCounter--;
                     tableRenew();
-                }
-
-                catch (ArrayIndexOutOfBoundsException error) {
-                    pCounter = 0;
-                    try {
-                        tableRenew();
-                    } catch (ParseException e1) {
-                        e1.printStackTrace();
-                    }
                 } catch (ParseException e1) {
                     e1.printStackTrace();
                 }
+            } catch (ParseException e1) {
+                e1.printStackTrace();
             }
         });
 
-        nextMonth.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    pCounter++;
-                    tableRenew();
-                }
+        nextMonth.addActionListener(e -> {
+            try {
+                pCounter++;
+                tableRenew();
+            }
 
-                catch (ArrayIndexOutOfBoundsException error) {
-                    pCounter = 0;
-                    try {
-                        tableRenew();
-                    } catch (ParseException e1) {
-                        e1.printStackTrace();
-                    }
+            catch (ArrayIndexOutOfBoundsException error) {
+                pCounter = 0;
+                try {
+                    tableRenew();
                 } catch (ParseException e1) {
                     e1.printStackTrace();
                 }
+            } catch (ParseException e1) {
+                e1.printStackTrace();
             }
         });
         final JPanel eastPanel = new JPanel();
@@ -353,47 +334,43 @@ public class UserInterface extends JFrame {
 
         JLabel department = new JLabel("Department");
         JButton previousDepartment = new JButton("Previous");
-        previousDepartment.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        previousDepartment.addActionListener(e -> {
+            try {
+                ccCounter--;
+                tableRenew();
+            }
+
+
+            catch(ArrayIndexOutOfBoundsException error){
+                    ccCounter = 0;
                 try {
-                    ccCounter--;
                     tableRenew();
-                }
-
-
-                catch(ArrayIndexOutOfBoundsException error){
-                        ccCounter = 0;
-                    try {
-                        tableRenew();
-                    } catch (ParseException e1) {
-                        e1.printStackTrace();
-                    }
                 } catch (ParseException e1) {
                     e1.printStackTrace();
                 }
-
+            } catch (ParseException e1) {
+                e1.printStackTrace();
             }
+
         });
 
         JButton nextDepartment = new JButton("Next");
-        nextDepartment.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        nextDepartment.addActionListener(e -> {
+            try {
+                ccCounter++;
                 try {
-                    ccCounter++;
-                    try {
-                        tableRenew();
-                    } catch (ParseException e1) {
-                        e1.printStackTrace();
-                    }
+                    tableRenew();
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
                 }
+            }
 
-                catch (ArrayIndexOutOfBoundsException error) {
-                    ccCounter = 0;
-                    try {
-                        tableRenew();
-                    } catch (ParseException e1) {
-                        e1.printStackTrace();
-                    }
+            catch (ArrayIndexOutOfBoundsException error) {
+                ccCounter = 0;
+                try {
+                    tableRenew();
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
                 }
             }
         });
@@ -419,49 +396,36 @@ public class UserInterface extends JFrame {
         contentPanel.setLayout(cardLayout);
         add(contentPanel, BorderLayout.CENTER);
 
-        overview.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(contentPanel, "1");
-            }
-        });
+        overview.addActionListener(e -> cardLayout.show(contentPanel, "1"));
 
-        departmentView.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(contentPanel, "2");
-            }
-        });
+        departmentView.addActionListener(e -> cardLayout.show(contentPanel, "2"));
 
-        departmentTable.getModel().addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                if (e.getColumn() == 14) {
-                    int row = e.getFirstRow();
-                    int column = e.getColumn();
-                    TableModel model = (TableModel) e.getSource();
-                    Object value = model.getValueAt(row, column);
-                    String uniqueKey = period.toString() + currentCostCode.toString() + departmentTable.getValueAt(row, 1).toString();
-                    Connection conn;
-                    Statement stmt;
-                    try {
-                        Class.forName(databaseConn.JDBC_DRIVER);
-                        conn = DriverManager.getConnection(databaseConn.DB_URL, "dan", "ParolaMea123");
-                        stmt = conn.createStatement();
-                        String noteSQL;
-                        noteSQL =   "UPDATE data " +
-                                "SET `Note`= +'" + value +
-                                "'WHERE `Unique Key`='" +  uniqueKey + "';";
-                        stmt.executeUpdate(noteSQL);
-                        scrollPane.remove(table);
-                        table = databaseConn.generateDataFromDB();
-                        scrollPane.add(table);
-                        stmt.close();
-                        conn.close();
-                        table = databaseConn.generateDataFromDB();
-                    } catch (ClassNotFoundException e1) {
-                        e1.printStackTrace();
-                    } catch (SQLException e1) {
-                        e1.printStackTrace();
-                    }
+        departmentTable.getModel().addTableModelListener(e -> {
+            if (e.getColumn() == 27) {
+                int row = e.getFirstRow();
+                int column = e.getColumn();
+                TableModel model = (TableModel) e.getSource();
+                Object value = model.getValueAt(row, column);
+                String uniqueKey = period.toString() + currentCostCode.toString() + departmentTable.getValueAt(row, 1).toString();
+                Connection conn;
+                Statement stmt;
+                try {
+                    Class.forName(databaseConn.JDBC_DRIVER);
+                    conn = DriverManager.getConnection(databaseConn.DB_URL, "dan", "ParolaMea123");
+                    stmt = conn.createStatement();
+                    String noteSQL;
+                    noteSQL =   "UPDATE data " +
+                            "SET `Note`= +'" + value +
+                            "'WHERE `Unique Key`='" +  uniqueKey + "';";
+                    stmt.executeUpdate(noteSQL);
+                    scrollPane.remove(table);
+                    table = databaseConn.generateDataFromDB();
+                    scrollPane.add(table);
+                    stmt.close();
+                    conn.close();
+                    table = databaseConn.generateDataFromDB();
+                } catch (ClassNotFoundException | SQLException e1) {
+                    e1.printStackTrace();
                 }
             }
         });
@@ -471,6 +435,7 @@ public class UserInterface extends JFrame {
         pack();
         getDefaultCloseOperation();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setTitle("VVCP: Variance Visualisation and Calculation Program");
     }
 
     private void tableRenew() throws ParseException {
@@ -492,6 +457,7 @@ public class UserInterface extends JFrame {
         periodLabel.setText("Month: " + getPeriod(period));
         departmentCard.remove(scrollPane2);
         departmentTable = databaseConn.createSpecificTable(currentCostCode, period);
+        departmentTable.setDefaultRenderer(Object.class, new BoardTableCellRenderer());
         departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         departmentTable.getColumnModel().getColumn(14).setMinWidth(200);
         departmentTable.getColumnModel().getColumn(13).setMinWidth(50);
@@ -504,34 +470,29 @@ public class UserInterface extends JFrame {
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane2.setPreferredSize(new Dimension(1900, 950));
         departmentCard.add(scrollPane2, BorderLayout.CENTER);
-        departmentTable.getModel().addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                if (e.getColumn() == 14) {
-                    int row = e.getFirstRow();
-                    int column = e.getColumn();
-                    TableModel model = (TableModel) e.getSource();
-                    Object value = model.getValueAt(row, column);
-                    String uniqueKey = period.toString() + currentCostCode.toString() + departmentTable.getValueAt(row, 1).toString();
-                    Connection conn;
-                    Statement stmt;
-                    try {
-                        Class.forName(databaseConn.JDBC_DRIVER);
-                        conn = DriverManager.getConnection(databaseConn.DB_URL, "dan", "ParolaMea123");
-                        stmt = conn.createStatement();
-                        String noteSQL;
-                        noteSQL =   "UPDATE data " +
-                                "SET `Note`= +'" + value +
-                                "'WHERE `Unique Key`='" +  uniqueKey + "';";
-                        stmt.executeUpdate(noteSQL);
-                        stmt.close();
-                        conn.close();
-                        table = databaseConn.generateDataFromDB();
-                    } catch (ClassNotFoundException e1) {
-                        e1.printStackTrace();
-                    } catch (SQLException e1) {
-                        e1.printStackTrace();
-                    }
+        departmentTable.getModel().addTableModelListener(e -> {
+            if (e.getColumn() == 27) {
+                int row = e.getFirstRow();
+                int column = e.getColumn();
+                TableModel model = (TableModel) e.getSource();
+                Object value = model.getValueAt(row, column);
+                String uniqueKey = period.toString() + currentCostCode.toString() + departmentTable.getValueAt(row, 1).toString();
+                Connection conn;
+                Statement stmt;
+                try {
+                    Class.forName(databaseConn.JDBC_DRIVER);
+                    conn = DriverManager.getConnection(databaseConn.DB_URL, "dan", "ParolaMea123");
+                    stmt = conn.createStatement();
+                    String noteSQL;
+                    noteSQL =   "UPDATE data " +
+                            "SET `Note`= +'" + value +
+                            "'WHERE `Unique Key`='" +  uniqueKey + "';";
+                    stmt.executeUpdate(noteSQL);
+                    stmt.close();
+                    conn.close();
+                    table = databaseConn.generateDataFromDB();
+                } catch (ClassNotFoundException | SQLException e1) {
+                    e1.printStackTrace();
                 }
             }
         });
@@ -542,7 +503,7 @@ public class UserInterface extends JFrame {
         String year = current.substring(0, 4);
         String month = current.substring(4, 6);
         String fullYear = "20" + year.substring(0, 2) + "-" + "20" + year.substring(2, 4);
-        HashMap<String, String> monthsMap = new HashMap<String, String>();
+        HashMap<String, String> monthsMap = new HashMap<>();
         monthsMap.put("01", "April");
         monthsMap.put("02", "May");
         monthsMap.put("03", "June");
@@ -559,17 +520,62 @@ public class UserInterface extends JFrame {
         return monthsMap.get(month) + " " + fullYear;
     }
 
+
+    public class BoardTableCellRenderer extends DefaultTableCellRenderer {
+
+        private static final long serialVersionUID = 1L;
+
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+            boolean isLimitExceeded;
+            Color lightGray = new Color(237, 237, 237);
+            Color lightRed = new Color(254, 209, 209);
+            Color lightGreen = new Color(226, 249, 225);
+            try {
+                isLimitExceeded = databaseConn.limitExceeded(row);
+                boolean isTotal = databaseConn.isTotal(row);
+                boolean hasNote = databaseConn.hasNote(row);
+                if (isTotal) {
+                    c.setBackground(lightGray);
+                    c.setForeground(Color.BLACK);
+                }
+
+                else if (hasNote && isLimitExceeded) {
+                    c.setBackground(lightGreen);
+                    c.setForeground(Color.BLACK);
+                }
+
+                else if (isLimitExceeded) {
+                    c.setBackground(lightRed);
+                    c.setForeground(Color.BLACK);
+                }
+
+                else {
+                    c.setBackground(table.getBackground());
+                    c.setForeground(table.getForeground());
+                }
+            }
+
+            catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            if (isSelected) {
+                c.setBackground(table.getSelectionBackground());
+                c.setForeground(table.getSelectionForeground());
+            }
+
+            return c;
+        }
+    }
+
     public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new UserInterface();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+        SwingUtilities.invokeLater(() -> {
+            try {
+                new UserInterface();
+            } catch (ClassNotFoundException | ParseException e) {
+                e.printStackTrace();
             }
         });
     }

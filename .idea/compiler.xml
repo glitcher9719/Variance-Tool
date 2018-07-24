@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Variance Tool" target="6" />
+      <module name="Variance Tool" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

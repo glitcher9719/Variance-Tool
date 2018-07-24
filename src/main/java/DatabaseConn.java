@@ -3,10 +3,12 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.oxbow.swingbits.table.filter.TableRowFilterSupport;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,23 +21,20 @@ import java.util.*;
 
 class DatabaseConn {
 
-    enum SortType {
-        Name, Division, CDG
-    }
     // JDBC driver name and database URL
     final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     final String DB_URL = "jdbc:mysql://localhost:3306/experimental-db?useSSL=false";
-    private Vector<Vector<String>> databaseEntries = new Vector<Vector<String>>();
-    private Vector<Vector<String>> sortedVector = new Vector<Vector<String>>();
-    private Vector<String> hd = new Vector<String>();
-    LinkedHashSet<Object> ccNames = new LinkedHashSet<Object>();
-    LinkedHashSet<Object> periodNames = new LinkedHashSet<Object>();
-    LinkedHashSet<Object> names = new LinkedHashSet<Object>();
-    LinkedHashSet<Object> divisions = new LinkedHashSet<Object>();
-    LinkedHashSet<Object> CDGs = new LinkedHashSet<Object>();
+    private Vector<Vector<String>> databaseEntries = new Vector<>();
+    Vector<Vector<String>> sortedVector = new Vector<>();
+    private Vector<String> hd = new Vector<>();
+    LinkedHashSet<Object> ccNames = new LinkedHashSet<>();
+    LinkedHashSet<Object> periodNames = new LinkedHashSet<>();
+    LinkedHashSet<Object> names = new LinkedHashSet<>();
+    LinkedHashSet<Object> divisions = new LinkedHashSet<>();
+    LinkedHashSet<Object> CDGs = new LinkedHashSet<>();
     int numberOfRows;
     private DefaultTableModel model;
-    private DecimalFormat nf = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
+    DecimalFormat nf = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
     private DecimalFormatSymbols symbols = nf.getDecimalFormatSymbols();
 
     private int rowsCompleted;
@@ -133,12 +132,8 @@ class DatabaseConn {
                 element.add(expenseGrouping);
                 element.add(expenseType);
                 element.add(note);
-
                 ccNames.add(costCentre);
                 periodNames.add(String.valueOf(periodAndMonth));
-                divisions.add(division);
-                CDGs.add(CDG);
-                names.add(name);
                 databaseEntries.add(element);
             }
 
@@ -151,7 +146,11 @@ class DatabaseConn {
             se.printStackTrace();
         }
 
-        return new JTable(databaseEntries, hd);
+        return TableRowFilterSupport
+                .forTable(new JTable(databaseEntries, hd))
+                .searchable(true)
+                .actions(false)
+                .apply();
     }
 
     void importSpreadsheet(String path) throws IOException {
@@ -355,9 +354,6 @@ class DatabaseConn {
             rs.close();
             stmt.close();
             conn.close();
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
         } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
@@ -491,17 +487,21 @@ class DatabaseConn {
         for (Vector<String> aSortedVector : vector) {
             Total varTotal;
 
-            if (aSortedVector.get(26).equals("Pay")) {
-                varTotal = pay;
-                payCounter++;
-            } else if (aSortedVector.get(26).equals("Non Pay")) {
+            switch (aSortedVector.get(26)) {
+                case "Pay":
+                    varTotal = pay;
+                    payCounter++;
+                    break;
+                case "Non Pay":
 
-                nonPayCounter++;
-                varTotal = nonPay;
+                    nonPayCounter++;
+                    varTotal = nonPay;
 
-            } else {
-                incomeCounter++;
-                varTotal = income;
+                    break;
+                default:
+                    incomeCounter++;
+                    varTotal = income;
+                    break;
             }
 
             varTotal.budgetAdd(nf.parse(aSortedVector.get(6)).doubleValue());
@@ -516,7 +516,6 @@ class DatabaseConn {
         }
 
         // Grand total calculation
-
         grandTotal.budgetAdd(pay.budget + nonPay.budget + income.budget);
         grandTotal.actualAdd(pay.actual + nonPay.actual + income.actual);
         grandTotal.varianceAdd(pay.variance + nonPay.variance + income.variance);
@@ -528,15 +527,11 @@ class DatabaseConn {
         grandTotal.WTEWorkedAdd(pay.WTEWorked + nonPay.WTEWorked + income.WTEWorked);
 
         Vector<String> payVector = pay.getTotal(pay);
-
         Vector<String> nonPayVector = nonPay.getTotal(nonPay);
-
         Vector<String> incomeVector = income.getTotal(income);
-
         Vector<String> grandTotalVector = grandTotal.getTotal(grandTotal);
 
         // Logic behind totals counters and totals position in table
-
         if (incomeCounter != 0) {
             vector.add(incomeCounter, incomeVector);
             payCounter += incomeCounter;
@@ -567,42 +562,181 @@ class DatabaseConn {
 
         // Sort each vector to match cost code and period parameters
         sortedVector.clear();
+        divisions.clear();
+        divisions.add("ALL");
+        names.clear();
+        names.add("ALL");
+        CDGs.clear();
+        CDGs.add("ALL");
         for (Vector<String> databaseEntry : databaseEntries) {
             Object x = databaseEntry.get(1);
             Object y = databaseEntry.get(3);
             if (x.equals(costCode) && y.equals(period)) {
-                Vector<String> tableVector = new Vector<String>(databaseEntry);
+                Vector<String> tableVector = new Vector<>(databaseEntry);
                 name = tableVector.get(16);
                 sortedVector.add(tableVector);
+                divisions.add(databaseEntry.get(18));
+                CDGs.add(databaseEntry.get(19));
+                names.add(databaseEntry.get(22));
             }
         }
-
         addTotals(sortedVector);
         model = new DefaultTableModel(sortedVector, hd);
-        return removeColumns(new JTable(model));
+        return removeColumns(new JTable(model){
+
+            //Implement table cell tool tips.
+            public String getToolTipText(MouseEvent e) {
+                String tip = null;
+                java.awt.Point p = e.getPoint();
+                int rowIndex = rowAtPoint(p);
+                int colIndex = columnAtPoint(p);
+
+                try {
+                    tip = databaseEntries.get(rowIndex).get(colIndex);
+                } catch (RuntimeException e1) {
+                    //catch null pointer exception if mouse is over an empty line
+                }
+
+                return tip;
+            }
+        });
     }
 
-    void drillTable(JTable table, Object name, SortType type) throws ParseException {
-        Vector<Vector<String>> newVector = new Vector<Vector<String>>();
-        for (Vector<String> vector : sortedVector) {
-            Object x = new Object();
+    void drillTable(JTable table, Object name, Object division, Object cdg) throws ParseException {
+        Vector<Vector<String>> newVector = new Vector<>();
 
-            if (type == SortType.Name) x = vector.get(22);
-            else if (type == SortType.CDG) x = vector.get(19);
-            else if (type == SortType.Division) x = vector.get(18);
-
-            if (x == null) continue;
-            if (x.equals(name)) newVector.add(vector);
+        if (Objects.isNull(name) && Objects.isNull(cdg) && Objects.isNull(division)) {
+            model = new DefaultTableModel(sortedVector, hd);
+            table.setModel(model);
+            removeColumns(table);
         }
 
-        addTotals(newVector);
-        for (Vector<String> vector : newVector) {
-            System.out.println(vector.toString());
+        else if (Objects.isNull(division) && Objects.isNull(cdg)) {
+            for (Vector<String> vector : sortedVector) {
+                Object nameObject = vector.get(22);
+                if (nameObject == null) continue;
+                if (nameObject.equals(name)) {
+                    newVector.add(vector);
+                }
+            }
+
+            addTotals(newVector);
+            model = new DefaultTableModel(newVector, hd);
+            table.setModel(model);
+            removeColumns(table);
         }
-        sortedVector = newVector;
-        model = new DefaultTableModel(sortedVector, hd);
-        table.setModel(model);
-        removeColumns(table);
+
+        else if (Objects.isNull(division) && Objects.isNull(name)) {
+            for (Vector<String> vector : sortedVector) {
+                Object cdgObject = vector.get(19);
+                if (cdgObject == null) continue;
+                if (cdgObject.equals(cdg)) {
+                    newVector.add(vector);
+                }
+            }
+
+            addTotals(newVector);
+            model = new DefaultTableModel(newVector, hd);
+            table.setModel(model);
+            removeColumns(table);
+        }
+
+        else if (Objects.isNull(name) && Objects.isNull(cdg)) {
+            for (Vector<String> vector : sortedVector) {
+                Object divisionObject = vector.get(18);
+
+                if (divisionObject == null) continue;
+                if (divisionObject.equals(division)) {
+                    divisions.add(vector.get(18));
+                    names.add(vector.get(22));
+                    CDGs.add(vector.get(19));
+                    newVector.add(vector);
+                }
+            }
+
+            addTotals(newVector);
+            model = new DefaultTableModel(newVector, hd);
+            table.setModel(model);
+            removeColumns(table);
+        }
+
+        else if (Objects.isNull(division)) {
+            for (Vector<String> vector : sortedVector) {
+                Object nameObject = vector.get(22);
+                Object cdgObject = vector.get(19);
+
+                if (nameObject == null || cdgObject == null) continue;
+                if (nameObject.equals(name) && cdgObject.equals(cdg)) {
+                    newVector.add(vector);
+                }
+            }
+
+            addTotals(newVector);
+            model = new DefaultTableModel(newVector, hd);
+            table.setModel(model);
+            removeColumns(table);
+        }
+
+        else if (Objects.isNull(name)) {
+            for (Vector<String> vector : sortedVector) {
+                Object cdgObject = vector.get(19);
+                Object divisionObject = vector.get(18);
+
+                if (divisionObject == null || cdgObject == null) continue;
+                if (cdgObject.equals(cdg) && divisionObject.equals(division)) {
+                    newVector.add(vector);
+                }
+            }
+
+            addTotals(newVector);
+            model = new DefaultTableModel(newVector, hd);
+            table.setModel(model);
+            removeColumns(table);
+        }
+
+        else if (Objects.isNull(cdg)) {
+            for (Vector<String> vector : sortedVector) {
+                Object nameObject = vector.get(22);
+                Object divisionObject = vector.get(18);
+
+                if (divisionObject == null || nameObject == null) continue;
+                if (nameObject.equals(name) && divisionObject.equals(division)) {
+                    newVector.add(vector);
+                }
+            }
+
+            addTotals(newVector);
+            model = new DefaultTableModel(newVector, hd);
+            table.setModel(model);
+            removeColumns(table);
+        }
+
+        else {
+            for (Vector<String> vector : sortedVector) {
+                Object nameObject = vector.get(22);
+                Object cdgObject = vector.get(19);
+                Object divisionObject = vector.get(18);
+
+                if (divisionObject == null || nameObject == null || cdgObject == null) continue;
+                if (nameObject.equals(name) && cdgObject.equals(cdg) && divisionObject.equals(division)) {
+                    newVector.add(vector);
+                }
+            }
+
+            addTotals(newVector);
+            model = new DefaultTableModel(newVector, hd);
+            table.setModel(model);
+            removeColumns(table);
+        }
+
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        table.getColumnModel().getColumn(14).setMinWidth(200);
+        table.getColumnModel().getColumn(13).setMinWidth(50);
+        table.getColumnModel().getColumn(12).setMinWidth(150);
+        table.getColumnModel().getColumn(11).setMinWidth(150);
+        table.getColumnModel().getColumn(10).setMinWidth(30);
+        table.getColumnModel().getColumn(9).setMinWidth(30);
+        table.getColumnModel().getColumn(8).setMinWidth(30);
     }
 
     private JTable removeColumns(JTable table) {
@@ -626,5 +760,28 @@ class DatabaseConn {
         table.removeColumn(table.getColumn("WTE Paid"));
 
         return table;
+    }
+
+    boolean limitExceeded(int row) throws ParseException {
+        Object o = sortedVector.get(row).get(23);
+        if (o == null){
+            return false;
+        }
+
+        else {
+            int limit = nf.parse(sortedVector.get(row).get(23)).intValue();
+            double variance = nf.parse(sortedVector.get(row).get(8)).doubleValue();
+            return variance > limit || variance < -limit;
+        }
+    }
+
+    boolean isTotal(int row) {
+        Object o = sortedVector.get(row).get(2);
+        return o == null;
+    }
+
+    boolean hasNote(int row) {
+        Object o = sortedVector.get(row).get(27);
+        return o != null;
     }
 }
