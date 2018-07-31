@@ -1,13 +1,14 @@
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Table;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.oxbow.swingbits.table.filter.TableRowFilterSupport;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,7 +26,7 @@ class DatabaseConn {
     final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     final String DB_URL = "jdbc:mysql://localhost:3306/experimental-db?useSSL=false";
     private Vector<Vector<String>> databaseEntries = new Vector<>();
-    Vector<Vector<String>> sortedVector = new Vector<>();
+    private Vector<Vector<String>> sortedVector = new Vector<>();
     private Vector<String> hd = new Vector<>();
     LinkedHashSet<Object> ccNames = new LinkedHashSet<>();
     LinkedHashSet<Object> periodNames = new LinkedHashSet<>();
@@ -63,6 +64,7 @@ class DatabaseConn {
             String dataSQL;
             dataSQL = "SELECT * FROM data;";
             ResultSet rs = stmt.executeQuery(dataSQL);
+            ccNames.add("ALL");
 
             if (!bol) {
                 ResultSetMetaData headers = rs.getMetaData();
@@ -141,16 +143,14 @@ class DatabaseConn {
             rs.close();
             stmt.close();
             conn.close();
-        } catch (SQLException se) {
+        }
+
+        catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();
         }
 
-        return TableRowFilterSupport
-                .forTable(new JTable(databaseEntries, hd))
-                .searchable(true)
-                .actions(false)
-                .apply();
+        return new JTable(databaseEntries, hd);
     }
 
     void importSpreadsheet(String path) throws IOException {
@@ -222,7 +222,9 @@ class DatabaseConn {
                 tableData.get(y).add(8, roundOffTo2DecPlaces(budgetYTD));
                 tableData.get(y).add(9, roundOffTo2DecPlaces(actualYTD));
                 tableData.get(y).add(10, roundOffTo2DecPlaces(varianceYTD));
-            } else {
+            }
+
+            else {
                 double budgetYTD = Double.parseDouble(tableData.get(y).get(5));
                 double actualYTD = Double.parseDouble(tableData.get(y).get(6));
                 double varianceYTD = budgetYTD - actualYTD;
@@ -303,6 +305,7 @@ class DatabaseConn {
                             "', `Investigation Limit` = '" + k.get(23) +
                             "', `Expense Description` = '" + k.get(24) +
                             "', `Expense Grouping` = '" + k.get(25) +
+                            // TODO: WHY IT THROWS SQLEXCEPTION ????
                             "', `Expense Type` = '" + k.get(26) +
                             "' WHERE `Unique Key` = '" + k.get(15) + "';";
                     stmt.executeUpdate(updateSQL);
@@ -373,12 +376,25 @@ class DatabaseConn {
 
     }
 
-    private void addTotals(Vector<Vector<String>> vector) throws ParseException {
 
-        // Total class for PAY, NON PAY, INCOME and GRAND TOTAL
+    // TODO: Little BUGS (FIX THEM)
+    /***
+     *
+     * @param vector
+     * @return newVector - returns a new vector with totals calculated and added to the collection
+     * (uncomment the prints for better understanding of the method)
+     * @throws ParseException
+     */
+    private Vector<Vector<String>> addTotals(Vector<Vector<String>> vector) throws ParseException {
+
+        // Total class for PAY, NON PAY, INCOME, RECHARGE and GRAND TOTAL
         class Total {
 
             private String name;
+
+            private int index;
+
+            private boolean isInserted;
 
             private double budget;
             private double actual;
@@ -394,6 +410,7 @@ class DatabaseConn {
 
             private Total(String n) {
                 this.name = n;
+                this.isInserted = false;
                 this.budget = 0;
                 this.actual = 0;
                 this.variance = 0;
@@ -442,7 +459,7 @@ class DatabaseConn {
             }
 
             private Vector<String> getTotal(Total object) {
-                Vector<String> vector = new Vector<String>();
+                Vector<String> vector = new Vector<>();
                 vector.add(null);
                 vector.add(object.name);
                 vector.add(null);
@@ -470,92 +487,260 @@ class DatabaseConn {
                 vector.add(null);
                 vector.add(null);
                 vector.add(null);
-
                 return vector;
             }
-        }
 
-        Total pay = new Total("PAY");
-        Total nonPay = new Total("NON PAY");
-        Total income = new Total("INCOME");
-        Total grandTotal = new Total("GRAND TOTAL");
-
-        int payCounter = 0;
-        int nonPayCounter = 0;
-        int incomeCounter = 0;
-
-        for (Vector<String> aSortedVector : vector) {
-            Total varTotal;
-
-            switch (aSortedVector.get(26)) {
-                case "Pay":
-                    varTotal = pay;
-                    payCounter++;
-                    break;
-                case "Non Pay":
-
-                    nonPayCounter++;
-                    varTotal = nonPay;
-
-                    break;
-                default:
-                    incomeCounter++;
-                    varTotal = income;
-                    break;
+            private void clear(){
+                this.isInserted = false;
+                this.index = 0;
+                this.budget = 0;
+                this.actual = 0;
+                this.variance = 0;
+                this.YTDBudget = 0;
+                this.YTDActual = 0;
+                this.YTDVariance = 0;
+                this.WTEBudget = 0;
+                this.WTEContracted = 0;
+                this.WTEWorked = 0;
             }
 
-            varTotal.budgetAdd(nf.parse(aSortedVector.get(6)).doubleValue());
-            varTotal.actualAdd(nf.parse(aSortedVector.get(7)).doubleValue());
-            varTotal.varianceAdd(nf.parse(aSortedVector.get(8)).doubleValue());
-            varTotal.YTDBudgetAdd(nf.parse(aSortedVector.get(9)).doubleValue());
-            varTotal.YTDActualAdd(nf.parse(aSortedVector.get(10)).doubleValue());
-            varTotal.YTDVarianceAdd(nf.parse(aSortedVector.get(11)).doubleValue());
-            varTotal.WTEBudgetAdd(nf.parse(aSortedVector.get(12)).doubleValue());
-            varTotal.WTEContractedAdd(nf.parse(aSortedVector.get(13)).doubleValue());
-            varTotal.WTEWorkedAdd(nf.parse(aSortedVector.get(14)).doubleValue());
-        }
+            private void setInserted(int counter) {
+                this.isInserted = true;
+                this.index = counter;
+            }
 
-        // Grand total calculation
-        grandTotal.budgetAdd(pay.budget + nonPay.budget + income.budget);
-        grandTotal.actualAdd(pay.actual + nonPay.actual + income.actual);
-        grandTotal.varianceAdd(pay.variance + nonPay.variance + income.variance);
-        grandTotal.YTDBudgetAdd(pay.YTDBudget + nonPay.YTDBudget + income.YTDBudget);
-        grandTotal.YTDActualAdd(pay.YTDActual + nonPay.YTDActual + income.YTDActual);
-        grandTotal.YTDVarianceAdd(pay.YTDVariance + nonPay.YTDVariance + income.YTDVariance);
-        grandTotal.WTEBudgetAdd(pay.WTEBudget + nonPay.WTEBudget + income.WTEBudget);
-        grandTotal.WTEContractedAdd(pay.WTEContracted + nonPay.WTEContracted + income.WTEContracted);
-        grandTotal.WTEWorkedAdd(pay.WTEWorked + nonPay.WTEWorked + income.WTEWorked);
+            private boolean isInserted() {
+                return isInserted;
+            }
 
-        Vector<String> payVector = pay.getTotal(pay);
-        Vector<String> nonPayVector = nonPay.getTotal(nonPay);
-        Vector<String> incomeVector = income.getTotal(income);
-        Vector<String> grandTotalVector = grandTotal.getTotal(grandTotal);
-
-        // Logic behind totals counters and totals position in table
-        if (incomeCounter != 0) {
-            vector.add(incomeCounter, incomeVector);
-            payCounter += incomeCounter;
-            payCounter++;
-        } else {
-            vector.add(incomeVector);
-        }
-
-        if (!(payCounter <= incomeCounter + 1)) {
-            vector.add(payCounter, payVector);
-            nonPayCounter += payCounter;
-            nonPayCounter++;
-        } else {
-            vector.add(payVector);
-        }
-
-        if (nonPayCounter != 0) {
-            vector.add(nonPayCounter, nonPayVector);
-        } else {
-            vector.add(nonPayVector);
+            private int getIndex() {
+                return index;
+            }
 
         }
 
-        vector.add(grandTotalVector);
+        // The totals
+        Total income = new Total("INCOME");
+        Total pay = new Total("PAY");
+        Total nonPay = new Total("NON PAY");
+        Total recharge = new Total("RECHARGE");
+        Total grandTotal = new Total("GRAND TOTAL");
+
+        // Totals mapped with the strings found in in the vectors
+        TreeMap<String, Total> totalTreeMap = new TreeMap<>();
+        totalTreeMap.put("Income", income);
+        totalTreeMap.put("Pay", pay);
+        totalTreeMap.put("Non Pay", nonPay);
+        totalTreeMap.put("Recharge", recharge);
+        totalTreeMap.put("Grand Total", grandTotal);
+
+        // New vector for inserting the totals at the indexes iterated here
+        Vector<Vector<String>> newVector = new Vector<>(vector);
+
+        // Index counter
+        int counter = 0;
+        int n = 0;
+
+        // Value to add to index after inserting totals (increment by 1 after each total inserted in the new vector)
+        int noOfTotals = 0;
+
+        // Starting cost code and expense type
+        String currentCode = vector.get(0).get(1);
+        String currentType = vector.get(0).get(26);
+
+        // Iterating over each entry in the vector
+        for (Vector<String> aVector : vector) {
+            // Current iteration cost code and expense type
+            String iteratedExpenseType = aVector.get(26);
+            String iteratedCode = aVector.get(1);
+
+            // Special case (One cost code)
+            if (vector.lastElement() == aVector) {
+                counter++;
+                Total varTotal = totalTreeMap.get(currentType);
+                varTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
+                varTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
+                varTotal.varianceAdd(nf.parse(aVector.get(8)).doubleValue());
+                varTotal.YTDBudgetAdd(nf.parse(aVector.get(9)).doubleValue());
+                varTotal.YTDActualAdd(nf.parse(aVector.get(10)).doubleValue());
+                varTotal.YTDVarianceAdd(nf.parse(aVector.get(11)).doubleValue());
+                varTotal.WTEBudgetAdd(nf.parse(aVector.get(12)).doubleValue());
+                varTotal.WTEContractedAdd(nf.parse(aVector.get(13)).doubleValue());
+                varTotal.WTEWorkedAdd(nf.parse(aVector.get(14)).doubleValue());
+                Vector<String> insertVector = varTotal.getTotal(varTotal);
+                newVector.insertElementAt(insertVector, counter+noOfTotals);
+                varTotal.setInserted(counter+noOfTotals);
+                noOfTotals++;
+                grandTotal.budgetAdd(pay.budget + nonPay.budget + income.budget + recharge.budget);
+                grandTotal.actualAdd(pay.actual + nonPay.actual + income.actual + recharge.actual);
+                grandTotal.varianceAdd(pay.variance + nonPay.variance + income.variance + recharge.variance);
+                grandTotal.YTDBudgetAdd(pay.YTDBudget + nonPay.YTDBudget + income.YTDBudget + recharge.YTDBudget);
+                grandTotal.YTDActualAdd(pay.YTDActual + nonPay.YTDActual + income.YTDActual + recharge.YTDActual);
+                grandTotal.YTDVarianceAdd(pay.YTDVariance + nonPay.YTDVariance + income.YTDVariance + recharge.YTDVariance);
+                grandTotal.WTEBudgetAdd(pay.WTEBudget + nonPay.WTEBudget + income.WTEBudget + recharge.WTEBudget);
+                grandTotal.WTEContractedAdd(pay.WTEContracted + nonPay.WTEContracted + income.WTEContracted + recharge.WTEContracted);
+                grandTotal.WTEWorkedAdd(pay.WTEWorked + nonPay.WTEWorked + income.WTEWorked + recharge.WTEWorked);
+                Vector<String> grandTotalVector = grandTotal.getTotal(grandTotal);
+                newVector.insertElementAt(grandTotalVector, counter+noOfTotals);
+                if (!(income.isInserted())) {
+                    newVector.insertElementAt(income.getTotal(income), n);
+                    income.setInserted(n);
+                    pay.index++;
+                    nonPay.index++;
+                    recharge.index++;
+                }
+
+                if (!(pay.isInserted())) {
+                    newVector.insertElementAt(pay.getTotal(pay), income.getIndex()+1);
+                    pay.setInserted(income.getIndex()+1);
+                    nonPay.index++;
+                    recharge.index++;
+                }
+
+                if (!(nonPay.isInserted())) {
+                    newVector.insertElementAt(nonPay.getTotal(nonPay), pay.getIndex()+1);
+                    nonPay.setInserted(pay.getIndex()+1);
+                    recharge.index++;
+                }
+
+                if (!(recharge.isInserted())) {
+                    newVector.insertElementAt(recharge.getTotal(recharge), nonPay.getIndex()+1);
+                    recharge.setInserted(nonPay.getIndex()+1);
+                }
+                break;
+            }
+
+            // Same cost code case
+            if (iteratedCode.equals(currentCode)) {
+
+                // Same expense type case
+                if (iteratedExpenseType.equals(currentType)) {
+                    /*System.out.println(currentType + " at index: " + counter);
+                    System.out.println("Adding value to " + currentType + " total.");*/
+                    // Adding values to the total matching the currentType
+                    Total varTotal = totalTreeMap.get(currentType);
+                    varTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
+                    varTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
+                    varTotal.varianceAdd(nf.parse(aVector.get(8)).doubleValue());
+                    varTotal.YTDBudgetAdd(nf.parse(aVector.get(9)).doubleValue());
+                    varTotal.YTDActualAdd(nf.parse(aVector.get(10)).doubleValue());
+                    varTotal.YTDVarianceAdd(nf.parse(aVector.get(11)).doubleValue());
+                    varTotal.WTEBudgetAdd(nf.parse(aVector.get(12)).doubleValue());
+                    varTotal.WTEContractedAdd(nf.parse(aVector.get(13)).doubleValue());
+                    varTotal.WTEWorkedAdd(nf.parse(aVector.get(14)).doubleValue());
+                    counter++;
+                }
+
+                // Different expense type case
+                else {
+                    /*System.out.println("Expense type changed, inserting current vector of " + currentType + " at index " + counter);*/
+                    Total insertTotal = totalTreeMap.get(currentType);
+                    Vector<String> insertVector = insertTotal.getTotal(insertTotal);
+                    newVector.insertElementAt(insertVector, counter+noOfTotals);
+                    insertTotal.setInserted(counter+noOfTotals);
+                    noOfTotals++;
+                    currentType = iteratedExpenseType;
+                    /*System.out.println("Type change to " + currentType + " at index: " + counter);
+                    System.out.println("Adding value to " + currentType + " instead");*/
+                    Total varTotal = totalTreeMap.get(currentType);
+                    varTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
+                    varTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
+                    varTotal.varianceAdd(nf.parse(aVector.get(8)).doubleValue());
+                    varTotal.YTDBudgetAdd(nf.parse(aVector.get(9)).doubleValue());
+                    varTotal.YTDActualAdd(nf.parse(aVector.get(10)).doubleValue());
+                    varTotal.YTDVarianceAdd(nf.parse(aVector.get(11)).doubleValue());
+                    varTotal.WTEBudgetAdd(nf.parse(aVector.get(12)).doubleValue());
+                    varTotal.WTEContractedAdd(nf.parse(aVector.get(13)).doubleValue());
+                    varTotal.WTEWorkedAdd(nf.parse(aVector.get(14)).doubleValue());
+                    counter++;
+                }
+            }
+
+            // Different cost code case
+            else {
+                /*System.out.println("Cost code possible changed, inserting grand total vector at index: " + (counter+1) + "and last vector at index: " + counter);*/
+                Total insertTotal = totalTreeMap.get(currentType);
+                Vector<String> insertVector = insertTotal.getTotal(insertTotal);
+                newVector.insertElementAt(insertVector, counter+noOfTotals);
+                insertTotal.setInserted(counter+noOfTotals);
+                noOfTotals++;
+                grandTotal.budgetAdd(pay.budget + nonPay.budget + income.budget + recharge.budget);
+                grandTotal.actualAdd(pay.actual + nonPay.actual + income.actual + recharge.actual);
+                grandTotal.varianceAdd(pay.variance + nonPay.variance + income.variance + recharge.variance);
+                grandTotal.YTDBudgetAdd(pay.YTDBudget + nonPay.YTDBudget + income.YTDBudget + recharge.YTDBudget);
+                grandTotal.YTDActualAdd(pay.YTDActual + nonPay.YTDActual + income.YTDActual + recharge.YTDActual);
+                grandTotal.YTDVarianceAdd(pay.YTDVariance + nonPay.YTDVariance + income.YTDVariance + recharge.YTDVariance);
+                grandTotal.WTEBudgetAdd(pay.WTEBudget + nonPay.WTEBudget + income.WTEBudget + recharge.WTEBudget);
+                grandTotal.WTEContractedAdd(pay.WTEContracted + nonPay.WTEContracted + income.WTEContracted + recharge.WTEContracted);
+                grandTotal.WTEWorkedAdd(pay.WTEWorked + nonPay.WTEWorked + income.WTEWorked + recharge.WTEWorked);
+                Vector<String> grandTotalVector = grandTotal.getTotal(grandTotal);
+                newVector.insertElementAt(grandTotalVector, counter+noOfTotals);
+                grandTotal.setInserted(counter+noOfTotals);
+                noOfTotals++;
+                currentType = iteratedExpenseType;
+                if (currentType == null) {
+                    break;
+                }
+              /*  System.out.println("End of cost code, type change to " + currentType + " at index: " + counter);
+                System.out.println("Resetting all the totals.");*/
+                if (!(income.isInserted())) {
+                    newVector.insertElementAt(income.getTotal(income), n);
+                    income.setInserted(n);
+                    pay.index++;
+                    nonPay.index++;
+                    recharge.index++;
+                    noOfTotals++;
+                }
+
+                if (!(pay.isInserted())) {
+                    newVector.insertElementAt(pay.getTotal(pay), income.getIndex()+1);
+                    pay.setInserted(income.getIndex()+1);
+                    nonPay.index++;
+                    recharge.index++;
+                    income.index++;
+                    noOfTotals++;
+                }
+
+                if (!(nonPay.isInserted())) {
+                    newVector.insertElementAt(nonPay.getTotal(nonPay), pay.getIndex()+1);
+                    nonPay.setInserted(pay.getIndex()+1);
+                    recharge.index++;
+                    income.index++;
+                    pay.index++;
+                    noOfTotals++;
+                }
+
+                if (!(recharge.isInserted())) {
+                    newVector.insertElementAt(recharge.getTotal(recharge), nonPay.getIndex()+1);
+                    recharge.setInserted(nonPay.getIndex()+1);
+                    nonPay.index++;
+                    income.index++;
+                    pay.index++;
+                    noOfTotals++;
+                }
+
+                n = counter+noOfTotals;
+                income.clear();
+                pay.clear();
+                nonPay.clear();
+                recharge.clear();
+                grandTotal.clear();
+                /*System.out.println("Adding value to " + currentType + " instead");*/
+                Total varTotal = totalTreeMap.get(currentType);
+                varTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
+                varTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
+                varTotal.varianceAdd(nf.parse(aVector.get(8)).doubleValue());
+                varTotal.YTDBudgetAdd(nf.parse(aVector.get(9)).doubleValue());
+                varTotal.YTDActualAdd(nf.parse(aVector.get(10)).doubleValue());
+                varTotal.YTDVarianceAdd(nf.parse(aVector.get(11)).doubleValue());
+                varTotal.WTEBudgetAdd(nf.parse(aVector.get(12)).doubleValue());
+                varTotal.WTEContractedAdd(nf.parse(aVector.get(13)).doubleValue());
+                varTotal.WTEWorkedAdd(nf.parse(aVector.get(14)).doubleValue());
+                currentCode = iteratedCode;
+                counter++;
+            }
+        }
+        return newVector;
     }
 
     JTable createSpecificTable(Object costCode, Object period) throws ParseException {
@@ -571,28 +756,50 @@ class DatabaseConn {
         for (Vector<String> databaseEntry : databaseEntries) {
             Object x = databaseEntry.get(1);
             Object y = databaseEntry.get(3);
-            if (x.equals(costCode) && y.equals(period)) {
-                Vector<String> tableVector = new Vector<>(databaseEntry);
-                name = tableVector.get(16);
-                sortedVector.add(tableVector);
-                divisions.add(databaseEntry.get(18));
-                CDGs.add(databaseEntry.get(19));
-                names.add(databaseEntry.get(22));
+            if (costCode == "ALL") {
+                if (y.equals(period)) {
+                    Vector<String> tableVector = new Vector<>(databaseEntry);
+                    name = tableVector.get(16);
+                    sortedVector.add(tableVector);
+                    divisions.add(databaseEntry.get(18));
+                    CDGs.add(databaseEntry.get(19));
+                    names.add(databaseEntry.get(22));
+                }
+            }
+
+            else {
+                if (x.equals(costCode) && y.equals(period)) {
+                    Vector<String> tableVector = new Vector<>(databaseEntry);
+                    name = tableVector.get(16);
+                    sortedVector.add(tableVector);
+                    divisions.add(databaseEntry.get(18));
+                    CDGs.add(databaseEntry.get(19));
+                    names.add(databaseEntry.get(22));
+                }
             }
         }
-        addTotals(sortedVector);
-        model = new DefaultTableModel(sortedVector, hd);
-        return removeColumns(new JTable(model){
+        try {
+            Vector<Vector<String>> finalVector = addTotals(sortedVector);
+            model = new DefaultTableModel(finalVector, hd);
+        }
 
+        catch (ArrayIndexOutOfBoundsException e) {
+            String noEntries = "No entries available!";
+            Vector<String> vvv = new Vector<>();
+            vvv.add(noEntries);
+            Vector<Vector<String>> vvvv = new Vector<>();
+            vvvv.add(vvv);
+            model = new DefaultTableModel(vvvv, hd);
+        }
+        return removeColumns(new JTable(model){
             //Implement table cell tool tips.
             public String getToolTipText(MouseEvent e) {
                 String tip = null;
                 java.awt.Point p = e.getPoint();
-                int rowIndex = rowAtPoint(p);
-                int colIndex = columnAtPoint(p);
-
+                String rowIndex = String.valueOf(rowAtPoint(p));
+                String colIndex = String.valueOf(columnAtPoint(p));
                 try {
-                    tip = databaseEntries.get(rowIndex).get(colIndex);
+                    tip = UserInterface.dataWithDecimal.get(rowIndex+colIndex).get(0);
                 } catch (RuntimeException e1) {
                     //catch null pointer exception if mouse is over an empty line
                 }
@@ -606,7 +813,8 @@ class DatabaseConn {
         Vector<Vector<String>> newVector = new Vector<>();
 
         if (Objects.isNull(name) && Objects.isNull(cdg) && Objects.isNull(division)) {
-            model = new DefaultTableModel(sortedVector, hd);
+            Vector<Vector<String>> finalVector = addTotals(sortedVector);
+            model = new DefaultTableModel(finalVector, hd);
             table.setModel(model);
             removeColumns(table);
         }
@@ -620,7 +828,17 @@ class DatabaseConn {
                 }
             }
 
-            addTotals(newVector);
+            try {
+                newVector = addTotals(newVector);
+            }
+
+            catch (ArrayIndexOutOfBoundsException e) {
+                String isEmpty = "No entries matched your search criteria!";
+                Vector<String> nn = new Vector<>();
+                nn.add(isEmpty);
+                newVector.add(nn);
+
+            }
             model = new DefaultTableModel(newVector, hd);
             table.setModel(model);
             removeColumns(table);
@@ -635,7 +853,17 @@ class DatabaseConn {
                 }
             }
 
-            addTotals(newVector);
+            try {
+                newVector = addTotals(newVector);
+            }
+
+            catch (ArrayIndexOutOfBoundsException e) {
+                String isEmpty = "No entries matched your search criteria!";
+                Vector<String> nn = new Vector<>();
+                nn.add(isEmpty);
+                newVector.add(nn);
+
+            }
             model = new DefaultTableModel(newVector, hd);
             table.setModel(model);
             removeColumns(table);
@@ -654,7 +882,17 @@ class DatabaseConn {
                 }
             }
 
-            addTotals(newVector);
+            try {
+                newVector = addTotals(newVector);
+            }
+
+            catch (ArrayIndexOutOfBoundsException e) {
+                String isEmpty = "No entries matched your search criteria!";
+                Vector<String> nn = new Vector<>();
+                nn.add(isEmpty);
+                newVector.add(nn);
+
+            }
             model = new DefaultTableModel(newVector, hd);
             table.setModel(model);
             removeColumns(table);
@@ -671,7 +909,17 @@ class DatabaseConn {
                 }
             }
 
-            addTotals(newVector);
+            try {
+                newVector = addTotals(newVector);
+            }
+
+            catch (ArrayIndexOutOfBoundsException e) {
+                String isEmpty = "No entries matched your search criteria!";
+                Vector<String> nn = new Vector<>();
+                nn.add(isEmpty);
+                newVector.add(nn);
+
+            }
             model = new DefaultTableModel(newVector, hd);
             table.setModel(model);
             removeColumns(table);
@@ -688,7 +936,18 @@ class DatabaseConn {
                 }
             }
 
-            addTotals(newVector);
+            try {
+                newVector = addTotals(newVector);
+            }
+
+            catch (ArrayIndexOutOfBoundsException e) {
+                String isEmpty = "No entries matched your search criteria!";
+                Vector<String> nn = new Vector<>();
+                nn.add(isEmpty);
+                newVector.add(nn);
+
+            }
+
             model = new DefaultTableModel(newVector, hd);
             table.setModel(model);
             removeColumns(table);
@@ -705,7 +964,17 @@ class DatabaseConn {
                 }
             }
 
-            addTotals(newVector);
+            try {
+                newVector = addTotals(newVector);
+            }
+
+            catch (ArrayIndexOutOfBoundsException e) {
+                String isEmpty = "No entries matched your search criteria!";
+                Vector<String> nn = new Vector<>();
+                nn.add(isEmpty);
+                newVector.add(nn);
+
+            }
             model = new DefaultTableModel(newVector, hd);
             table.setModel(model);
             removeColumns(table);
@@ -723,7 +992,17 @@ class DatabaseConn {
                 }
             }
 
-            addTotals(newVector);
+            try {
+                newVector = addTotals(newVector);
+            }
+
+            catch (ArrayIndexOutOfBoundsException e) {
+                String isEmpty = "No entries matched your search criteria!";
+                Vector<String> nn = new Vector<>();
+                nn.add(isEmpty);
+                newVector.add(nn);
+
+            }
             model = new DefaultTableModel(newVector, hd);
             table.setModel(model);
             removeColumns(table);
@@ -762,26 +1041,26 @@ class DatabaseConn {
         return table;
     }
 
-    boolean limitExceeded(int row) throws ParseException {
-        Object o = sortedVector.get(row).get(23);
+    boolean limitExceeded(int row, JTable table) throws ParseException {
+        Object o = table.getModel().getValueAt(row, 23);
         if (o == null){
             return false;
         }
 
         else {
-            int limit = nf.parse(sortedVector.get(row).get(23)).intValue();
-            double variance = nf.parse(sortedVector.get(row).get(8)).doubleValue();
+            int limit = nf.parse(String.valueOf(table.getModel().getValueAt(row, 23))).intValue();
+            double variance = nf.parse(String.valueOf(table.getModel().getValueAt(row, 8))).doubleValue();
             return variance > limit || variance < -limit;
         }
     }
 
-    boolean isTotal(int row) {
-        Object o = sortedVector.get(row).get(2);
+    boolean isTotal(int row, JTable table) {
+        Object o = table.getModel().getValueAt(row, 2);
         return o == null;
     }
 
-    boolean hasNote(int row) {
-        Object o = sortedVector.get(row).get(27);
+    boolean hasNote(int row, JTable table) {
+        Object o = table.getModel().getValueAt(row, 27);
         return o != null;
     }
 }

@@ -1,12 +1,16 @@
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 public class UserInterface extends JFrame {
 
@@ -43,6 +47,7 @@ public class UserInterface extends JFrame {
 
     // TODO: PROGRESS BAR
     static JProgressBar pb;
+    static ListMultimap<String, String> dataWithDecimal = ArrayListMultimap.create();
 
     private UserInterface() throws ClassNotFoundException, ParseException {
 
@@ -51,13 +56,16 @@ public class UserInterface extends JFrame {
         ccNames = databaseConn.ccNames.toArray();
         periodNames = databaseConn.periodNames.toArray();
 
-        if (ccNames.length < 1) {
+        try {
+            currentCostCode = ccNames[ccCounter];
+            period = periodNames[pCounter];
+        }
+
+        catch (ArrayIndexOutOfBoundsException | NullPointerException e){
             ccNames = new Object[]{"No cost codes available"};
             periodNames = new Object[]{"No periods available"};
         }
 
-        currentCostCode = ccNames[ccCounter];
-        period = periodNames[pCounter];
         contentPanel = new JPanel(cardLayout);
         JPanel overviewCard = new JPanel(new BorderLayout());
         departmentCard = new JPanel(new BorderLayout());
@@ -97,6 +105,7 @@ public class UserInterface extends JFrame {
         */
 
         departmentTable = databaseConn.createSpecificTable(currentCostCode, period);
+        dataWithDecimal.clear();
         departmentTable.setDefaultRenderer(Object.class, new BoardTableCellRenderer());
         departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         departmentTable.getColumnModel().getColumn(14).setMinWidth(200);
@@ -193,7 +202,7 @@ public class UserInterface extends JFrame {
             } catch (ParseException e1) {
                 e1.printStackTrace();
             }
-
+            dataWithDecimal.clear();
             departmentTable.setDefaultRenderer(Object.class, new BoardTableCellRenderer());
             nameList.setModel(new DefaultComboBoxModel<>(databaseConn.names.toArray()));
             divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.divisions.toArray()));
@@ -457,6 +466,7 @@ public class UserInterface extends JFrame {
         periodLabel.setText("Month: " + getPeriod(period));
         departmentCard.remove(scrollPane2);
         departmentTable = databaseConn.createSpecificTable(currentCostCode, period);
+        dataWithDecimal.clear();
         departmentTable.setDefaultRenderer(Object.class, new BoardTableCellRenderer());
         departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         departmentTable.getColumnModel().getColumn(14).setMinWidth(200);
@@ -499,42 +509,66 @@ public class UserInterface extends JFrame {
     }
 
     private String getPeriod (Object o) {
-        String current = o.toString();
-        String year = current.substring(0, 4);
-        String month = current.substring(4, 6);
-        String fullYear = "20" + year.substring(0, 2) + "-" + "20" + year.substring(2, 4);
-        HashMap<String, String> monthsMap = new HashMap<>();
-        monthsMap.put("01", "April");
-        monthsMap.put("02", "May");
-        monthsMap.put("03", "June");
-        monthsMap.put("04", "July");
-        monthsMap.put("05", "August");
-        monthsMap.put("06", "September");
-        monthsMap.put("07", "October");
-        monthsMap.put("08", "November");
-        monthsMap.put("09", "December");
-        monthsMap.put("10", "January");
-        monthsMap.put("11", "February");
-        monthsMap.put("12", "March");
+        if (Objects.isNull(o)) {
+            return "No periods available";
+        }
 
-        return monthsMap.get(month) + " " + fullYear;
+        else {
+            String current = o.toString();
+            String year = current.substring(0, 4);
+            String month = current.substring(4, 6);
+            String fullYear = "20" + year.substring(0, 2) + "-" + "20" + year.substring(2, 4);
+            HashMap<String, String> monthsMap = new HashMap<>();
+            monthsMap.put("01", "April");
+            monthsMap.put("02", "May");
+            monthsMap.put("03", "June");
+            monthsMap.put("04", "July");
+            monthsMap.put("05", "August");
+            monthsMap.put("06", "September");
+            monthsMap.put("07", "October");
+            monthsMap.put("08", "November");
+            monthsMap.put("09", "December");
+            monthsMap.put("10", "January");
+            monthsMap.put("11", "February");
+            monthsMap.put("12", "March");
+            return monthsMap.get(month) + " " + fullYear;
+        }
     }
 
 
     public class BoardTableCellRenderer extends DefaultTableCellRenderer {
-
-        private static final long serialVersionUID = 1L;
-
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
-            boolean isLimitExceeded;
-            Color lightGray = new Color(237, 237, 237);
+            DecimalFormat nf = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
+            DecimalFormatSymbols symbols = nf.getDecimalFormatSymbols();
+            Object s = table.getModel().getValueAt(row, col);
+            symbols.setCurrencySymbol(""); // Don't use null.
+            nf.setDecimalFormatSymbols(symbols);
+            nf.setMaximumFractionDigits(0);
+            Color lightGray = new Color(217, 229, 247);
             Color lightRed = new Color(254, 209, 209);
             Color lightGreen = new Color(226, 249, 225);
+            String x = String.valueOf(table.convertRowIndexToView(row));
+            String y = String.valueOf(table.convertColumnIndexToView(col));
+            if (Objects.nonNull(s)) {
+                if (dataWithDecimal.containsKey(x + y)) {
+                    dataWithDecimal.put(x + y, s.toString());
+                } else {
+                    String coordinateCode = x + y;
+                    dataWithDecimal.put(coordinateCode, s.toString());
+                }
+                setToolTipText(dataWithDecimal.get(x + y).get(0));
+            }
+            boolean isLimitExceeded;
             try {
-                isLimitExceeded = databaseConn.limitExceeded(row);
-                boolean isTotal = databaseConn.isTotal(row);
-                boolean hasNote = databaseConn.hasNote(row);
+
+                if (col>=6 && col <=11 && Objects.nonNull(s)) {
+                    int roundedValue = Math.toIntExact(Math.round(databaseConn.nf.parse(s.toString()).doubleValue()));
+                    table.getModel().setValueAt(nf.format(roundedValue), row, col);
+                }
+                isLimitExceeded = databaseConn.limitExceeded(row, departmentTable);
+                boolean isTotal = databaseConn.isTotal(row, departmentTable);
+                boolean hasNote = databaseConn.hasNote(row, departmentTable);
                 if (isTotal) {
                     c.setBackground(lightGray);
                     c.setForeground(Color.BLACK);

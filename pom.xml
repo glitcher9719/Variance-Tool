@@ -28,12 +28,13 @@
         <version>3.17</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.bidib.org.oxbow/swingbits -->
+        <!-- https://mvnrepository.com/artifact/com.google.collections/google-collections -->
         <dependency>
-            <groupId>org.bidib.org.oxbow</groupId>
-            <artifactId>swingbits</artifactId>
-            <version>1.2.2</version>
+            <groupId>com.google.collections</groupId>
+            <artifactId>google-collections</artifactId>
+            <version>1.0</version>
         </dependency>
-     </dependencies>
+
+    </dependencies>
     
 </project>
