@@ -1,5 +1,4 @@
 import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Table;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -8,7 +7,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -157,8 +155,8 @@ class DatabaseConn {
         long start = System.currentTimeMillis();
         int x = 0;
         int y = 0;
-        Vector<Vector<String>> tableData = new Vector<Vector<String>>();
-        TreeMap<String, Vector<Double>> head = new TreeMap<String, Vector<Double>>();
+        Vector<Vector<String>> tableData = new Vector<>();
+        TreeMap<String, Vector<Double>> head = new TreeMap<>();
         InputStream ExcelFileToRead = new FileInputStream(path);
         XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
         XSSFSheet sheet = wb.getSheetAt(0);
@@ -271,86 +269,121 @@ class DatabaseConn {
             }
 
             final int BATCH_SIZE = 1000;
-            int currentBatch = 0;
+            int currentInsertBatch = 0;
+            int currentUpdateBatch = 0;
 
             String insertSQL = "INSERT INTO data VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-            PreparedStatement preparedStatement = conn.prepareStatement(insertSQL);
+            String updateSQL = "UPDATE data SET" +
+                    "`Cost Centre` = " + "?" +
+                    ",`Expense Header` = " + "?" +
+                    ", `Period and Month` = " + "?" +
+                    ", `Month` = " + "?" +
+                    ", `Year` = " + "?" +
+                    ", `Budget` = " + "?" +
+                    ", `Actuals` = " + "?" +
+                    ", `Variance` = " + "?" +
+                    ", `Budget YTD` = " + "?" +
+                    ", `Actual YTD` = " + "?" +
+                    ", `VarianceYTD` = " + "?" +
+                    ", `WTE Bud` = " + "?" +
+                    ", `WTE Con` = " + "?" +
+                    ", `WTE Work` = " + "?" +
+                    ", `WTE Paid` = " + "?" +
+                    ", `Department` = " + "?" +
+                    ", `Group` = " + "?" +
+                    ", `Division` = " + "?" +
+                    ", `CDG` = " + "?" +
+                    ", `Service` = " + "?" +
+                    ", `National Specialty` = " + "?" +
+                    ", `Name` = " + "?" +
+                    ", `Investigation Limit` = " + "?" +
+                    ", `Expense Description` = " + "?" +
+                    ", `Expense Grouping` = " + "?" +
+                    ", `Expense Type` = " + "?" +
+                    " WHERE `Unique Key` = " + "?" + ";";
+            PreparedStatement updatePreparedStatement = conn.prepareStatement(updateSQL);
+            PreparedStatement insertPreparedStatement = conn.prepareStatement(insertSQL);
             conn.setAutoCommit(false);
 
             for (Vector<String> k : tableData) {
                 if (uniqueKeys.contains(k.get(15))) {
-                    String updateSQL = "UPDATE data " +
-                            "SET `Cost Centre` = '" + k.get(0) +
-                            "', `Expense Header` = '" + k.get(1) +
-                            "', `Period and Month` = '" + k.get(2) +
-                            "', `Month` = '" + k.get(3) +
-                            "', `Year` = '" + k.get(4) +
-                            "', `Budget` = '" + k.get(5) +
-                            "', `Actuals` = '" + k.get(6) +
-                            "', `Variance` = '" + k.get(7) +
-                            "', `Budget YTD` = '" + k.get(8) +
-                            "', `Actual YTD` = '" + k.get(9) +
-                            "', `VarianceYTD` = '" + k.get(10) +
-                            "', `WTE Bud` = '" + k.get(11) +
-                            "', `WTE Con` = '" + k.get(12) +
-                            "', `WTE Work` = '" + k.get(13) +
-                            "', `WTE Paid` = '" + k.get(14) +
-                            "', `Department` = '" + k.get(16) +
-                            "', `Group` = '" + k.get(17) +
-                            "', `Division` = '" + k.get(18) +
-                            "', `CDG` = '" + k.get(19) +
-                            "', `Service` = '" + k.get(20) +
-                            "', `National Specialty` = '" + k.get(21) +
-                            "', `Name` = '" + k.get(22) +
-                            "', `Investigation Limit` = '" + k.get(23) +
-                            "', `Expense Description` = '" + k.get(24) +
-                            "', `Expense Grouping` = '" + k.get(25) +
-                            // TODO: WHY IT THROWS SQLEXCEPTION ????
-                            "', `Expense Type` = '" + k.get(26) +
-                            "' WHERE `Unique Key` = '" + k.get(15) + "';";
-                    stmt.executeUpdate(updateSQL);
-                    conn.commit();
-                } else {
-                    preparedStatement.setString(1, k.get(15));
-                    preparedStatement.setString(2, k.get(0));
-                    preparedStatement.setString(3, k.get(1));
-                    preparedStatement.setInt(4, (int) Math.round(Double.parseDouble(k.get(2))));
-                    preparedStatement.setInt(5, (int) Math.round(Double.parseDouble(k.get(3))));
-                    preparedStatement.setInt(6, (int) Math.round(Double.parseDouble(k.get(4))));
-                    preparedStatement.setDouble(7, Double.parseDouble(k.get(5)));
-                    preparedStatement.setDouble(8, Double.parseDouble(k.get(6)));
-                    preparedStatement.setDouble(9, Double.parseDouble(k.get(7)));
-                    preparedStatement.setDouble(10, Double.parseDouble(k.get(8)));
-                    preparedStatement.setDouble(11, Double.parseDouble(k.get(9)));
-                    preparedStatement.setDouble(12, Double.parseDouble(k.get(10)));
-                    preparedStatement.setDouble(13, Double.parseDouble(k.get(11)));
-                    preparedStatement.setDouble(14, Double.parseDouble(k.get(12)));
-                    preparedStatement.setDouble(15, Double.parseDouble(k.get(13)));
-                    preparedStatement.setDouble(16, Double.parseDouble(k.get(14)));
-                    preparedStatement.setString(17, k.get(16));
-                    preparedStatement.setString(18, k.get(17));
-                    preparedStatement.setString(19, k.get(18));
-                    preparedStatement.setString(20, k.get(19));
-                    preparedStatement.setString(21, k.get(20));
-                    preparedStatement.setString(22, k.get(21));
-                    preparedStatement.setString(23, k.get(22));
-                    preparedStatement.setString(24, k.get(23));
-                    preparedStatement.setString(25, k.get(24));
-                    preparedStatement.setString(26, k.get(25));
-                    preparedStatement.setString(27, k.get(26));
-                    preparedStatement.setString(28, null);
-                    preparedStatement.executeUpdate();
-                    currentBatch++;
+                    updatePreparedStatement.setString(1, k.get(0));
+                    updatePreparedStatement.setString(2, k.get(1));
+                    updatePreparedStatement.setInt(3, (int) Math.round(Double.parseDouble(k.get(2))));
+                    updatePreparedStatement.setInt(4, (int) Math.round(Double.parseDouble(k.get(3))));
+                    updatePreparedStatement.setInt(5, (int) Math.round(Double.parseDouble(k.get(4))));
+                    updatePreparedStatement.setDouble(6, Double.parseDouble(k.get(5)));
+                    updatePreparedStatement.setDouble(7, Double.parseDouble(k.get(6)));
+                    updatePreparedStatement.setDouble(8, Double.parseDouble(k.get(7)));
+                    updatePreparedStatement.setDouble(9, Double.parseDouble(k.get(8)));
+                    updatePreparedStatement.setDouble(10, Double.parseDouble(k.get(9)));
+                    updatePreparedStatement.setDouble(11, Double.parseDouble(k.get(10)));
+                    updatePreparedStatement.setDouble(12, Double.parseDouble(k.get(11)));
+                    updatePreparedStatement.setDouble(13, Double.parseDouble(k.get(12)));
+                    updatePreparedStatement.setDouble(14, Double.parseDouble(k.get(13)));
+                    updatePreparedStatement.setDouble(15, Double.parseDouble(k.get(14)));
+                    updatePreparedStatement.setString(16, k.get(16));
+                    updatePreparedStatement.setString(17, k.get(17));
+                    updatePreparedStatement.setString(18, k.get(18));
+                    updatePreparedStatement.setString(19, k.get(19));
+                    updatePreparedStatement.setString(20, k.get(20));
+                    updatePreparedStatement.setString(21, k.get(21));
+                    updatePreparedStatement.setString(22, k.get(22));
+                    updatePreparedStatement.setString(23, k.get(23));
+                    updatePreparedStatement.setString(24, k.get(24));
+                    updatePreparedStatement.setString(25, k.get(25));
+                    updatePreparedStatement.setString(26, k.get(26));
+                    updatePreparedStatement.setString(27, k.get(15));
+                    updatePreparedStatement.executeUpdate();
+                    currentUpdateBatch++;
 
-                    if (currentBatch >= BATCH_SIZE) {
-                        preparedStatement.executeBatch();
+                    if (currentUpdateBatch >= BATCH_SIZE) {
+                        updatePreparedStatement.executeBatch();
                         conn.commit();
-                        currentBatch = 0;
+                        currentUpdateBatch = 0;
+                    }
+                } else {
+                    insertPreparedStatement.setString(1, k.get(15));
+                    insertPreparedStatement.setString(2, k.get(0));
+                    insertPreparedStatement.setString(3, k.get(1));
+                    insertPreparedStatement.setInt(4, (int) Math.round(Double.parseDouble(k.get(2))));
+                    insertPreparedStatement.setInt(5, (int) Math.round(Double.parseDouble(k.get(3))));
+                    insertPreparedStatement.setInt(6, (int) Math.round(Double.parseDouble(k.get(4))));
+                    insertPreparedStatement.setDouble(7, Double.parseDouble(k.get(5)));
+                    insertPreparedStatement.setDouble(8, Double.parseDouble(k.get(6)));
+                    insertPreparedStatement.setDouble(9, Double.parseDouble(k.get(7)));
+                    insertPreparedStatement.setDouble(10, Double.parseDouble(k.get(8)));
+                    insertPreparedStatement.setDouble(11, Double.parseDouble(k.get(9)));
+                    insertPreparedStatement.setDouble(12, Double.parseDouble(k.get(10)));
+                    insertPreparedStatement.setDouble(13, Double.parseDouble(k.get(11)));
+                    insertPreparedStatement.setDouble(14, Double.parseDouble(k.get(12)));
+                    insertPreparedStatement.setDouble(15, Double.parseDouble(k.get(13)));
+                    insertPreparedStatement.setDouble(16, Double.parseDouble(k.get(14)));
+                    insertPreparedStatement.setString(17, k.get(16));
+                    insertPreparedStatement.setString(18, k.get(17));
+                    insertPreparedStatement.setString(19, k.get(18));
+                    insertPreparedStatement.setString(20, k.get(19));
+                    insertPreparedStatement.setString(21, k.get(20));
+                    insertPreparedStatement.setString(22, k.get(21));
+                    insertPreparedStatement.setString(23, k.get(22));
+                    insertPreparedStatement.setString(24, k.get(23));
+                    insertPreparedStatement.setString(25, k.get(24));
+                    insertPreparedStatement.setString(26, k.get(25));
+                    insertPreparedStatement.setString(27, k.get(26));
+                    insertPreparedStatement.setString(28, null);
+                    insertPreparedStatement.executeUpdate();
+                    currentInsertBatch++;
+
+                    if (currentInsertBatch >= BATCH_SIZE) {
+                        insertPreparedStatement.executeBatch();
+                        conn.commit();
+                        currentInsertBatch = 0;
                     }
                 }
             }
 
-            preparedStatement.executeBatch();
+            insertPreparedStatement.executeBatch();
+            updatePreparedStatement.executeBatch();
             conn.commit();
 
             //STEP 6: Clean-up environment

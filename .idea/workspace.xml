@@ -2,20 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9ec3fa37-6308-4677-acb1-392265eb16cf" name="Default" comment="initial commit (3)">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_collections_google_collections_1_0.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_miglayout_miglayout_3_7_4.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_bidib_org_oxbow_swingbits_1_2_2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_api_1_7_21.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Variance Tool.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Variance Tool.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/DatabaseConn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DatabaseConn.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/UserInterface.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/DatabaseConn$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DatabaseConn$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/DatabaseConn$1Total.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DatabaseConn$1Total.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/DatabaseConn.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DatabaseConn.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$BoardTableCellRenderer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$BoardTableCellRenderer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -68,8 +59,8 @@
       <file leaf-file-name="UserInterface.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/UserInterface.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2910">
-              <caret line="508" column="5" lean-forward="true" selection-start-line="508" selection-start-column="5" selection-end-line="508" selection-end-column="5" />
+            <state relative-caret-position="17">
+              <caret line="47" column="7" selection-start-line="47" selection-start-column="7" selection-end-line="47" selection-end-column="7" />
             </state>
           </provider>
         </entry>
@@ -77,21 +68,8 @@
       <file leaf-file-name="DatabaseConn.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/DatabaseConn.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3988">
-              <caret line="379" column="35" selection-start-line="379" selection-start-column="35" selection-end-line="379" selection-end-column="35" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#2876#2884#0" expanded="true" />
-                <element signature="e#6564#6580#0" expanded="true" />
-                <element signature="e#6642#6666#0" expanded="true" />
-                <element signature="e#7179#7187#0" expanded="true" />
-                <element signature="e#9774#9782#0" expanded="true" />
-                <element signature="e#10976#10984#0" expanded="true" />
-                <element signature="e#21341#21342#0" expanded="true" />
-                <element signature="e#21391#21392#0" expanded="true" />
-                <element signature="e#21441#21442#0" expanded="true" />
-                <element signature="e#21485#21486#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="190">
+              <caret line="412" column="7" selection-start-line="412" selection-start-column="7" selection-end-line="412" selection-end-column="7" />
             </state>
           </provider>
         </entry>
@@ -107,7 +85,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>tableData</find>
       <find>ccnames</find>
       <find>departmentCARD</find>
       <find>north</find>
@@ -137,6 +114,7 @@
       <find>create</find>
       <find>g</find>
       <find>addT</find>
+      <find>next</find>
     </findStrings>
     <replaceStrings>
       <replace>Income</replace>
@@ -215,9 +193,9 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="336" />
-    <option name="y" value="7" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="964" />
+    <option name="y" value="-27" />
     <option name="width" value="960" />
     <option name="height" value="1040" />
   </component>
@@ -228,7 +206,12 @@
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes />
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane" />
+      <pane id="PackagesPane" />
+      <pane id="AndroidView" />
+    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="Downloaded.Files.Path.Enabled" value="true" />
@@ -472,7 +455,9 @@
       <workItem from="1532824621671" duration="37000" />
       <workItem from="1532887486956" duration="3345000" />
       <workItem from="1532945518383" duration="17613000" />
-      <workItem from="1533032422883" duration="15216000" />
+      <workItem from="1533032422883" duration="17109000" />
+      <workItem from="1533640508537" duration="6957000" />
+      <workItem from="1534075205787" duration="122000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit (2)">
       <created>1525109752678</created>
@@ -492,7 +477,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="445659000" />
+    <option name="totallyTimeSpent" value="454631000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -504,35 +489,34 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="336" y="70" width="960" height="1040" extended-state="0" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="bottom" id="TODO" order="7" weight="0.32570806" />
-      <window_info anchor="bottom" id="Messages" order="11" weight="0.26622662" />
+      <window_info active="true" anchor="bottom" id="TODO" order="7" visible="true" weight="0.32461873" />
       <window_info anchor="right" id="Palette&#9;" order="8" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50159913" side_tool="true" weight="0.36710238" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5010941" side_tool="true" weight="0.36633664" />
       <window_info anchor="right" id="Maven Projects" order="7" weight="0.32932165" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="12" weight="0.3278867" />
-      <window_info active="true" anchor="bottom" id="Run" order="3" sideWeight="0.49840087" visible="true" weight="0.37583148" />
-      <window_info anchor="bottom" id="Terminal" order="9" weight="0.3278328" />
+      <window_info anchor="bottom" id="Version Control" order="12" weight="0.3278328" />
+      <window_info anchor="bottom" id="Run" order="3" sideWeight="0.49840087" weight="0.37472767" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4989059" weight="0.3278328" />
       <window_info id="Capture Tool" order="6" />
       <window_info id="Designer" order="3" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4991453" weight="0.1108742" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4991453" visible="true" weight="0.1119403" />
       <window_info anchor="right" id="Database" order="6" weight="0.32995737" />
+      <window_info anchor="bottom" id="Find" order="2" />
       <window_info id="Structure" order="1" sideWeight="0.50085473" side_tool="true" weight="0.30912864" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="4" />
       <window_info anchor="right" id="Theme Preview" order="5" />
       <window_info id="Favorites" order="5" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="4" weight="0.34640524" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.3453159" />
+      <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.4989059" weight="0.26622662" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="bottom" id="Database Console" order="13" weight="0.33223322" />
-      <window_info anchor="bottom" id="Find" order="2" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -541,9 +525,8 @@
     <layout-to-restore>
       <window_info id="Designer" order="3" />
       <window_info anchor="right" id="Palette" order="3" />
-      <window_info active="true" anchor="bottom" id="Run" order="3" sideWeight="0.49840087" visible="true" weight="0.36928105" />
       <window_info anchor="bottom" id="Database Console" order="13" weight="0.33223322" />
-      <window_info anchor="bottom" id="Find" order="2" />
+      <window_info active="true" anchor="bottom" id="Run" order="3" sideWeight="0.49840087" visible="true" weight="0.36928105" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="4" />
@@ -556,18 +539,19 @@
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50159913" side_tool="true" weight="0.36710238" />
       <window_info anchor="bottom" id="Messages" order="11" weight="0.26622662" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4991453" weight="0.1108742" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="12" weight="0.3278867" />
       <window_info anchor="right" id="Maven Projects" order="7" weight="0.32932165" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4991453" weight="0.1108742" />
+      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="right" id="Database" order="6" weight="0.32995737" />
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="TODO" order="7" weight="0.32570806" />
       <window_info anchor="right" id="Palette&#9;" order="8" />
       <window_info anchor="right" id="Theme Preview" order="5" />
       <window_info id="Structure" order="1" sideWeight="0.50085473" side_tool="true" weight="0.30912864" />
-      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
+      <window_info anchor="bottom" id="Find" order="2" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.34640524" />
     </layout-to-restore>
   </component>
@@ -594,10 +578,164 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>449</line>
+          <properties class="UserInterface" method="tableRenew">
+            <option name="EMULATED" value="true" />
+          </properties>
+          <option name="timeStamp" value="743" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>452</line>
+          <properties />
+          <option name="timeStamp" value="744" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>456</line>
+          <properties />
+          <option name="timeStamp" value="745" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>457</line>
+          <properties />
+          <option name="timeStamp" value="746" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>461</line>
+          <properties />
+          <option name="timeStamp" value="747" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>462</line>
+          <properties />
+          <option name="timeStamp" value="748" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>463</line>
+          <properties />
+          <option name="timeStamp" value="749" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>464</line>
+          <properties />
+          <option name="timeStamp" value="750" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>466</line>
+          <properties />
+          <option name="timeStamp" value="751" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>467</line>
+          <properties />
+          <option name="timeStamp" value="752" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>469</line>
+          <properties />
+          <option name="timeStamp" value="753" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>468</line>
+          <properties />
+          <option name="timeStamp" value="754" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>465</line>
+          <properties />
+          <option name="timeStamp" value="755" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>472</line>
+          <properties />
+          <option name="timeStamp" value="757" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>473</line>
+          <properties />
+          <option name="timeStamp" value="758" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>471</line>
+          <properties />
+          <option name="timeStamp" value="759" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>470</line>
+          <properties />
+          <option name="timeStamp" value="760" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>474</line>
+          <properties />
+          <option name="timeStamp" value="761" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>476</line>
+          <properties />
+          <option name="timeStamp" value="762" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>475</line>
+          <properties />
+          <option name="timeStamp" value="763" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>477</line>
+          <properties />
+          <option name="timeStamp" value="764" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>478</line>
+          <properties />
+          <option name="timeStamp" value="765" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>480</line>
+          <properties />
+          <option name="timeStamp" value="766" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>481</line>
+          <properties />
+          <option name="timeStamp" value="767" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/UserInterface.java</url>
+          <line>479</line>
+          <properties />
+          <option name="timeStamp" value="768" />
+        </line-breakpoint>
+      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="743" />
+      <option name="time" value="769" />
     </breakpoint-manager>
   </component>
   <component name="antWorkspaceConfiguration">
@@ -938,10 +1076,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1560">
           <caret line="130" column="19" selection-start-line="130" selection-start-column="19" selection-end-line="130" selection-end-column="19" />
-          <folding>
-            <element signature="e#3834#3835#0" expanded="true" />
-            <element signature="e#3862#3863#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -954,28 +1088,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/DatabaseConn.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3988">
-          <caret line="379" column="35" selection-start-line="379" selection-start-column="35" selection-end-line="379" selection-end-column="35" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2876#2884#0" expanded="true" />
-            <element signature="e#6564#6580#0" expanded="true" />
-            <element signature="e#6642#6666#0" expanded="true" />
-            <element signature="e#7179#7187#0" expanded="true" />
-            <element signature="e#9774#9782#0" expanded="true" />
-            <element signature="e#10976#10984#0" expanded="true" />
-            <element signature="e#21341#21342#0" expanded="true" />
-            <element signature="e#21391#21392#0" expanded="true" />
-            <element signature="e#21441#21442#0" expanded="true" />
-            <element signature="e#21485#21486#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="190">
+          <caret line="412" column="7" selection-start-line="412" selection-start-column="7" selection-end-line="412" selection-end-column="7" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/UserInterface.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2910">
-          <caret line="508" column="5" lean-forward="true" selection-start-line="508" selection-start-column="5" selection-end-line="508" selection-end-column="5" />
+        <state relative-caret-position="17">
+          <caret line="47" column="7" selection-start-line="47" selection-start-column="7" selection-end-line="47" selection-end-column="7" />
         </state>
       </provider>
     </entry>
