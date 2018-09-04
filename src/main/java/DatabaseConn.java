@@ -26,11 +26,18 @@ class DatabaseConn {
     private Vector<Vector<String>> databaseEntries = new Vector<>();
     private Vector<Vector<String>> sortedVector = new Vector<>();
     private Vector<String> hd = new Vector<>();
+
     LinkedHashSet<Object> ccNames = new LinkedHashSet<>();
     LinkedHashSet<Object> periodNames = new LinkedHashSet<>();
     LinkedHashSet<Object> names = new LinkedHashSet<>();
     LinkedHashSet<Object> divisions = new LinkedHashSet<>();
     LinkedHashSet<Object> CDGs = new LinkedHashSet<>();
+
+    LinkedHashSet<Object> sortedCostCentreNames = new LinkedHashSet<>();
+    LinkedHashSet<Object> sortedNames = new LinkedHashSet<>();
+    LinkedHashSet<Object> sortedDivisions = new LinkedHashSet<>();
+    LinkedHashSet<Object> sortedCDGs = new LinkedHashSet<>();
+
     int numberOfRows;
     private DefaultTableModel model;
     DecimalFormat nf = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
@@ -75,7 +82,7 @@ class DatabaseConn {
             }
 
             while (rs.next()) {
-                Vector<String> element = new Vector<String>();
+                Vector<String> element = new Vector<>();
                 String uniqueKey = rs.getString("Unique Key");
                 String costCentre = rs.getString("Cost Centre");
                 String expenseHead = rs.getString("Expense Header");
@@ -168,7 +175,7 @@ class DatabaseConn {
         while (rows.hasNext()) {
             row = (XSSFRow) rows.next();
             Iterator cells = row.cellIterator();
-            Vector<String> currentRow = new Vector<String>();
+            Vector<String> currentRow = new Vector<>();
 
             while (cells.hasNext()) {
 
@@ -226,7 +233,7 @@ class DatabaseConn {
                 double budgetYTD = Double.parseDouble(tableData.get(y).get(5));
                 double actualYTD = Double.parseDouble(tableData.get(y).get(6));
                 double varianceYTD = budgetYTD - actualYTD;
-                Vector<Double> newYTD = new Vector<Double>();
+                Vector<Double> newYTD = new Vector<>();
                 newYTD.add(budgetYTD);
                 newYTD.add(actualYTD);
                 newYTD.add(varianceYTD);
@@ -259,7 +266,7 @@ class DatabaseConn {
 
             //STEP 5: Extract data from result set
 
-            Vector<String> uniqueKeys = new Vector<String>();
+            Vector<String> uniqueKeys = new Vector<>();
             while (rs.next()) {
                 if (uniqueKeys.contains(rs.getString("Unique Key"))) {
                     throw new Exception("Invalid entries in database, unique keys should not contain duplicates!");
@@ -413,10 +420,10 @@ class DatabaseConn {
     // TODO: Little BUGS (FIX THEM)
     /***
      *
-     * @param vector
+     * @param vector - the initial vector with the data collected from excel spreadsheets
      * @return newVector - returns a new vector with totals calculated and added to the collection
      * (uncomment the prints for better understanding of the method)
-     * @throws ParseException
+     * @throws ParseException - specific format
      */
     private Vector<Vector<String>> addTotals(Vector<Vector<String>> vector) throws ParseException {
 
@@ -781,11 +788,11 @@ class DatabaseConn {
         // Sort each vector to match cost code and period parameters
         sortedVector.clear();
         divisions.clear();
-        divisions.add("ALL");
+        divisions.add("Division");
         names.clear();
-        names.add("ALL");
+        names.add("Name");
         CDGs.clear();
-        CDGs.add("ALL");
+        CDGs.add("CDG");
         for (Vector<String> databaseEntry : databaseEntries) {
             Object x = databaseEntry.get(1);
             Object y = databaseEntry.get(3);
@@ -844,94 +851,78 @@ class DatabaseConn {
 
     void drillTable(JTable table, Object name, Object division, Object cdg) throws ParseException {
         Vector<Vector<String>> newVector = new Vector<>();
-
+        boolean returnNewVector = true;
         if (Objects.isNull(name) && Objects.isNull(cdg) && Objects.isNull(division)) {
             Vector<Vector<String>> finalVector = addTotals(sortedVector);
             model = new DefaultTableModel(finalVector, hd);
             table.setModel(model);
             removeColumns(table);
+            returnNewVector = false;
         }
 
         else if (Objects.isNull(division) && Objects.isNull(cdg)) {
+            sortedCostCentreNames.clear();
+            sortedCostCentreNames.add("ALL");
+            sortedDivisions.clear();
+            sortedDivisions.add("Division");
+            sortedCDGs.clear();
+            sortedCDGs.add("CDG");
             for (Vector<String> vector : sortedVector) {
                 Object nameObject = vector.get(22);
                 if (nameObject == null) continue;
                 if (nameObject.equals(name)) {
                     newVector.add(vector);
+                    sortedCostCentreNames.add(vector.get(1));
+                    sortedDivisions.add(vector.get(18));
+                    sortedCDGs.add(vector.get(19));
                 }
             }
-
-            try {
-                newVector = addTotals(newVector);
-            }
-
-            catch (ArrayIndexOutOfBoundsException e) {
-                String isEmpty = "No entries matched your search criteria!";
-                Vector<String> nn = new Vector<>();
-                nn.add(isEmpty);
-                newVector.add(nn);
-
-            }
-            model = new DefaultTableModel(newVector, hd);
-            table.setModel(model);
-            removeColumns(table);
         }
 
         else if (Objects.isNull(division) && Objects.isNull(name)) {
+            sortedCostCentreNames.clear();
+            sortedCostCentreNames.add("ALL");
+            sortedDivisions.clear();
+            sortedDivisions.add("Division");
+            sortedNames.clear();
+            sortedNames.add("Name");
             for (Vector<String> vector : sortedVector) {
                 Object cdgObject = vector.get(19);
                 if (cdgObject == null) continue;
                 if (cdgObject.equals(cdg)) {
                     newVector.add(vector);
+                    sortedCostCentreNames.add(vector.get(1));
+                    sortedDivisions.add(vector.get(18));
+                    sortedNames.add(vector.get(22));
                 }
             }
-
-            try {
-                newVector = addTotals(newVector);
-            }
-
-            catch (ArrayIndexOutOfBoundsException e) {
-                String isEmpty = "No entries matched your search criteria!";
-                Vector<String> nn = new Vector<>();
-                nn.add(isEmpty);
-                newVector.add(nn);
-
-            }
-            model = new DefaultTableModel(newVector, hd);
-            table.setModel(model);
-            removeColumns(table);
         }
 
         else if (Objects.isNull(name) && Objects.isNull(cdg)) {
+            sortedCostCentreNames.clear();
+            sortedCostCentreNames.add("ALL");
+            sortedCDGs.clear();
+            sortedCDGs.add("CDG");
+            sortedNames.clear();
+            sortedNames.add("Name");
             for (Vector<String> vector : sortedVector) {
                 Object divisionObject = vector.get(18);
 
                 if (divisionObject == null) continue;
                 if (divisionObject.equals(division)) {
-                    divisions.add(vector.get(18));
-                    names.add(vector.get(22));
-                    CDGs.add(vector.get(19));
                     newVector.add(vector);
+                    sortedCostCentreNames.add(vector.get(1));
+                    sortedCDGs.add(vector.get(19));
+                    sortedNames.add(vector.get(22));
                 }
             }
-
-            try {
-                newVector = addTotals(newVector);
-            }
-
-            catch (ArrayIndexOutOfBoundsException e) {
-                String isEmpty = "No entries matched your search criteria!";
-                Vector<String> nn = new Vector<>();
-                nn.add(isEmpty);
-                newVector.add(nn);
-
-            }
-            model = new DefaultTableModel(newVector, hd);
-            table.setModel(model);
-            removeColumns(table);
         }
 
         else if (Objects.isNull(division)) {
+            sortedCostCentreNames.clear();
+            sortedCostCentreNames.add("ALL");
+            sortedDivisions.clear();
+            sortedDivisions.add("Division");
             for (Vector<String> vector : sortedVector) {
                 Object nameObject = vector.get(22);
                 Object cdgObject = vector.get(19);
@@ -939,26 +930,17 @@ class DatabaseConn {
                 if (nameObject == null || cdgObject == null) continue;
                 if (nameObject.equals(name) && cdgObject.equals(cdg)) {
                     newVector.add(vector);
+                    sortedCostCentreNames.add(vector.get(1));
+                    sortedDivisions.add(vector.get(18));
                 }
             }
-
-            try {
-                newVector = addTotals(newVector);
-            }
-
-            catch (ArrayIndexOutOfBoundsException e) {
-                String isEmpty = "No entries matched your search criteria!";
-                Vector<String> nn = new Vector<>();
-                nn.add(isEmpty);
-                newVector.add(nn);
-
-            }
-            model = new DefaultTableModel(newVector, hd);
-            table.setModel(model);
-            removeColumns(table);
         }
 
         else if (Objects.isNull(name)) {
+            sortedCostCentreNames.clear();
+            sortedCostCentreNames.add("ALL");
+            sortedNames.clear();
+            sortedNames.add("Name");
             for (Vector<String> vector : sortedVector) {
                 Object cdgObject = vector.get(19);
                 Object divisionObject = vector.get(18);
@@ -966,27 +948,17 @@ class DatabaseConn {
                 if (divisionObject == null || cdgObject == null) continue;
                 if (cdgObject.equals(cdg) && divisionObject.equals(division)) {
                     newVector.add(vector);
+                    sortedCostCentreNames.add(vector.get(1));
+                    sortedNames.add(vector.get(22));
                 }
             }
-
-            try {
-                newVector = addTotals(newVector);
-            }
-
-            catch (ArrayIndexOutOfBoundsException e) {
-                String isEmpty = "No entries matched your search criteria!";
-                Vector<String> nn = new Vector<>();
-                nn.add(isEmpty);
-                newVector.add(nn);
-
-            }
-
-            model = new DefaultTableModel(newVector, hd);
-            table.setModel(model);
-            removeColumns(table);
         }
 
         else if (Objects.isNull(cdg)) {
+            sortedCostCentreNames.clear();
+            sortedCostCentreNames.add("ALL");
+            sortedCDGs.clear();
+            sortedCDGs.add("CDG");
             for (Vector<String> vector : sortedVector) {
                 Object nameObject = vector.get(22);
                 Object divisionObject = vector.get(18);
@@ -994,26 +966,16 @@ class DatabaseConn {
                 if (divisionObject == null || nameObject == null) continue;
                 if (nameObject.equals(name) && divisionObject.equals(division)) {
                     newVector.add(vector);
+                    sortedCostCentreNames.add(vector.get(1));
+                    sortedCDGs.add(vector.get(19));
                 }
             }
 
-            try {
-                newVector = addTotals(newVector);
-            }
-
-            catch (ArrayIndexOutOfBoundsException e) {
-                String isEmpty = "No entries matched your search criteria!";
-                Vector<String> nn = new Vector<>();
-                nn.add(isEmpty);
-                newVector.add(nn);
-
-            }
-            model = new DefaultTableModel(newVector, hd);
-            table.setModel(model);
-            removeColumns(table);
         }
 
         else {
+            sortedCostCentreNames.clear();
+            sortedCostCentreNames.add("ALL");
             for (Vector<String> vector : sortedVector) {
                 Object nameObject = vector.get(22);
                 Object cdgObject = vector.get(19);
@@ -1022,9 +984,12 @@ class DatabaseConn {
                 if (divisionObject == null || nameObject == null || cdgObject == null) continue;
                 if (nameObject.equals(name) && cdgObject.equals(cdg) && divisionObject.equals(division)) {
                     newVector.add(vector);
+                    sortedCostCentreNames.add(vector.get(1));
                 }
             }
+        }
 
+        if (returnNewVector) {
             try {
                 newVector = addTotals(newVector);
             }
@@ -1036,6 +1001,7 @@ class DatabaseConn {
                 newVector.add(nn);
 
             }
+
             model = new DefaultTableModel(newVector, hd);
             table.setModel(model);
             removeColumns(table);

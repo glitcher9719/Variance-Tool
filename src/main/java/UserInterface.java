@@ -1,16 +1,23 @@
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+
 import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Objects;
 
 public class UserInterface extends JFrame {
 
@@ -25,7 +32,7 @@ public class UserInterface extends JFrame {
     private JTable table;
     private JPanel departmentCard;
 
-    private JComboBox costCodeList;
+    private JComboBox<Object> costCodeList;
     private Object[] ccNames;
     private Object[] periodNames;
 
@@ -118,24 +125,28 @@ public class UserInterface extends JFrame {
         scrollPane2 = new JScrollPane(departmentTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-        costCodeList = new JComboBox(ccNames);
+        costCodeList = new JComboBox<>(ccNames);
         costCodeList.setSelectedIndex(0);
 
-        nameList = new JComboBox(databaseConn.names.toArray());
+        nameList = new JComboBox<>(databaseConn.names.toArray());
         nameList.setSelectedIndex(0);
 
-        divisionList = new JComboBox(databaseConn.divisions.toArray());
+        divisionList = new JComboBox<>(databaseConn.divisions.toArray());
         divisionList.setSelectedIndex(0);
 
-        cdgList = new JComboBox(databaseConn.CDGs.toArray());
+        cdgList = new JComboBox<>(databaseConn.CDGs.toArray());
         cdgList.setSelectedIndex(0);
 
         currentSelectedName = null;
         currentSelectedDivision = null;
         currentSelectedCDG = null;
 
+        JLabel costCode  = new JLabel("Cost code: ");
+        JLabel filters = new JLabel("Filter by: ");
         JPanel listView= new JPanel();
+        listView.add(costCode);
         listView.add(costCodeList);
+        listView.add(filters);
         listView.add(nameList);
         listView.add(divisionList);
         listView.add(cdgList);
@@ -204,13 +215,14 @@ public class UserInterface extends JFrame {
             }
             dataWithDecimal.clear();
             departmentTable.setDefaultRenderer(Object.class, new BoardTableCellRenderer());
-            nameList.setModel(new DefaultComboBoxModel<>(databaseConn.names.toArray()));
-            divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.divisions.toArray()));
-            cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.CDGs.toArray()));
-
-            currentSelectedName = null;
-            currentSelectedCDG = null;
-            currentSelectedDivision = null;
+            if (Objects.isNull(currentSelectedCDG)) cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCDGs.toArray()));
+            if (Objects.isNull(currentSelectedName)) nameList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedNames.toArray()));
+            if (Objects.isNull(currentSelectedDivision)) divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedDivisions.toArray()));
+            if (Objects.isNull(currentSelectedDivision) && Objects.isNull(currentSelectedCDG) && Objects.isNull(currentSelectedName)) {
+                nameList.setModel(new DefaultComboBoxModel<>(databaseConn.names.toArray()));
+                divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.divisions.toArray()));
+                cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.CDGs.toArray()));
+            }
 
             departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
             departmentTable.getColumnModel().getColumn(14).setMinWidth(200);
@@ -255,7 +267,7 @@ public class UserInterface extends JFrame {
         });
 
         nameList.addActionListener(e -> {
-            if (Objects.requireNonNull(nameList.getSelectedItem()).toString().equals("ALL")) {
+            if (Objects.requireNonNull(nameList.getSelectedItem()).toString().equals("Name")) {
                 currentSelectedName = null;
             }
             else {
@@ -263,14 +275,26 @@ public class UserInterface extends JFrame {
             }
             try {
                 databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
-            } catch (ParseException e1) {
+                costCodeList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
+
+                if (Objects.isNull(currentSelectedCDG)) cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCDGs.toArray()));
+                if (Objects.isNull(currentSelectedDivision)) divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedDivisions.toArray()));
+                if (Objects.isNull(currentSelectedDivision) && Objects.isNull(currentSelectedCDG) && Objects.isNull(currentSelectedName)) {
+                    costCodeList.setModel(new DefaultComboBoxModel<>(databaseConn.ccNames.toArray()));
+                    nameList.setModel(new DefaultComboBoxModel<>(databaseConn.names.toArray()));
+                    divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.divisions.toArray()));
+                    cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.CDGs.toArray()));
+                }
+            }
+
+            catch (ParseException e1) {
                 e1.printStackTrace();
             }
 
         });
 
         divisionList.addActionListener(e -> {
-            if (Objects.requireNonNull(divisionList.getSelectedItem()).toString().equals("ALL")) {
+            if (Objects.requireNonNull(divisionList.getSelectedItem()).toString().equals("Division")) {
                 currentSelectedDivision = null;
             }
             else {
@@ -278,21 +302,47 @@ public class UserInterface extends JFrame {
             }
             try {
                 databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
-            } catch (ParseException e1) {
+                costCodeList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
+
+                if (Objects.isNull(currentSelectedCDG)) cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCDGs.toArray()));
+                if (Objects.isNull(currentSelectedName)) nameList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedNames.toArray()));
+                if (Objects.isNull(currentSelectedDivision) && Objects.isNull(currentSelectedCDG) && Objects.isNull(currentSelectedName)) {
+                    costCodeList.setModel(new DefaultComboBoxModel<>(databaseConn.ccNames.toArray()));
+                    nameList.setModel(new DefaultComboBoxModel<>(databaseConn.names.toArray()));
+                    divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.divisions.toArray()));
+                    cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.CDGs.toArray()));
+                }
+            }
+
+            catch (ParseException e1) {
                 e1.printStackTrace();
             }
         });
 
         cdgList.addActionListener(e -> {
-            if (Objects.requireNonNull(cdgList.getSelectedItem()).toString().equals("ALL")) {
+            if (Objects.requireNonNull(cdgList.getSelectedItem()).toString().equals("CDG")) {
                 currentSelectedCDG = null;
             }
+
             else {
                 currentSelectedCDG = cdgList.getSelectedItem();
             }
+
             try {
                 databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
-            } catch (ParseException e1) {
+                costCodeList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
+
+                if (Objects.isNull(currentSelectedDivision)) divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedDivisions.toArray()));
+                if (Objects.isNull(currentSelectedName)) nameList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedNames.toArray()));
+                if (Objects.isNull(currentSelectedDivision) && Objects.isNull(currentSelectedCDG) && Objects.isNull(currentSelectedName)) {
+                    costCodeList.setModel(new DefaultComboBoxModel<>(databaseConn.ccNames.toArray()));
+                    nameList.setModel(new DefaultComboBoxModel<>(databaseConn.names.toArray()));
+                    divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.divisions.toArray()));
+                    cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.CDGs.toArray()));
+                }
+        }
+
+            catch (ParseException e1) {
                 e1.printStackTrace();
             }
         });

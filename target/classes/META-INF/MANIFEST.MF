@@ -1,5 +1,3 @@
 Manifest-Version: 1.0
-Built-By: Dan
-Build-Jdk: 1.8.0_171
-Created-By: Maven Integration for Eclipse
+Main-Class: UserInterface
 
