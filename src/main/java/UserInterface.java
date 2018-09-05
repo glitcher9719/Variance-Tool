@@ -15,6 +15,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
@@ -51,18 +52,13 @@ public class UserInterface extends JFrame {
     private Object currentSelectedCDG;
 
     private DatabaseConn databaseConn;
-
-    // TODO: PROGRESS BAR
-    static JProgressBar pb;
     static ListMultimap<String, String> dataWithDecimal = ArrayListMultimap.create();
 
     private UserInterface() throws ClassNotFoundException, ParseException {
-
         databaseConn = new DatabaseConn();
         table = databaseConn.generateDataFromDB();
         ccNames = databaseConn.ccNames.toArray();
         periodNames = databaseConn.periodNames.toArray();
-
         try {
             currentCostCode = ccNames[ccCounter];
             period = periodNames[pCounter];
@@ -172,7 +168,13 @@ public class UserInterface extends JFrame {
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
                 String filePath = file.getAbsolutePath();
-
+                JFrame loadingFrame = new JFrame("Loading");
+                loadingFrame.setVisible(true);
+                loadingFrame.setSize(100, 50);
+                JProgressBar progressBar = new JProgressBar();
+                loadingFrame.add(progressBar);
+                progressBar.setIndeterminate(true);
+                progressBar.setVisible(true);
                 try {
                     databaseConn.importSpreadsheet(filePath);
                     dispose();
@@ -223,7 +225,6 @@ public class UserInterface extends JFrame {
                 divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.divisions.toArray()));
                 cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.CDGs.toArray()));
             }
-
             departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
             departmentTable.getColumnModel().getColumn(14).setMinWidth(200);
             departmentTable.getColumnModel().getColumn(13).setMinWidth(50);
@@ -275,6 +276,7 @@ public class UserInterface extends JFrame {
             }
             try {
                 databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
+                ccNames = databaseConn.sortedCostCentreNames.toArray();
                 costCodeList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
 
                 if (Objects.isNull(currentSelectedCDG)) cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCDGs.toArray()));
@@ -302,6 +304,7 @@ public class UserInterface extends JFrame {
             }
             try {
                 databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
+                ccNames = databaseConn.sortedCostCentreNames.toArray();
                 costCodeList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
 
                 if (Objects.isNull(currentSelectedCDG)) cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCDGs.toArray()));
@@ -330,6 +333,7 @@ public class UserInterface extends JFrame {
 
             try {
                 databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
+                ccNames = databaseConn.sortedCostCentreNames.toArray();
                 costCodeList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
 
                 if (Objects.isNull(currentSelectedDivision)) divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedDivisions.toArray()));
@@ -401,6 +405,7 @@ public class UserInterface extends JFrame {
 
 
             catch(ArrayIndexOutOfBoundsException error){
+                    System.out.println(ccCounter);
                     ccCounter = 0;
                 try {
                     tableRenew();
@@ -425,6 +430,7 @@ public class UserInterface extends JFrame {
             }
 
             catch (ArrayIndexOutOfBoundsException error) {
+                System.out.println(ccCounter);
                 ccCounter = 0;
                 try {
                     tableRenew();
@@ -498,12 +504,12 @@ public class UserInterface extends JFrame {
     }
 
     private void tableRenew() throws ParseException {
-
         try {
             costCodeList.setSelectedIndex(ccCounter);
         }
 
         catch (IllegalArgumentException exc) {
+            System.out.println(ccCounter);
             ccCounter = 0;
             costCodeList.setSelectedIndex(ccCounter);
 
@@ -516,6 +522,10 @@ public class UserInterface extends JFrame {
         periodLabel.setText("Month: " + getPeriod(period));
         departmentCard.remove(scrollPane2);
         departmentTable = databaseConn.createSpecificTable(currentCostCode, period);
+        if (Objects.nonNull(currentSelectedDivision) || Objects.nonNull(currentSelectedName) || Objects.nonNull(currentSelectedCDG)) {
+            databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
+
+        }
         dataWithDecimal.clear();
         departmentTable.setDefaultRenderer(Object.class, new BoardTableCellRenderer());
         departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);

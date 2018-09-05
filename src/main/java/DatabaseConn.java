@@ -343,7 +343,6 @@ class DatabaseConn {
                     updatePreparedStatement.setString(27, k.get(15));
                     updatePreparedStatement.executeUpdate();
                     currentUpdateBatch++;
-
                     if (currentUpdateBatch >= BATCH_SIZE) {
                         updatePreparedStatement.executeBatch();
                         conn.commit();
