@@ -38,7 +38,6 @@ class DatabaseConn {
     LinkedHashSet<Object> sortedDivisions = new LinkedHashSet<>();
     LinkedHashSet<Object> sortedCDGs = new LinkedHashSet<>();
 
-    int numberOfRows;
     private DefaultTableModel model;
     DecimalFormat nf = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
     private DecimalFormatSymbols symbols = nf.getDecimalFormatSymbols();
@@ -167,7 +166,9 @@ class DatabaseConn {
         InputStream ExcelFileToRead = new FileInputStream(path);
         XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
         XSSFSheet sheet = wb.getSheetAt(0);
-        numberOfRows = sheet.getPhysicalNumberOfRows();
+        int numberOfRows = sheet.getPhysicalNumberOfRows();
+        UserInterface.progressBar.setMaximum(numberOfRows *2);
+        UserInterface.progressBar.setString("Processing spreadsheet data...");
         XSSFRow row;
         XSSFCell cell;
         Iterator rows = sheet.rowIterator();
@@ -250,6 +251,7 @@ class DatabaseConn {
             }
             x = 0;
             rowsCompleted++;
+            UserInterface.progressBar.setValue(rowsCompleted);
         }
         long process = System.currentTimeMillis();
         System.out.println("Processing time: " + (process - start));
@@ -259,6 +261,7 @@ class DatabaseConn {
         try {
             Class.forName(JDBC_DRIVER);
             conn = DriverManager.getConnection(DB_URL, "dan", "ParolaMea123");
+
             stmt = conn.createStatement();
             String checkSQL;
             checkSQL = "SELECT `Unique Key` FROM data;";
@@ -274,7 +277,8 @@ class DatabaseConn {
                     uniqueKeys.add(rs.getString("Unique Key"));
                 }
             }
-
+            long connectionTime = System.currentTimeMillis();
+            System.out.println("Preparing time: " + (connectionTime-process));
             final int BATCH_SIZE = 1000;
             int currentInsertBatch = 0;
             int currentUpdateBatch = 0;
@@ -342,6 +346,8 @@ class DatabaseConn {
                     updatePreparedStatement.setString(26, k.get(26));
                     updatePreparedStatement.setString(27, k.get(15));
                     updatePreparedStatement.executeUpdate();
+                    rowsCompleted++;
+                    UserInterface.progressBar.setValue(rowsCompleted);
                     currentUpdateBatch++;
                     if (currentUpdateBatch >= BATCH_SIZE) {
                         updatePreparedStatement.executeBatch();
@@ -378,6 +384,8 @@ class DatabaseConn {
                     insertPreparedStatement.setString(27, k.get(26));
                     insertPreparedStatement.setString(28, null);
                     insertPreparedStatement.executeUpdate();
+                    rowsCompleted++;
+                    UserInterface.progressBar.setValue(rowsCompleted);
                     currentInsertBatch++;
 
                     if (currentInsertBatch >= BATCH_SIZE) {

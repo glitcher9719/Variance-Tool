@@ -15,7 +15,6 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
@@ -53,6 +52,7 @@ public class UserInterface extends JFrame {
 
     private DatabaseConn databaseConn;
     static ListMultimap<String, String> dataWithDecimal = ArrayListMultimap.create();
+    static JProgressBar progressBar;
 
     private UserInterface() throws ClassNotFoundException, ParseException {
         databaseConn = new DatabaseConn();
@@ -170,20 +170,29 @@ public class UserInterface extends JFrame {
                 String filePath = file.getAbsolutePath();
                 JFrame loadingFrame = new JFrame("Loading");
                 loadingFrame.setVisible(true);
-                loadingFrame.setSize(100, 50);
-                JProgressBar progressBar = new JProgressBar();
+                loadingFrame.setSize(400, 100);
+                progressBar = new JProgressBar();
                 loadingFrame.add(progressBar);
-                progressBar.setIndeterminate(true);
-                progressBar.setVisible(true);
-                try {
-                    databaseConn.importSpreadsheet(filePath);
-                    dispose();
-                    new UserInterface();
-                }
+                loadingFrame.setLocationRelativeTo(null);
+                SwingWorker x = new SwingWorker<Void, Void>() {
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                        databaseConn.importSpreadsheet(filePath);
+                        return null;
+                    }
 
-                catch (IOException | ClassNotFoundException | ParseException e1) {
-                    e1.printStackTrace();
-                }
+                    @Override
+                    public void done() {
+                        dispose();
+                        loadingFrame.dispose();
+                        try {
+                            new UserInterface();
+                        } catch (ClassNotFoundException | ParseException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                };
+                x.execute();
             }
         });
         radioButtons.add(importSpreadsheet, BorderLayout.SOUTH);
