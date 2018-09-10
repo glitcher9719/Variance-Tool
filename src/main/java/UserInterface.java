@@ -159,6 +159,61 @@ public class UserInterface extends JFrame {
         JPanel labelPanel = new JPanel();
         labelPanel.add(label);
         JButton importSpreadsheet = new JButton("Import Spreadsheet");
+
+        radioButtons.add(importSpreadsheet, BorderLayout.SOUTH);
+        add(radioButtons, BorderLayout.NORTH);
+        north.add(labelPanel, BorderLayout.CENTER);
+        departmentCard.add(scrollPane2, BorderLayout.CENTER);
+
+        JLabel month = new JLabel("Month");
+        JButton previousMonth = new JButton("Previous");
+        JButton nextMonth = new JButton("Next");
+
+        final boolean[] current = {true};
+        JButton checkPrevious = new JButton("Current data");
+
+        final JPanel eastPanel = new JPanel();
+        eastPanel.add(checkPrevious);
+        eastPanel.add(month);
+        eastPanel.add(previousMonth);
+        eastPanel.add(nextMonth);
+
+        JLabel department = new JLabel("Department");
+        JButton previousDepartment = new JButton("Previous");
+        JButton nextDepartment = new JButton("Next");
+
+        JButton clear = new JButton("Clear");
+
+        final JPanel westPanel = new JPanel();
+        westPanel.add(department);
+        westPanel.add(previousDepartment);
+        westPanel.add(nextDepartment);
+        north.add(eastPanel, BorderLayout.EAST);
+        JPanel westP = new JPanel();
+        westP.add(westPanel);
+        westP.add(listView);
+        westP.add(clear);
+        north.add(westP, BorderLayout.WEST);
+        departmentCard.add(north, BorderLayout.NORTH);
+
+        /*
+        Card Layout
+         */
+
+        contentPanel.add(overviewCard, "1");
+        contentPanel.add(departmentCard, "2");
+
+        contentPanel.setLayout(cardLayout);
+        add(contentPanel, BorderLayout.CENTER);
+
+        setLocationRelativeTo(null);
+        setVisible(true);
+        pack();
+        getDefaultCloseOperation();
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setTitle("VAT: Variance Analysis Tool");
+
+        // LISTENERS
         importSpreadsheet.addActionListener(e -> {
             final JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -193,10 +248,6 @@ public class UserInterface extends JFrame {
                 x.execute();
             }
         });
-        radioButtons.add(importSpreadsheet, BorderLayout.SOUTH);
-        add(radioButtons, BorderLayout.NORTH);
-        north.add(labelPanel, BorderLayout.CENTER);
-        departmentCard.add(scrollPane2, BorderLayout.CENTER);
 
         costCodeList.addActionListener(e -> {
             ccCounter = costCodeList.getSelectedIndex();
@@ -372,9 +423,6 @@ public class UserInterface extends JFrame {
             }
         });
 
-        JLabel month = new JLabel("Month");
-        JButton previousMonth = new JButton("Previous");
-        JButton nextMonth = new JButton("Next");
         previousMonth.addActionListener(e -> {
 
             try {
@@ -383,14 +431,8 @@ public class UserInterface extends JFrame {
             }
 
             catch (ArrayIndexOutOfBoundsException error) {
-                pCounter = 0;
-                try {
-                    tableRenew();
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
-            } catch (ParseException e1) {
-                e1.printStackTrace();
+                pCounter = databaseConn.periodNames.size()-1;
+                tableRenew();
             }
         });
 
@@ -402,18 +444,10 @@ public class UserInterface extends JFrame {
 
             catch (ArrayIndexOutOfBoundsException error) {
                 pCounter = 0;
-                try {
-                    tableRenew();
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
-            } catch (ParseException e1) {
-                e1.printStackTrace();
+                tableRenew();
             }
         });
 
-        final boolean[] current = {true};
-        JButton checkPrevious = new JButton("Current data");
         checkPrevious.addActionListener(e -> {
             try {
                 costCodeList.setSelectedIndex(ccCounter);
@@ -508,90 +542,37 @@ public class UserInterface extends JFrame {
             });
         });
 
-        final JPanel eastPanel = new JPanel();
-        eastPanel.add(checkPrevious);
-        eastPanel.add(month);
-        eastPanel.add(previousMonth);
-        eastPanel.add(nextMonth);
-
-        JLabel department = new JLabel("Department");
-        JButton previousDepartment = new JButton("Previous");
         previousDepartment.addActionListener(e -> {
-            try {
-                ccCounter--;
+            if (ccCounter == 0) {
+                ccCounter = costCodeList.getItemCount()-1;
                 tableRenew();
             }
 
-
-            catch(ArrayIndexOutOfBoundsException | NullPointerException error){
-                    System.out.println(ccCounter);
-                    ccCounter = 0;
-                try {
-                    tableRenew();
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
-            } catch (ParseException e1) {
-                e1.printStackTrace();
+            else {
+                ccCounter--;
+                tableRenew();
             }
-
         });
 
-        JButton nextDepartment = new JButton("Next");
         nextDepartment.addActionListener(e -> {
             try {
                 ccCounter++;
-                try {
-                    tableRenew();
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
+                tableRenew();
             }
 
-            catch (ArrayIndexOutOfBoundsException error) {
-                System.out.println(ccCounter);
+            catch (ArrayIndexOutOfBoundsException | IllegalArgumentException error) {
                 ccCounter = 0;
-                try {
-                    tableRenew();
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
+                tableRenew();
             }
         });
 
-        JButton clear = new JButton("Clear");
         clear.addActionListener(e -> {
             ccCounter = 0;
             divisionList.setSelectedIndex(0);
             nameList.setSelectedIndex(0);
             cdgList.setSelectedIndex(0);
-            try {
-                tableRenew();
-            } catch (ParseException e1) {
-                e1.printStackTrace();
-            }
+            tableRenew();
         });
-        final JPanel westPanel = new JPanel();
-        westPanel.add(department);
-        westPanel.add(previousDepartment);
-        westPanel.add(nextDepartment);
-        north.add(eastPanel, BorderLayout.EAST);
-        JPanel westP = new JPanel();
-        westP.add(westPanel);
-        westP.add(listView);
-        westP.add(clear);
-        north.add(westP, BorderLayout.WEST);
-        departmentCard.add(north, BorderLayout.NORTH);
-
-        /*
-        Card Layout
-         */
-
-        contentPanel.add(overviewCard, "1");
-        contentPanel.add(departmentCard, "2");
-
-        contentPanel.setLayout(cardLayout);
-        add(contentPanel, BorderLayout.CENTER);
 
         overview.addActionListener(e -> cardLayout.show(contentPanel, "1"));
 
@@ -631,36 +612,26 @@ public class UserInterface extends JFrame {
                 x.execute();
             }
         });
-
-        setLocationRelativeTo(null);
-        setVisible(true);
-        pack();
-        getDefaultCloseOperation();
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setTitle("VAT: Variance Analysis Tool");
     }
 
-    private void tableRenew() throws ParseException {
-        try {
-            costCodeList.setSelectedIndex(ccCounter);
-        }
-
-        catch (IllegalArgumentException exc) {
-            ccCounter = 0;
-            costCodeList.setSelectedIndex(ccCounter);
-
-        }
-
+    private void tableRenew() {
+        costCodeList.setSelectedIndex(ccCounter);
         currentCostCode = ccNames[ccCounter];
         period = periodNames[pCounter];
         ccLabel.setText("Cost code: " + currentCostCode.toString());
         descriptionLabel.setText("Description: " + databaseConn.name);
         periodLabel.setText("Month: " + getPeriod(period));
         departmentCard.remove(scrollPane2);
-        departmentTable = databaseConn.createSpecificTable(currentCostCode, period, 1);
-        if (Objects.nonNull(currentSelectedDivision) || Objects.nonNull(currentSelectedName) || Objects.nonNull(currentSelectedCDG)) {
-            databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
+        try {
+            departmentTable = databaseConn.createSpecificTable(currentCostCode, period, 1);
+            if (Objects.nonNull(currentSelectedDivision) || Objects.nonNull(currentSelectedName) || Objects.nonNull(currentSelectedCDG)) {
+                databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
 
+            }
+        }
+
+        catch (ParseException e) {
+            e.printStackTrace();
         }
         dataWithDecimal.clear();
         departmentTable.setDefaultRenderer(Object.class, new BoardTableCellRenderer());
