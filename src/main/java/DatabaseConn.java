@@ -864,7 +864,7 @@ class DatabaseConn {
             if (costCode == "ALL") {
                 if (y.equals(period)) {
                     Vector<String> tableVector = new Vector<>(databaseEntry);
-                    name = tableVector.get(16);
+                    name = "Unavailable, select cost code";
                     sortedVector.add(tableVector);
                     divisions.add(databaseEntry.get(18));
                     CDGs.add(databaseEntry.get(19));

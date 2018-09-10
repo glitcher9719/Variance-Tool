@@ -22,7 +22,6 @@ public class UserInterface extends JFrame {
 
     // default values for department view
     private JTable departmentTable;
-    private JScrollPane scrollPane;
     private JScrollPane scrollPane2;
     private CardLayout cardLayout = new CardLayout();
     private JLabel ccLabel;
@@ -89,7 +88,7 @@ public class UserInterface extends JFrame {
             -------- Overview ---------
          */
 
-        scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+        JScrollPane scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         if (table != null) {
             add(table.getTableHeader());
@@ -619,7 +618,7 @@ public class UserInterface extends JFrame {
         pack();
         getDefaultCloseOperation();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setTitle("VVCP: Variance Visualisation and Calculation Program");
+        setTitle("VAT: Variance Analysis Tool");
     }
 
     private void tableRenew() throws ParseException {
