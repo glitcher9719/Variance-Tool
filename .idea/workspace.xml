@@ -54,18 +54,18 @@
       <file leaf-file-name="UserInterface.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/UserInterface.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="952">
-              <caret line="763" column="5" selection-start-line="763" selection-start-column="5" selection-end-line="763" selection-end-column="5" />
+            <state relative-caret-position="621">
+              <caret line="537" column="11" lean-forward="true" selection-start-line="537" selection-start-column="11" selection-end-line="537" selection-end-column="11" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#11511#12678#0" expanded="true" />
-                <element signature="e#12677#12678#0" expanded="true" />
-                <element signature="e#22268#23435#0" expanded="true" />
-                <element signature="e#23434#23435#0" expanded="true" />
-                <element signature="e#26450#27537#0" expanded="true" />
-                <element signature="e#27536#27537#0" expanded="true" />
-                <element signature="e#30374#31461#0" expanded="true" />
-                <element signature="e#31460#31461#0" expanded="true" />
+                <element signature="e#9499#10658#0" expanded="true" />
+                <element signature="e#10657#10658#0" expanded="true" />
+                <element signature="e#20917#22076#0" expanded="true" />
+                <element signature="e#22075#22076#0" expanded="true" />
+                <element signature="e#25120#26199#0" expanded="true" />
+                <element signature="e#26198#26199#0" expanded="true" />
+                <element signature="e#29006#30085#0" expanded="true" />
+                <element signature="e#30084#30085#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -74,8 +74,8 @@
       <file leaf-file-name="DatabaseConn.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/DatabaseConn.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="160">
-              <caret line="866" column="57" selection-start-line="866" selection-start-column="57" selection-end-line="866" selection-end-column="57" />
+            <state relative-caret-position="290">
+              <caret line="473" selection-start-line="473" selection-end-line="473" />
             </state>
           </provider>
         </entry>
@@ -91,10 +91,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>U0203918A000</find>
-      <find>0</find>
-      <find>1</find>
-      <find>radioButtons</find>
       <find>DataIm</find>
       <find>tableHeaders</find>
       <find>createSpecificTable</find>
@@ -114,13 +110,17 @@
       <find>ALL</find>
       <find>month</find>
       <find>drillTable</find>
-      <find>next</find>
       <find>import</find>
       <find>k</find>
       <find>rs</find>
       <find>radiobutton</find>
       <find>descriptionLabel</find>
       <find>name</find>
+      <find>costCodeList</find>
+      <find>next</find>
+      <find>Syste</find>
+      <find>current</find>
+      <find>previo</find>
     </findStrings>
     <replaceStrings>
       <replace>Income</replace>
@@ -206,10 +206,10 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-7" />
-    <option name="y" value="-1080" />
-    <option name="width" value="974" />
-    <option name="height" value="1047" />
+    <option name="x" value="471" />
+    <option name="y" value="-1102" />
+    <option name="width" value="1368" />
+    <option name="height" value="852" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -218,7 +218,40 @@
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes />
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="AndroidView" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Variance Tool" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Variance Tool" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Variance Tool" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Variance Tool" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="Downloaded.Files.Path.Enabled" value="true" />
@@ -501,7 +534,7 @@
       <workItem from="1536232313021" duration="5042000" />
       <workItem from="1536317430357" duration="17036000" />
       <workItem from="1536505007933" duration="2621000" />
-      <workItem from="1536572866186" duration="6153000" />
+      <workItem from="1536572866186" duration="14329000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit (2)">
       <created>1525109752678</created>
@@ -521,7 +554,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="543320000" />
+    <option name="totallyTimeSpent" value="551496000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -533,12 +566,12 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-1080" width="974" height="1047" extended-state="0" />
+    <frame x="-8" y="-1088" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="7" weight="0.32026145" />
-      <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.4977778" weight="0.26361656" />
+      <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.4977778" weight="0.26330534" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
@@ -546,11 +579,11 @@
       <window_info anchor="right" id="Maven Projects" order="8" weight="0.32889125" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="12" weight="0.3278328" />
-      <window_info active="true" anchor="bottom" id="Run" order="3" sideWeight="0.4968017" visible="true" weight="0.3938394" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4977778" weight="0.15731573" />
+      <window_info anchor="bottom" id="Run" order="3" sideWeight="0.4968017" weight="0.3888889" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4977778" weight="0.15686275" />
       <window_info id="Capture Tool" order="6" />
       <window_info id="Designer" order="3" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4991453" weight="0.3035168" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4991453" weight="0.3033049" />
       <window_info anchor="right" id="Database" order="6" weight="0.32942432" />
       <window_info id="Structure" order="1" sideWeight="0.50085473" side_tool="true" weight="0.30912864" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -969,25 +1002,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/DatabaseConn.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="866" column="57" selection-start-line="866" selection-start-column="57" selection-end-line="866" selection-end-column="57" />
+        <state relative-caret-position="290">
+          <caret line="473" selection-start-line="473" selection-end-line="473" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/UserInterface.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="952">
-          <caret line="763" column="5" selection-start-line="763" selection-start-column="5" selection-end-line="763" selection-end-column="5" />
+        <state relative-caret-position="621">
+          <caret line="537" column="11" lean-forward="true" selection-start-line="537" selection-start-column="11" selection-end-line="537" selection-end-column="11" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#11511#12678#0" expanded="true" />
-            <element signature="e#12677#12678#0" expanded="true" />
-            <element signature="e#22268#23435#0" expanded="true" />
-            <element signature="e#23434#23435#0" expanded="true" />
-            <element signature="e#26450#27537#0" expanded="true" />
-            <element signature="e#27536#27537#0" expanded="true" />
-            <element signature="e#30374#31461#0" expanded="true" />
-            <element signature="e#31460#31461#0" expanded="true" />
+            <element signature="e#9499#10658#0" expanded="true" />
+            <element signature="e#10657#10658#0" expanded="true" />
+            <element signature="e#20917#22076#0" expanded="true" />
+            <element signature="e#22075#22076#0" expanded="true" />
+            <element signature="e#25120#26199#0" expanded="true" />
+            <element signature="e#26198#26199#0" expanded="true" />
+            <element signature="e#29006#30085#0" expanded="true" />
+            <element signature="e#30084#30085#0" expanded="true" />
           </folding>
         </state>
       </provider>

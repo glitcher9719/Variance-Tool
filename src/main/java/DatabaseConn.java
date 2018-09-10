@@ -471,8 +471,6 @@ class DatabaseConn {
 
     }
 
-
-    // TODO: Little BUGS (FIX THEM)
     /***
      *
      * @param vector - the initial vector with the data collected from excel spreadsheets

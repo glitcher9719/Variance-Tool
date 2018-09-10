@@ -199,23 +199,8 @@ public class UserInterface extends JFrame {
         departmentCard.add(scrollPane2, BorderLayout.CENTER);
 
         costCodeList.addActionListener(e -> {
-            JComboBox combo = (JComboBox)e.getSource();
-            int pk = 0;
-            try {
-                for (Object x : ccNames) {
-                    if (Objects.equals(combo.getSelectedItem(), x)) {
-                        break;
-                    } else {
-                        pk++;
-                    }
-                }
-            }
-
-            catch (NullPointerException nul) {
-                pk = 0;
-            }
-            ccCounter = pk;
-            currentCostCode = ccNames[ccCounter];
+            ccCounter = costCodeList.getSelectedIndex();
+            currentCostCode = costCodeList.getSelectedItem();
             departmentCard.remove(scrollPane2);
             try {
                 departmentTable = databaseConn.createSpecificTable(currentCostCode, period, 1);
@@ -291,8 +276,15 @@ public class UserInterface extends JFrame {
             }
             try {
                 databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
-                ccNames = databaseConn.sortedCostCentreNames.toArray();
-                costCodeList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
+                if (Objects.nonNull(currentSelectedName)) {
+                    ccNames = databaseConn.sortedCostCentreNames.toArray();
+                    costCodeList.setModel(new DefaultComboBoxModel<>(ccNames));
+                }
+
+                else {
+                    ccNames = databaseConn.ccNames.toArray();
+                    costCodeList.setModel(new DefaultComboBoxModel<>(ccNames));
+                }
 
                 if (Objects.isNull(currentSelectedCDG)) cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCDGs.toArray()));
                 if (Objects.isNull(currentSelectedDivision)) divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedDivisions.toArray()));
@@ -319,8 +311,15 @@ public class UserInterface extends JFrame {
             }
             try {
                 databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
-                ccNames = databaseConn.sortedCostCentreNames.toArray();
-                costCodeList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
+                if (Objects.nonNull(currentSelectedName)) {
+                    ccNames = databaseConn.sortedCostCentreNames.toArray();
+                    costCodeList.setModel(new DefaultComboBoxModel<>(ccNames));
+                }
+
+                else {
+                    ccNames = databaseConn.ccNames.toArray();
+                    costCodeList.setModel(new DefaultComboBoxModel<>(ccNames));
+                }
 
                 if (Objects.isNull(currentSelectedCDG)) cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCDGs.toArray()));
                 if (Objects.isNull(currentSelectedName)) nameList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedNames.toArray()));
@@ -348,8 +347,15 @@ public class UserInterface extends JFrame {
 
             try {
                 databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
-                ccNames = databaseConn.sortedCostCentreNames.toArray();
-                costCodeList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
+                if (Objects.nonNull(currentSelectedName)) {
+                    ccNames = databaseConn.sortedCostCentreNames.toArray();
+                    costCodeList.setModel(new DefaultComboBoxModel<>(ccNames));
+                }
+
+                else {
+                    ccNames = databaseConn.ccNames.toArray();
+                    costCodeList.setModel(new DefaultComboBoxModel<>(ccNames));
+                }
 
                 if (Objects.isNull(currentSelectedDivision)) divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedDivisions.toArray()));
                 if (Objects.isNull(currentSelectedName)) nameList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedNames.toArray()));
@@ -517,7 +523,7 @@ public class UserInterface extends JFrame {
             }
 
 
-            catch(ArrayIndexOutOfBoundsException error){
+            catch(ArrayIndexOutOfBoundsException | NullPointerException error){
                     System.out.println(ccCounter);
                     ccCounter = 0;
                 try {
@@ -553,6 +559,18 @@ public class UserInterface extends JFrame {
             }
         });
 
+        JButton clear = new JButton("Clear");
+        clear.addActionListener(e -> {
+            ccCounter = 0;
+            divisionList.setSelectedIndex(0);
+            nameList.setSelectedIndex(0);
+            cdgList.setSelectedIndex(0);
+            try {
+                tableRenew();
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+            }
+        });
         final JPanel westPanel = new JPanel();
         westPanel.add(department);
         westPanel.add(previousDepartment);
@@ -561,6 +579,7 @@ public class UserInterface extends JFrame {
         JPanel westP = new JPanel();
         westP.add(westPanel);
         westP.add(listView);
+        westP.add(clear);
         north.add(westP, BorderLayout.WEST);
         departmentCard.add(north, BorderLayout.NORTH);
 
