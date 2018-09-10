@@ -6,7 +6,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -107,7 +106,7 @@ public class UserInterface extends JFrame {
            -------- Department view ---------
         */
 
-        departmentTable = databaseConn.createSpecificTable(currentCostCode, period);
+        departmentTable = databaseConn.createSpecificTable(currentCostCode, period, 1);
         dataWithDecimal.clear();
         departmentTable.setDefaultRenderer(Object.class, new BoardTableCellRenderer());
         departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -220,7 +219,7 @@ public class UserInterface extends JFrame {
             currentCostCode = ccNames[ccCounter];
             departmentCard.remove(scrollPane2);
             try {
-                departmentTable = databaseConn.createSpecificTable(currentCostCode, period);
+                departmentTable = databaseConn.createSpecificTable(currentCostCode, period, 1);
             } catch (ParseException e1) {
                 e1.printStackTrace();
             }
@@ -254,24 +253,32 @@ public class UserInterface extends JFrame {
                     int column = e12.getColumn();
                     TableModel model = (TableModel) e12.getSource();
                     Object value = model.getValueAt(row, column);
-                    String uniqueKey = period.toString() + currentCostCode.toString() + departmentTable.getValueAt(row, 1).toString();
-                    Connection conn;
-                    Statement stmt;
-                    try {
-                        Class.forName(databaseConn.JDBC_DRIVER);
-                        conn = DriverManager.getConnection(databaseConn.DB_URL, "dan", "ParolaMea123");
-                        stmt = conn.createStatement();
-                        String noteSQL;
-                        noteSQL =   "UPDATE data " +
-                                "SET `Note`= +'" + value +
-                                "'WHERE `Unique Key`='" +  uniqueKey + "';";
-                        stmt.executeUpdate(noteSQL);
-                        stmt.close();
-                        conn.close();
-                        table = databaseConn.generateDataFromDB();
-                    } catch (ClassNotFoundException | SQLException e1) {
-                        e1.printStackTrace();
-                    }
+                    String uniqueKey = period.toString() + departmentTable.getValueAt(row, 0).toString() + departmentTable.getValueAt(row, 1).toString();
+                    final Connection[] conn = new Connection[1];
+                    final Statement[] stmt = new Statement[1];
+                    SwingWorker x = new SwingWorker<Void, Void>() {
+                        @Override
+                        protected Void doInBackground() {
+                            try {
+                                Class.forName(databaseConn.JDBC_DRIVER);
+                                conn[0] = DriverManager.getConnection(databaseConn.DB_URL, "dan", "ParolaMea123");
+                                stmt[0] = conn[0].createStatement();
+                                String noteSQL;
+                                noteSQL =   "UPDATE data " +
+                                        "SET `Note`= +'" + value +
+                                        "'WHERE `Unique Key`='" +  uniqueKey + "';";
+                                stmt[0].executeUpdate(noteSQL);
+                                stmt[0].close();
+                                conn[0].close();
+                                table = databaseConn.generateDataFromDB();
+                            } catch (ClassNotFoundException | SQLException e1) {
+                                e1.printStackTrace();
+                            }
+                            return null;
+                        }
+
+                    };
+                    x.execute();
                 }
             });
         });
@@ -399,7 +406,105 @@ public class UserInterface extends JFrame {
                 e1.printStackTrace();
             }
         });
+
+        final boolean[] current = {true};
+        JButton checkPrevious = new JButton("Current data");
+        checkPrevious.addActionListener(e -> {
+            try {
+                costCodeList.setSelectedIndex(ccCounter);
+            }
+
+            catch (IllegalArgumentException exc) {
+                ccCounter = 0;
+                costCodeList.setSelectedIndex(ccCounter);
+
+            }
+
+            currentCostCode = ccNames[ccCounter];
+            period = periodNames[pCounter];
+            ccLabel.setText("Cost code: " + currentCostCode.toString());
+            descriptionLabel.setText("Description: " + databaseConn.name);
+            periodLabel.setText("Month: " + getPeriod(period));
+            departmentCard.remove(scrollPane2);
+            if (current[0]) {
+                try {
+                    departmentTable = databaseConn.createSpecificTable(currentCostCode, period, 0);
+                    current[0] = false;
+                    checkPrevious.setText("Previous data");
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+            else {
+                try {
+                    departmentTable = databaseConn.createSpecificTable(currentCostCode, period, 1);
+                    current[0] = true;
+                    checkPrevious.setText("Current data");
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
+            }
+            if (Objects.nonNull(currentSelectedDivision) || Objects.nonNull(currentSelectedName) || Objects.nonNull(currentSelectedCDG)) {
+                try {
+                    databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
+
+            }
+            dataWithDecimal.clear();
+            departmentTable.setDefaultRenderer(Object.class, new BoardTableCellRenderer());
+            departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+            departmentTable.getColumnModel().getColumn(14).setMinWidth(200);
+            departmentTable.getColumnModel().getColumn(13).setMinWidth(50);
+            departmentTable.getColumnModel().getColumn(12).setMinWidth(150);
+            departmentTable.getColumnModel().getColumn(11).setMinWidth(150);
+            departmentTable.getColumnModel().getColumn(10).setMinWidth(30);
+            departmentTable.getColumnModel().getColumn(9).setMinWidth(30);
+            departmentTable.getColumnModel().getColumn(8).setMinWidth(30);
+            scrollPane2 = new JScrollPane(departmentTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            scrollPane2.setPreferredSize(new Dimension(1900, 950));
+            departmentCard.add(scrollPane2, BorderLayout.CENTER);
+            departmentTable.getModel().addTableModelListener(d -> {
+                if (d.getColumn() == 27) {
+                    int row = d.getFirstRow();
+                    int column = d.getColumn();
+                    TableModel model = (TableModel) d.getSource();
+                    Object value = model.getValueAt(row, column);
+                    String uniqueKey = period.toString() + departmentTable.getValueAt(row, 0).toString() + departmentTable.getValueAt(row, 1).toString();
+                    final Connection[] conn = new Connection[1];
+                    final Statement[] stmt = new Statement[1];
+                    SwingWorker x = new SwingWorker<Void, Void>() {
+                        @Override
+                        protected Void doInBackground() {
+                            try {
+                                Class.forName(databaseConn.JDBC_DRIVER);
+                                conn[0] = DriverManager.getConnection(databaseConn.DB_URL, "dan", "ParolaMea123");
+                                stmt[0] = conn[0].createStatement();
+                                String noteSQL;
+                                noteSQL =   "UPDATE data " +
+                                        "SET `Note`= +'" + value +
+                                        "'WHERE `Unique Key`='" +  uniqueKey + "';";
+                                stmt[0].executeUpdate(noteSQL);
+                                stmt[0].close();
+                                conn[0].close();
+                                table = databaseConn.generateDataFromDB();
+                            } catch (ClassNotFoundException | SQLException e1) {
+                                e1.printStackTrace();
+                            }
+                            return null;
+                        }
+
+                    };
+                    x.execute();
+                }
+            });
+        });
+
         final JPanel eastPanel = new JPanel();
+        eastPanel.add(checkPrevious);
         eastPanel.add(month);
         eastPanel.add(previousMonth);
         eastPanel.add(nextMonth);
@@ -480,27 +585,32 @@ public class UserInterface extends JFrame {
                 int column = e.getColumn();
                 TableModel model = (TableModel) e.getSource();
                 Object value = model.getValueAt(row, column);
-                String uniqueKey = period.toString() + currentCostCode.toString() + departmentTable.getValueAt(row, 1).toString();
-                Connection conn;
-                Statement stmt;
-                try {
-                    Class.forName(databaseConn.JDBC_DRIVER);
-                    conn = DriverManager.getConnection(databaseConn.DB_URL, "dan", "ParolaMea123");
-                    stmt = conn.createStatement();
-                    String noteSQL;
-                    noteSQL =   "UPDATE data " +
-                            "SET `Note`= +'" + value +
-                            "'WHERE `Unique Key`='" +  uniqueKey + "';";
-                    stmt.executeUpdate(noteSQL);
-                    scrollPane.remove(table);
-                    table = databaseConn.generateDataFromDB();
-                    scrollPane.add(table);
-                    stmt.close();
-                    conn.close();
-                    table = databaseConn.generateDataFromDB();
-                } catch (ClassNotFoundException | SQLException e1) {
-                    e1.printStackTrace();
-                }
+                String uniqueKey = period.toString() + departmentTable.getValueAt(row, 0).toString() + departmentTable.getValueAt(row, 1).toString();
+                final Connection[] conn = new Connection[1];
+                final Statement[] stmt = new Statement[1];
+                SwingWorker x = new SwingWorker<Void, Void>() {
+                    @Override
+                    protected Void doInBackground() {
+                        try {
+                            Class.forName(databaseConn.JDBC_DRIVER);
+                            conn[0] = DriverManager.getConnection(databaseConn.DB_URL, "dan", "ParolaMea123");
+                            stmt[0] = conn[0].createStatement();
+                            String noteSQL;
+                            noteSQL =   "UPDATE data " +
+                                    "SET `Note`= +'" + value +
+                                    "'WHERE `Unique Key`='" +  uniqueKey + "';";
+                            stmt[0].executeUpdate(noteSQL);
+                            stmt[0].close();
+                            conn[0].close();
+                            table = databaseConn.generateDataFromDB();
+                        } catch (ClassNotFoundException | SQLException e1) {
+                            e1.printStackTrace();
+                        }
+                        return null;
+                    }
+
+                };
+                x.execute();
             }
         });
 
@@ -518,7 +628,6 @@ public class UserInterface extends JFrame {
         }
 
         catch (IllegalArgumentException exc) {
-            System.out.println(ccCounter);
             ccCounter = 0;
             costCodeList.setSelectedIndex(ccCounter);
 
@@ -530,7 +639,7 @@ public class UserInterface extends JFrame {
         descriptionLabel.setText("Description: " + databaseConn.name);
         periodLabel.setText("Month: " + getPeriod(period));
         departmentCard.remove(scrollPane2);
-        departmentTable = databaseConn.createSpecificTable(currentCostCode, period);
+        departmentTable = databaseConn.createSpecificTable(currentCostCode, period, 1);
         if (Objects.nonNull(currentSelectedDivision) || Objects.nonNull(currentSelectedName) || Objects.nonNull(currentSelectedCDG)) {
             databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
 
@@ -555,24 +664,32 @@ public class UserInterface extends JFrame {
                 int column = e.getColumn();
                 TableModel model = (TableModel) e.getSource();
                 Object value = model.getValueAt(row, column);
-                String uniqueKey = period.toString() + currentCostCode.toString() + departmentTable.getValueAt(row, 1).toString();
-                Connection conn;
-                Statement stmt;
-                try {
-                    Class.forName(databaseConn.JDBC_DRIVER);
-                    conn = DriverManager.getConnection(databaseConn.DB_URL, "dan", "ParolaMea123");
-                    stmt = conn.createStatement();
-                    String noteSQL;
-                    noteSQL =   "UPDATE data " +
-                            "SET `Note`= +'" + value +
-                            "'WHERE `Unique Key`='" +  uniqueKey + "';";
-                    stmt.executeUpdate(noteSQL);
-                    stmt.close();
-                    conn.close();
-                    table = databaseConn.generateDataFromDB();
-                } catch (ClassNotFoundException | SQLException e1) {
-                    e1.printStackTrace();
-                }
+                String uniqueKey = period.toString() + departmentTable.getValueAt(row, 0).toString() + departmentTable.getValueAt(row, 1).toString();
+                final Connection[] conn = new Connection[1];
+                final Statement[] stmt = new Statement[1];
+                SwingWorker x = new SwingWorker<Void, Void>() {
+                    @Override
+                    protected Void doInBackground() {
+                        try {
+                            Class.forName(databaseConn.JDBC_DRIVER);
+                            conn[0] = DriverManager.getConnection(databaseConn.DB_URL, "dan", "ParolaMea123");
+                            stmt[0] = conn[0].createStatement();
+                            String noteSQL;
+                            noteSQL =   "UPDATE data " +
+                                    "SET `Note`= +'" + value +
+                                    "'WHERE `Unique Key`='" +  uniqueKey + "';";
+                            stmt[0].executeUpdate(noteSQL);
+                            stmt[0].close();
+                            conn[0].close();
+                            table = databaseConn.generateDataFromDB();
+                        } catch (ClassNotFoundException | SQLException e1) {
+                            e1.printStackTrace();
+                        }
+                        return null;
+                    }
+
+                };
+                x.execute();
             }
         });
     }

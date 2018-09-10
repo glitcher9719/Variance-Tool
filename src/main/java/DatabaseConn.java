@@ -24,6 +24,7 @@ class DatabaseConn {
     final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     final String DB_URL = "jdbc:mysql://localhost:3306/experimental-db?useSSL=false";
     private Vector<Vector<String>> databaseEntries = new Vector<>();
+    private Vector<Vector<String>> previousDatabaseEntries = new Vector<>();
     private Vector<Vector<String>> sortedVector = new Vector<>();
     private Vector<String> hd = new Vector<>();
 
@@ -62,11 +63,14 @@ class DatabaseConn {
         nf.setDecimalFormatSymbols(symbols);
         try {
             databaseEntries.clear();
+            previousDatabaseEntries.clear();
             Class.forName(JDBC_DRIVER);
             conn = DriverManager.getConnection(DB_URL, "dan", "ParolaMea123");
             stmt = conn.createStatement();
             String dataSQL;
+            String previousDataSQL;
             dataSQL = "SELECT * FROM data;";
+            previousDataSQL = "SELECT * FROM previous;";
             ResultSet rs = stmt.executeQuery(dataSQL);
             ccNames.add("ALL");
 
@@ -142,9 +146,71 @@ class DatabaseConn {
                 periodNames.add(String.valueOf(periodAndMonth));
                 databaseEntries.add(element);
             }
+            rs.close();
+            ResultSet rs2 = stmt.executeQuery(previousDataSQL);
+            while (rs2.next()) {
+                Vector<String> element = new Vector<>();
+                String uniqueKey = rs2.getString("Unique Key");
+                String costCentre = rs2.getString("Cost Centre");
+                String expenseHead = rs2.getString("Expense Header");
+                int periodAndMonth = rs2.getInt("Period and Month");
+                int month = rs2.getInt("Month");
+                int year = rs2.getInt("Year");
+                double budget = rs2.getDouble("Budget");
+                double actuals = rs2.getDouble("Actuals");
+                double variance = rs2.getDouble("Variance");
+                double budgetYTD = rs2.getDouble("Budget YTD");
+                double actualsYTD = rs2.getDouble("Actual YTD");
+                double varianceYTD = rs2.getDouble("VarianceYTD");
+                double WTEBud = rs2.getDouble("WTE Bud");
+                double WTECon = rs2.getDouble("WTE Con");
+                double WTEWork = rs2.getDouble("WTE Work");
+                double WTEPaid = rs2.getDouble("WTE Paid");
+                String department = rs2.getString("Department");
+                String group = rs2.getString("Group");
+                String division = rs2.getString("Division");
+                String CDG = rs2.getString("CDG");
+                String service = rs2.getString("Service");
+                String nationalSpecialty = rs2.getString("National Specialty");
+                String name = rs2.getString("Name");
+                String investigationLimit = rs2.getString("Investigation Limit");
+                String expenseDescription = rs2.getString("Expense Description");
+                String expenseGrouping = rs2.getString("Expense Grouping");
+                String expenseType = rs2.getString("Expense Type");
+                String note = rs2.getString("Note");
+                element.add(uniqueKey);
+                element.add(costCentre);
+                element.add(expenseHead);
+                element.add(String.valueOf(periodAndMonth));
+                element.add(String.valueOf(month));
+                element.add(String.valueOf(year));
+                element.add(nf.format(budget));
+                element.add(nf.format(actuals));
+                element.add(nf.format(variance));
+                element.add(nf.format(budgetYTD));
+                element.add(nf.format(actualsYTD));
+                element.add(nf.format(varianceYTD));
+                element.add(nf.format(WTEBud));
+                element.add(nf.format(WTECon));
+                element.add(nf.format(WTEWork));
+                element.add(nf.format(WTEPaid));
+                element.add(department);
+                element.add(group);
+                element.add(division);
+                element.add(CDG);
+                element.add(service);
+                element.add(nationalSpecialty);
+                element.add(name);
+                element.add(investigationLimit);
+                element.add(expenseDescription);
+                element.add(expenseGrouping);
+                element.add(expenseType);
+                element.add(note);
+                previousDatabaseEntries.add(element);
+            }
 
             //STEP 6: Clean-up environment
-            rs.close();
+            rs2.close();
             stmt.close();
             conn.close();
         }
@@ -162,6 +228,7 @@ class DatabaseConn {
         int x = 0;
         int y = 0;
         Vector<Vector<String>> tableData = new Vector<>();
+        ArrayList<String> tableDataPeriod = new ArrayList<>();
         TreeMap<String, Vector<Double>> head = new TreeMap<>();
         InputStream ExcelFileToRead = new FileInputStream(path);
         XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
@@ -253,6 +320,7 @@ class DatabaseConn {
             rowsCompleted++;
             UserInterface.progressBar.setValue(rowsCompleted);
         }
+
         long process = System.currentTimeMillis();
         System.out.println("Processing time: " + (process - start));
         Connection conn = null;
@@ -264,140 +332,120 @@ class DatabaseConn {
 
             stmt = conn.createStatement();
             String checkSQL;
-            checkSQL = "SELECT `Unique Key` FROM data;";
+            checkSQL = "SELECT DISTINCT `Period and Month` FROM data;";
             ResultSet rs = stmt.executeQuery(checkSQL);
-
-            //STEP 5: Extract data from result set
-
-            Vector<String> uniqueKeys = new Vector<>();
             while (rs.next()) {
-                if (uniqueKeys.contains(rs.getString("Unique Key"))) {
-                    throw new Exception("Invalid entries in database, unique keys should not contain duplicates!");
-                } else {
-                    uniqueKeys.add(rs.getString("Unique Key"));
-                }
+                tableDataPeriod.add(rs.getString("Period and Month"));
             }
-            long connectionTime = System.currentTimeMillis();
-            System.out.println("Preparing time: " + (connectionTime-process));
-            final int BATCH_SIZE = 1000;
-            int currentInsertBatch = 0;
-            int currentUpdateBatch = 0;
-
             String insertSQL = "INSERT INTO data VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-            String updateSQL = "UPDATE data SET" +
-                    "`Cost Centre` = " + "?" +
-                    ",`Expense Header` = " + "?" +
-                    ", `Period and Month` = " + "?" +
-                    ", `Month` = " + "?" +
-                    ", `Year` = " + "?" +
-                    ", `Budget` = " + "?" +
-                    ", `Actuals` = " + "?" +
-                    ", `Variance` = " + "?" +
-                    ", `Budget YTD` = " + "?" +
-                    ", `Actual YTD` = " + "?" +
-                    ", `VarianceYTD` = " + "?" +
-                    ", `WTE Bud` = " + "?" +
-                    ", `WTE Con` = " + "?" +
-                    ", `WTE Work` = " + "?" +
-                    ", `WTE Paid` = " + "?" +
-                    ", `Department` = " + "?" +
-                    ", `Group` = " + "?" +
-                    ", `Division` = " + "?" +
-                    ", `CDG` = " + "?" +
-                    ", `Service` = " + "?" +
-                    ", `National Specialty` = " + "?" +
-                    ", `Name` = " + "?" +
-                    ", `Investigation Limit` = " + "?" +
-                    ", `Expense Description` = " + "?" +
-                    ", `Expense Grouping` = " + "?" +
-                    ", `Expense Type` = " + "?" +
-                    " WHERE `Unique Key` = " + "?" + ";";
+            String firstDeleteSQL = "DELETE FROM previous WHERE `Period and Month` = " + "?" + ";";
+            String secondDeleteSQL = "DELETE FROM data WHERE `Period and Month` = " + "?" + ";";
+            String updateSQL = "INSERT INTO previous " +
+                    "SELECT * " +
+                    "FROM data " +
+                    "WHERE `Period and Month` = " + "?" + ";";
+
+            final int BATCH_SIZE = 1000;
+            int currentBatch = 0;
+            PreparedStatement firstDeletePreparedStatement = conn.prepareStatement(firstDeleteSQL);
+            PreparedStatement secondDeletePreparedStatement = conn.prepareStatement(secondDeleteSQL);
             PreparedStatement updatePreparedStatement = conn.prepareStatement(updateSQL);
             PreparedStatement insertPreparedStatement = conn.prepareStatement(insertSQL);
+            ArrayList<String> iteratedPeriods = new ArrayList<>();
             conn.setAutoCommit(false);
 
-            for (Vector<String> k : tableData) {
-                if (uniqueKeys.contains(k.get(15))) {
-                    updatePreparedStatement.setString(1, k.get(0));
-                    updatePreparedStatement.setString(2, k.get(1));
-                    updatePreparedStatement.setInt(3, (int) Math.round(Double.parseDouble(k.get(2))));
-                    updatePreparedStatement.setInt(4, (int) Math.round(Double.parseDouble(k.get(3))));
-                    updatePreparedStatement.setInt(5, (int) Math.round(Double.parseDouble(k.get(4))));
-                    updatePreparedStatement.setDouble(6, Double.parseDouble(k.get(5)));
-                    updatePreparedStatement.setDouble(7, Double.parseDouble(k.get(6)));
-                    updatePreparedStatement.setDouble(8, Double.parseDouble(k.get(7)));
-                    updatePreparedStatement.setDouble(9, Double.parseDouble(k.get(8)));
-                    updatePreparedStatement.setDouble(10, Double.parseDouble(k.get(9)));
-                    updatePreparedStatement.setDouble(11, Double.parseDouble(k.get(10)));
-                    updatePreparedStatement.setDouble(12, Double.parseDouble(k.get(11)));
-                    updatePreparedStatement.setDouble(13, Double.parseDouble(k.get(12)));
-                    updatePreparedStatement.setDouble(14, Double.parseDouble(k.get(13)));
-                    updatePreparedStatement.setDouble(15, Double.parseDouble(k.get(14)));
-                    updatePreparedStatement.setString(16, k.get(16));
-                    updatePreparedStatement.setString(17, k.get(17));
-                    updatePreparedStatement.setString(18, k.get(18));
-                    updatePreparedStatement.setString(19, k.get(19));
-                    updatePreparedStatement.setString(20, k.get(20));
-                    updatePreparedStatement.setString(21, k.get(21));
-                    updatePreparedStatement.setString(22, k.get(22));
-                    updatePreparedStatement.setString(23, k.get(23));
-                    updatePreparedStatement.setString(24, k.get(24));
-                    updatePreparedStatement.setString(25, k.get(25));
-                    updatePreparedStatement.setString(26, k.get(26));
-                    updatePreparedStatement.setString(27, k.get(15));
-                    updatePreparedStatement.executeUpdate();
-                    rowsCompleted++;
-                    UserInterface.progressBar.setValue(rowsCompleted);
-                    currentUpdateBatch++;
-                    if (currentUpdateBatch >= BATCH_SIZE) {
-                        updatePreparedStatement.executeBatch();
-                        conn.commit();
-                        currentUpdateBatch = 0;
-                    }
-                } else {
-                    insertPreparedStatement.setString(1, k.get(15));
-                    insertPreparedStatement.setString(2, k.get(0));
-                    insertPreparedStatement.setString(3, k.get(1));
-                    insertPreparedStatement.setInt(4, (int) Math.round(Double.parseDouble(k.get(2))));
-                    insertPreparedStatement.setInt(5, (int) Math.round(Double.parseDouble(k.get(3))));
-                    insertPreparedStatement.setInt(6, (int) Math.round(Double.parseDouble(k.get(4))));
-                    insertPreparedStatement.setDouble(7, Double.parseDouble(k.get(5)));
-                    insertPreparedStatement.setDouble(8, Double.parseDouble(k.get(6)));
-                    insertPreparedStatement.setDouble(9, Double.parseDouble(k.get(7)));
-                    insertPreparedStatement.setDouble(10, Double.parseDouble(k.get(8)));
-                    insertPreparedStatement.setDouble(11, Double.parseDouble(k.get(9)));
-                    insertPreparedStatement.setDouble(12, Double.parseDouble(k.get(10)));
-                    insertPreparedStatement.setDouble(13, Double.parseDouble(k.get(11)));
-                    insertPreparedStatement.setDouble(14, Double.parseDouble(k.get(12)));
-                    insertPreparedStatement.setDouble(15, Double.parseDouble(k.get(13)));
-                    insertPreparedStatement.setDouble(16, Double.parseDouble(k.get(14)));
-                    insertPreparedStatement.setString(17, k.get(16));
-                    insertPreparedStatement.setString(18, k.get(17));
-                    insertPreparedStatement.setString(19, k.get(18));
-                    insertPreparedStatement.setString(20, k.get(19));
-                    insertPreparedStatement.setString(21, k.get(20));
-                    insertPreparedStatement.setString(22, k.get(21));
-                    insertPreparedStatement.setString(23, k.get(22));
-                    insertPreparedStatement.setString(24, k.get(23));
-                    insertPreparedStatement.setString(25, k.get(24));
-                    insertPreparedStatement.setString(26, k.get(25));
-                    insertPreparedStatement.setString(27, k.get(26));
-                    insertPreparedStatement.setString(28, null);
-                    insertPreparedStatement.executeUpdate();
-                    rowsCompleted++;
-                    UserInterface.progressBar.setValue(rowsCompleted);
-                    currentInsertBatch++;
+            for (Vector<String> aTableData : tableData) {
+                if (currentBatch >= BATCH_SIZE) {
+                    insertPreparedStatement.executeBatch();
+                    conn.commit();
+                    currentBatch = 0;
+                }
 
-                    if (currentInsertBatch >= BATCH_SIZE) {
-                        insertPreparedStatement.executeBatch();
+                if (tableDataPeriod.contains(aTableData.get(2))) {
+                    if (!(iteratedPeriods.contains(aTableData.get(2)))) {
+                        iteratedPeriods.add(aTableData.get(2));
+                        firstDeletePreparedStatement.setInt(1, Integer.parseInt(aTableData.get(2)));
+                        firstDeletePreparedStatement.executeUpdate();
+                        updatePreparedStatement.setInt(1, Integer.parseInt(aTableData.get(2)));
+                        updatePreparedStatement.executeUpdate();
+                        secondDeletePreparedStatement.setInt(1, Integer.parseInt(aTableData.get(2)));
+                        secondDeletePreparedStatement.executeUpdate();
                         conn.commit();
-                        currentInsertBatch = 0;
                     }
+                    insertPreparedStatement.setString(1, aTableData.get(15));
+                    insertPreparedStatement.setString(2, aTableData.get(0));
+                    insertPreparedStatement.setString(3, aTableData.get(1));
+                    insertPreparedStatement.setInt(4, (int) Math.round(Double.parseDouble(aTableData.get(2))));
+                    insertPreparedStatement.setInt(5, (int) Math.round(Double.parseDouble(aTableData.get(3))));
+                    insertPreparedStatement.setInt(6, (int) Math.round(Double.parseDouble(aTableData.get(4))));
+                    insertPreparedStatement.setDouble(7, Double.parseDouble(aTableData.get(5)));
+                    insertPreparedStatement.setDouble(8, Double.parseDouble(aTableData.get(6)));
+                    insertPreparedStatement.setDouble(9, Double.parseDouble(aTableData.get(7)));
+                    insertPreparedStatement.setDouble(10, Double.parseDouble(aTableData.get(8)));
+                    insertPreparedStatement.setDouble(11, Double.parseDouble(aTableData.get(9)));
+                    insertPreparedStatement.setDouble(12, Double.parseDouble(aTableData.get(10)));
+                    insertPreparedStatement.setDouble(13, Double.parseDouble(aTableData.get(11)));
+                    insertPreparedStatement.setDouble(14, Double.parseDouble(aTableData.get(12)));
+                    insertPreparedStatement.setDouble(15, Double.parseDouble(aTableData.get(13)));
+                    insertPreparedStatement.setDouble(16, Double.parseDouble(aTableData.get(14)));
+                    insertPreparedStatement.setString(17, aTableData.get(16));
+                    insertPreparedStatement.setString(18, aTableData.get(17));
+                    insertPreparedStatement.setString(19, aTableData.get(18));
+                    insertPreparedStatement.setString(20, aTableData.get(19));
+                    insertPreparedStatement.setString(21, aTableData.get(20));
+                    insertPreparedStatement.setString(22, aTableData.get(21));
+                    insertPreparedStatement.setString(23, aTableData.get(22));
+                    insertPreparedStatement.setString(24, aTableData.get(23));
+                    insertPreparedStatement.setString(25, aTableData.get(24));
+                    insertPreparedStatement.setString(26, aTableData.get(25));
+                    insertPreparedStatement.setString(27, aTableData.get(26));
+                    insertPreparedStatement.setString(28, null);
+                    insertPreparedStatement.addBatch();
+                    rowsCompleted++;
+                    UserInterface.progressBar.setValue(rowsCompleted);
+                    currentBatch++;
+                }
+
+                else {
+                    insertPreparedStatement.setString(1, aTableData.get(15));
+                    insertPreparedStatement.setString(2, aTableData.get(0));
+                    insertPreparedStatement.setString(3, aTableData.get(1));
+                    insertPreparedStatement.setInt(4, (int) Math.round(Double.parseDouble(aTableData.get(2))));
+                    insertPreparedStatement.setInt(5, (int) Math.round(Double.parseDouble(aTableData.get(3))));
+                    insertPreparedStatement.setInt(6, (int) Math.round(Double.parseDouble(aTableData.get(4))));
+                    insertPreparedStatement.setDouble(7, Double.parseDouble(aTableData.get(5)));
+                    insertPreparedStatement.setDouble(8, Double.parseDouble(aTableData.get(6)));
+                    insertPreparedStatement.setDouble(9, Double.parseDouble(aTableData.get(7)));
+                    insertPreparedStatement.setDouble(10, Double.parseDouble(aTableData.get(8)));
+                    insertPreparedStatement.setDouble(11, Double.parseDouble(aTableData.get(9)));
+                    insertPreparedStatement.setDouble(12, Double.parseDouble(aTableData.get(10)));
+                    insertPreparedStatement.setDouble(13, Double.parseDouble(aTableData.get(11)));
+                    insertPreparedStatement.setDouble(14, Double.parseDouble(aTableData.get(12)));
+                    insertPreparedStatement.setDouble(15, Double.parseDouble(aTableData.get(13)));
+                    insertPreparedStatement.setDouble(16, Double.parseDouble(aTableData.get(14)));
+                    insertPreparedStatement.setString(17, aTableData.get(16));
+                    insertPreparedStatement.setString(18, aTableData.get(17));
+                    insertPreparedStatement.setString(19, aTableData.get(18));
+                    insertPreparedStatement.setString(20, aTableData.get(19));
+                    insertPreparedStatement.setString(21, aTableData.get(20));
+                    insertPreparedStatement.setString(22, aTableData.get(21));
+                    insertPreparedStatement.setString(23, aTableData.get(22));
+                    insertPreparedStatement.setString(24, aTableData.get(23));
+                    insertPreparedStatement.setString(25, aTableData.get(24));
+                    insertPreparedStatement.setString(26, aTableData.get(25));
+                    insertPreparedStatement.setString(27, aTableData.get(26));
+                    insertPreparedStatement.setString(28, null);
+                    insertPreparedStatement.addBatch();
+                    rowsCompleted++;
+                    UserInterface.progressBar.setValue(rowsCompleted);
+                    currentBatch++;
                 }
             }
 
+            long connectionTime = System.currentTimeMillis();
+            System.out.println("Preparing time: " + (connectionTime-process));
+
             insertPreparedStatement.executeBatch();
-            updatePreparedStatement.executeBatch();
             conn.commit();
 
             //STEP 6: Clean-up environment
@@ -790,7 +838,17 @@ class DatabaseConn {
         return newVector;
     }
 
-    JTable createSpecificTable(Object costCode, Object period) throws ParseException {
+    // @param currentPrevious -> 0 for current database entries, 1 for previous database entries
+    JTable createSpecificTable(Object costCode, Object period, int currentPrevious) throws ParseException {
+        Vector<Vector<String>> databaseEntries;
+
+        if (currentPrevious == 0) {
+            databaseEntries = previousDatabaseEntries;
+        }
+
+        else {
+            databaseEntries = this.databaseEntries;
+        }
 
         // Sort each vector to match cost code and period parameters
         sortedVector.clear();
