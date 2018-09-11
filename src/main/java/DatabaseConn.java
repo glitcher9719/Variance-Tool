@@ -22,7 +22,7 @@ class DatabaseConn {
 
     // JDBC driver name and database URL
     final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    final String DB_URL = "jdbc:mysql://RDECGHDB04.rde.local:3306/vmDatabase?useSSL=false";
+    final String DB_URL = "jdbc:mysql://localhost:3306/experimental-db?useSSL=false";
     private Vector<Vector<String>> databaseEntries = new Vector<>();
     private Vector<Vector<String>> previousDatabaseEntries = new Vector<>();
     private Vector<Vector<String>> sortedVector = new Vector<>();
@@ -65,7 +65,7 @@ class DatabaseConn {
             databaseEntries.clear();
             previousDatabaseEntries.clear();
             Class.forName(JDBC_DRIVER);
-            conn = DriverManager.getConnection(DB_URL, "root", "Tuesday1981@");
+            conn = DriverManager.getConnection(DB_URL, "dan", "ParolaMea123");
             stmt = conn.createStatement();
             String dataSQL;
             String previousDataSQL;

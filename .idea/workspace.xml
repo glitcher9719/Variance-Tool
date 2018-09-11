@@ -2,23 +2,13 @@
 <project version="4">
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="com.colchesterhospitalnhs.variancetool:jar" />
+      <artifact name="Variance Tool:jar" />
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ec3fa37-6308-4677-acb1-392265eb16cf" name="Default" comment="initial commit (3)">
-      <change afterPath="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/com_colchesterhospitalnhs_variancetool_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/Variance_Tool_jar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/com_colchesterhospitalnhs_variancetool_jar/com.colchesterhospitalnhs.variancetool.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/com_colchesterhospitalnhs_variancetool_jar/com.colchesterhospitalnhs.variancetool.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/DatabaseConn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DatabaseConn.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$5.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$BoardTableCellRenderer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$BoardTableCellRenderer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/com_colchesterhospitalnhs_variancetool_jar/com.colchesterhospitalnhs.variancetool.jar" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -80,6 +70,11 @@
               <caret line="24" column="91" lean-forward="true" selection-start-line="24" selection-start-column="91" selection-end-line="24" selection-end-column="91" />
             </state>
           </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MANIFEST.MF" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
     </leaf>
@@ -207,7 +202,7 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="354" />
     <option name="y" value="-1022" />
     <option name="width" value="1368" />
@@ -229,24 +224,6 @@
             <path>
               <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
               <item name="Variance Tool" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Variance Tool" type="462c0819:PsiDirectoryNode" />
-              <item name="out" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Variance Tool" type="462c0819:PsiDirectoryNode" />
-              <item name="out" type="462c0819:PsiDirectoryNode" />
-              <item name="artifacts" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Variance Tool" type="462c0819:PsiDirectoryNode" />
-              <item name="out" type="462c0819:PsiDirectoryNode" />
-              <item name="artifacts" type="462c0819:PsiDirectoryNode" />
-              <item name="com_colchesterhospitalnhs_variancetool_jar" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
@@ -555,7 +532,7 @@
       <workItem from="1536317430357" duration="17036000" />
       <workItem from="1536505007933" duration="2621000" />
       <workItem from="1536572866186" duration="18730000" />
-      <workItem from="1536658629239" duration="11262000" />
+      <workItem from="1536658629239" duration="12065000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit (2)">
       <created>1525109752678</created>
@@ -575,7 +552,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="567159000" />
+    <option name="totallyTimeSpent" value="567962000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -600,11 +577,11 @@
       <window_info anchor="right" id="Maven Projects" order="8" weight="0.32889125" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="12" weight="0.3278328" />
-      <window_info anchor="bottom" id="Run" order="3" sideWeight="0.4968017" weight="0.3960396" />
+      <window_info anchor="bottom" id="Run" order="3" sideWeight="0.4968017" weight="0.50840336" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4977778" weight="0.15686275" />
       <window_info id="Capture Tool" order="6" />
       <window_info id="Designer" order="3" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49782136" visible="true" weight="0.3033049" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49782136" weight="0.3033049" />
       <window_info anchor="right" id="Database" order="6" weight="0.32942432" />
       <window_info id="Structure" order="1" sideWeight="0.50085473" side_tool="true" weight="0.30863538" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -737,13 +714,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/java/util/TreeMap.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="103">
-          <caret line="534" column="13" selection-start-line="534" selection-start-column="13" selection-end-line="534" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/javax/swing/JFileChooser.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="714">
@@ -1032,6 +1002,9 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/DatabaseConn.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
@@ -1045,7 +1018,7 @@
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
           <artifact-editor />
-          <last-edited />
+          <last-edited>Variance Tool:jar</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1058,7 +1031,7 @@
       </state>
       <state key="FacetStructureConfigurable.UI">
         <settings>
-          <last-edited />
+          <last-edited>No facets are configured</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1094,7 +1067,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited />
+          <last-edited>Variance Tool</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
