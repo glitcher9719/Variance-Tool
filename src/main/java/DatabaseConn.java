@@ -285,7 +285,7 @@ class DatabaseConn {
 
                 budgetYTD += currentBudget;
                 actualYTD += currentActual;
-                varianceYTD += budgetYTD - actualYTD;
+                varianceYTD += (budgetYTD - actualYTD);
 
                 head.get(tableData.get(y).get(0) + tableData.get(y).get(1)).clear();
                 head.get(tableData.get(y).get(0) + tableData.get(y).get(1)).add(budgetYTD);
@@ -300,7 +300,7 @@ class DatabaseConn {
             else {
                 double budgetYTD = Double.parseDouble(tableData.get(y).get(5));
                 double actualYTD = Double.parseDouble(tableData.get(y).get(6));
-                double varianceYTD = budgetYTD - actualYTD;
+                double varianceYTD = (budgetYTD - actualYTD);
                 Vector<Double> newYTD = new Vector<>();
                 newYTD.add(budgetYTD);
                 newYTD.add(actualYTD);

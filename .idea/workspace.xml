@@ -7,7 +7,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ec3fa37-6308-4677-acb1-392265eb16cf" name="Default" comment="initial commit (3)">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/DatabaseConn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DatabaseConn.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/UserInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$BoardTableCellRenderer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$BoardTableCellRenderer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -48,46 +57,28 @@
     </expand>
     <select />
   </component>
+  <component name="FavoritesManager">
+    <favorites_list name="Variance Tool" />
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="UserInterface.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="UserInterface.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/UserInterface.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="91">
-              <caret line="435" column="61" selection-start-line="435" selection-start-column="61" selection-end-line="435" selection-end-column="61" />
+            <state relative-caret-position="256">
+              <caret line="570" column="48" selection-start-line="570" selection-start-column="48" selection-end-line="570" selection-end-column="48" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#12627#13794#0" expanded="true" />
-                <element signature="e#13793#13794#0" expanded="true" />
-                <element signature="e#23406#24573#0" expanded="true" />
-                <element signature="e#24572#24573#0" expanded="true" />
-                <element signature="e#31674#32761#0" expanded="true" />
-                <element signature="e#32760#32761#0" expanded="true" />
-                <element signature="e#35312#36399#0" expanded="true" />
-                <element signature="e#36398#36399#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DatabaseConn.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="DatabaseConn.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/DatabaseConn.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-238">
-              <caret line="31" column="26" selection-start-line="31" selection-start-column="26" selection-end-line="31" selection-end-column="26" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="JComboBox.java" pinned="false" current-in-tab="false">
-        <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/javax/swing/JComboBox.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="1470" column="15" selection-start-line="1470" selection-start-column="15" selection-end-line="1470" selection-end-column="15" />
-              <folding>
-                <element signature="e#51174#51175#0" expanded="true" />
-                <element signature="e#51216#51217#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="485">
+              <caret line="287" column="55" lean-forward="true" selection-start-line="287" selection-start-column="55" selection-end-line="287" selection-end-column="55" />
             </state>
           </provider>
         </entry>
@@ -103,10 +94,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>period</find>
-      <find>periodLabel</find>
-      <find>departmentTable</find>
-      <find>departmentTa</find>
       <find>setDe</find>
       <find>g</find>
       <find>addT</find>
@@ -133,6 +120,10 @@
       <find>previousDepartment</find>
       <find>previousDep</find>
       <find>previousMonth</find>
+      <find>System.out</find>
+      <find>divisionList</find>
+      <find>clear</find>
+      <find>YTD</find>
     </findStrings>
     <replaceStrings>
       <replace>Income</replace>
@@ -193,8 +184,8 @@
         <option value="$PROJECT_DIR$/src/main/java/Layout.form" />
         <option value="$PROJECT_DIR$/src/main/java/DataProcessing.java" />
         <option value="$PROJECT_DIR$/src/main/java/DatabaseConnectivity.java" />
-        <option value="$PROJECT_DIR$/src/main/java/DatabaseConn.java" />
         <option value="$PROJECT_DIR$/src/main/java/UserInterface.java" />
+        <option value="$PROJECT_DIR$/src/main/java/DatabaseConn.java" />
       </list>
     </option>
   </component>
@@ -219,6 +210,7 @@
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-7" />
+    <option name="y" value="-1080" />
     <option name="width" value="974" />
     <option name="height" value="1047" />
   </component>
@@ -545,7 +537,8 @@
       <workItem from="1536232313021" duration="5042000" />
       <workItem from="1536317430357" duration="17036000" />
       <workItem from="1536505007933" duration="2621000" />
-      <workItem from="1536572866186" duration="16804000" />
+      <workItem from="1536572866186" duration="18730000" />
+      <workItem from="1536658629239" duration="8832000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit (2)">
       <created>1525109752678</created>
@@ -565,7 +558,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="553971000" />
+    <option name="totallyTimeSpent" value="564729000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -577,7 +570,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="0" width="974" height="1047" extended-state="0" />
+    <frame x="-8" y="-1088" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
@@ -590,17 +583,17 @@
       <window_info anchor="right" id="Maven Projects" order="8" weight="0.32889125" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="12" weight="0.3278328" />
-      <window_info active="true" anchor="bottom" id="Run" order="3" sideWeight="0.4968017" visible="true" weight="0.39273927" />
+      <window_info anchor="bottom" id="Run" order="3" sideWeight="0.4968017" weight="0.3960396" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4977778" weight="0.15686275" />
       <window_info id="Capture Tool" order="6" />
       <window_info id="Designer" order="3" />
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4991453" weight="0.3033049" />
       <window_info anchor="right" id="Database" order="6" weight="0.32942432" />
-      <window_info id="Structure" order="1" sideWeight="0.50085473" side_tool="true" weight="0.30912864" />
+      <window_info id="Structure" order="1" sideWeight="0.50085473" side_tool="true" weight="0.30863538" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="4" />
       <window_info anchor="right" id="Theme Preview" order="5" />
-      <window_info id="Favorites" order="5" side_tool="true" />
+      <window_info id="Favorites" order="5" side_tool="true" weight="0.32995737" />
       <window_info anchor="bottom" id="Debug" order="4" sideWeight="0.49840087" weight="0.2777778" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -1015,28 +1008,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/DatabaseConn.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/UserInterface.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-238">
-          <caret line="31" column="26" selection-start-line="31" selection-start-column="26" selection-end-line="31" selection-end-column="26" />
+        <state relative-caret-position="256">
+          <caret line="570" column="48" selection-start-line="570" selection-start-column="48" selection-end-line="570" selection-end-column="48" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/UserInterface.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/DatabaseConn.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="91">
-          <caret line="435" column="61" selection-start-line="435" selection-start-column="61" selection-end-line="435" selection-end-column="61" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#12627#13794#0" expanded="true" />
-            <element signature="e#13793#13794#0" expanded="true" />
-            <element signature="e#23406#24573#0" expanded="true" />
-            <element signature="e#24572#24573#0" expanded="true" />
-            <element signature="e#31674#32761#0" expanded="true" />
-            <element signature="e#32760#32761#0" expanded="true" />
-            <element signature="e#35312#36399#0" expanded="true" />
-            <element signature="e#36398#36399#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="485">
+          <caret line="287" column="55" lean-forward="true" selection-start-line="287" selection-start-column="55" selection-end-line="287" selection-end-column="55" />
         </state>
       </provider>
     </entry>

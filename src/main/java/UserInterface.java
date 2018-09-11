@@ -327,7 +327,7 @@ public class UserInterface extends JFrame {
             }
             try {
                 databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
-                if (Objects.nonNull(currentSelectedName)) {
+                if (Objects.nonNull(currentCostCode)) {
                     ccNames = databaseConn.sortedCostCentreNames.toArray();
                     costCodeList.setModel(new DefaultComboBoxModel<>(ccNames));
                 }
@@ -362,7 +362,7 @@ public class UserInterface extends JFrame {
             }
             try {
                 databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
-                if (Objects.nonNull(currentSelectedName)) {
+                if (Objects.nonNull(currentCostCode)) {
                     ccNames = databaseConn.sortedCostCentreNames.toArray();
                     costCodeList.setModel(new DefaultComboBoxModel<>(ccNames));
                 }
@@ -398,7 +398,7 @@ public class UserInterface extends JFrame {
 
             try {
                 databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
-                if (Objects.nonNull(currentSelectedName)) {
+                if (Objects.nonNull(currentCostCode)) {
                     ccNames = databaseConn.sortedCostCentreNames.toArray();
                     costCodeList.setModel(new DefaultComboBoxModel<>(ccNames));
                 }
@@ -567,11 +567,13 @@ public class UserInterface extends JFrame {
         });
 
         clear.addActionListener(e -> {
-            ccCounter = 0;
-            divisionList.setSelectedIndex(0);
-            nameList.setSelectedIndex(0);
-            cdgList.setSelectedIndex(0);
-            tableRenew();
+            if (!(currentCostCode.equals("ALL")) || Objects.nonNull(currentSelectedName) || Objects.nonNull(currentSelectedDivision) || Objects.nonNull(currentSelectedCDG)) {
+                ccCounter = 0;
+                divisionList.setSelectedIndex(0);
+                nameList.setSelectedIndex(0);
+                cdgList.setSelectedIndex(0);
+                tableRenew();
+            }
         });
 
         overview.addActionListener(e -> cardLayout.show(contentPanel, "1"));
