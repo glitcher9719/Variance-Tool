@@ -7,9 +7,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ec3fa37-6308-4677-acb1-392265eb16cf" name="Default" comment="initial commit (3)">
+      <change afterPath="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/com_colchesterhospitalnhs_variancetool_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/Variance_Tool_jar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/com_colchesterhospitalnhs_variancetool_jar/com.colchesterhospitalnhs.variancetool.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/com_colchesterhospitalnhs_variancetool_jar/com.colchesterhospitalnhs.variancetool.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/DatabaseConn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DatabaseConn.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/UserInterface.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$3.class" afterDir="false" />
@@ -65,11 +67,8 @@
       <file leaf-file-name="UserInterface.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/UserInterface.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="256">
-              <caret line="570" column="48" selection-start-line="570" selection-start-column="48" selection-end-line="570" selection-end-column="48" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="-884">
+              <caret line="17" column="24" lean-forward="true" selection-start-line="17" selection-start-column="24" selection-end-line="17" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -77,8 +76,8 @@
       <file leaf-file-name="DatabaseConn.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/DatabaseConn.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="485">
-              <caret line="287" column="55" lean-forward="true" selection-start-line="287" selection-start-column="55" selection-end-line="287" selection-end-column="55" />
+            <state relative-caret-position="102">
+              <caret line="24" column="91" lean-forward="true" selection-start-line="24" selection-start-column="91" selection-end-line="24" selection-end-column="91" />
             </state>
           </provider>
         </entry>
@@ -208,11 +207,11 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-7" />
-    <option name="y" value="-1080" />
-    <option name="width" value="974" />
-    <option name="height" value="1047" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="354" />
+    <option name="y" value="-1022" />
+    <option name="width" value="1368" />
+    <option name="height" value="852" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -222,15 +221,32 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="AndroidView" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
               <item name="Variance Tool" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Variance Tool" type="462c0819:PsiDirectoryNode" />
+              <item name="out" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Variance Tool" type="462c0819:PsiDirectoryNode" />
+              <item name="out" type="462c0819:PsiDirectoryNode" />
+              <item name="artifacts" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Variance Tool" type="462c0819:PsiDirectoryNode" />
+              <item name="out" type="462c0819:PsiDirectoryNode" />
+              <item name="artifacts" type="462c0819:PsiDirectoryNode" />
+              <item name="com_colchesterhospitalnhs_variancetool_jar" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
@@ -254,6 +270,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -538,7 +555,7 @@
       <workItem from="1536317430357" duration="17036000" />
       <workItem from="1536505007933" duration="2621000" />
       <workItem from="1536572866186" duration="18730000" />
-      <workItem from="1536658629239" duration="8832000" />
+      <workItem from="1536658629239" duration="11262000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit (2)">
       <created>1525109752678</created>
@@ -558,7 +575,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="564729000" />
+    <option name="totallyTimeSpent" value="567159000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -587,13 +604,13 @@
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4977778" weight="0.15686275" />
       <window_info id="Capture Tool" order="6" />
       <window_info id="Designer" order="3" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4991453" weight="0.3033049" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49782136" visible="true" weight="0.3033049" />
       <window_info anchor="right" id="Database" order="6" weight="0.32942432" />
       <window_info id="Structure" order="1" sideWeight="0.50085473" side_tool="true" weight="0.30863538" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="4" />
       <window_info anchor="right" id="Theme Preview" order="5" />
-      <window_info id="Favorites" order="5" side_tool="true" weight="0.32995737" />
+      <window_info id="Favorites" order="5" sideWeight="0.50217867" side_tool="true" weight="0.3033049" />
       <window_info anchor="bottom" id="Debug" order="4" sideWeight="0.49840087" weight="0.2777778" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -1010,18 +1027,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/UserInterface.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="570" column="48" selection-start-line="570" selection-start-column="48" selection-end-line="570" selection-end-column="48" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="-884">
+          <caret line="17" column="24" lean-forward="true" selection-start-line="17" selection-start-column="24" selection-end-line="17" selection-end-column="24" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/DatabaseConn.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="485">
-          <caret line="287" column="55" lean-forward="true" selection-start-line="287" selection-start-column="55" selection-end-line="287" selection-end-column="55" />
+        <state relative-caret-position="102">
+          <caret line="24" column="91" lean-forward="true" selection-start-line="24" selection-start-column="91" selection-end-line="24" selection-end-column="91" />
         </state>
       </provider>
     </entry>
@@ -1031,7 +1045,7 @@
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
           <artifact-editor />
-          <last-edited>com.colchesterhospitalnhs.variancetool:jar</last-edited>
+          <last-edited />
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1044,7 +1058,7 @@
       </state>
       <state key="FacetStructureConfigurable.UI">
         <settings>
-          <last-edited>No facets are configured</last-edited>
+          <last-edited />
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1080,11 +1094,12 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>com</last-edited>
+          <last-edited />
           <splitter-proportions>
             <option name="proportions">
               <list>
                 <option value="0.2" />
+                <option value="0.6" />
               </list>
             </option>
           </splitter-proportions>
