@@ -22,13 +22,16 @@ public class UserInterface extends JFrame {
 
     // default values for department view
     private JTable departmentTable;
+    private JTable summaryCostCodeTable;
     private JScrollPane scrollPane2;
+    private JScrollPane scrollPane3;
     private CardLayout cardLayout = new CardLayout();
     private JLabel ccLabel;
     private JLabel periodLabel;
     private JLabel descriptionLabel;
     private JTable table;
     private JPanel departmentCard;
+    private JPanel summaryCard;
 
     private JComboBox<Object> costCodeList;
     private Object[] ccNames;
@@ -55,6 +58,7 @@ public class UserInterface extends JFrame {
     private UserInterface() throws ClassNotFoundException, ParseException {
         databaseConn = new DatabaseConn();
         table = databaseConn.generateDataFromDB();
+        summaryCostCodeTable = databaseConn.createSummaryTable(null);
         ccNames = databaseConn.ccNames.toArray();
         periodNames = databaseConn.periodNames.toArray();
         try {
@@ -70,6 +74,7 @@ public class UserInterface extends JFrame {
         contentPanel = new JPanel(cardLayout);
         JPanel overviewCard = new JPanel(new BorderLayout());
         departmentCard = new JPanel(new BorderLayout());
+        summaryCard = new JPanel(new BorderLayout());
         JPanel north = new JPanel(new BorderLayout());
 
          /*
@@ -77,12 +82,15 @@ public class UserInterface extends JFrame {
          */
         final JRadioButton overview = new JRadioButton("Overview", true);
         final JRadioButton departmentView = new JRadioButton("Department View");
+        final JRadioButton summaryView = new JRadioButton("Summary View");
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(overview);
         buttonGroup.add(departmentView);
+        buttonGroup.add(summaryView);
         final JPanel radioButtons = new JPanel();
         radioButtons.add(overview);
         radioButtons.add(departmentView);
+        radioButtons.add(summaryView);
 
         /*
             -------- Overview ---------
@@ -197,11 +205,21 @@ public class UserInterface extends JFrame {
         departmentCard.add(north, BorderLayout.NORTH);
 
         /*
+        Summary layout
+         */
+
+        scrollPane3 = new JScrollPane(summaryCostCodeTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        summaryCard.add(scrollPane3);
+        JComboBox<Object> periods = new JComboBox<>(periodNames);
+        summaryCard.add(periods, BorderLayout.LINE_START);
+
+        /*
         Card Layout
          */
 
         contentPanel.add(overviewCard, "1");
         contentPanel.add(departmentCard, "2");
+        contentPanel.add(summaryCard, "3");
 
         contentPanel.setLayout(cardLayout);
         add(contentPanel, BorderLayout.CENTER);
@@ -436,6 +454,19 @@ public class UserInterface extends JFrame {
             }
         });
 
+        periods.addActionListener(e -> {
+            Object currentPeriod = periods.getSelectedItem();
+            summaryCard.remove(scrollPane3);
+            try {
+                summaryCostCodeTable = databaseConn.createSummaryTable(currentPeriod);
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+            }
+            scrollPane3 = new JScrollPane(summaryCostCodeTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            summaryCard.add(scrollPane3);
+        });
+
         nextMonth.addActionListener(e -> {
             try {
                 pCounter++;
@@ -580,6 +611,8 @@ public class UserInterface extends JFrame {
 
         departmentView.addActionListener(e -> cardLayout.show(contentPanel, "2"));
 
+        summaryView.addActionListener(e -> cardLayout.show(contentPanel, "3"));
+
         departmentTable.getModel().addTableModelListener(e -> {
             if (e.getColumn() == 27) {
                 int row = e.getFirstRow();
@@ -618,9 +651,9 @@ public class UserInterface extends JFrame {
 
     private void tableRenew() {
         costCodeList.setSelectedIndex(ccCounter);
-        currentCostCode = ccNames[ccCounter];
+        currentCostCode = costCodeList.getSelectedItem();
         period = periodNames[pCounter];
-        ccLabel.setText("Cost code: " + currentCostCode.toString());
+        ccLabel.setText("Cost code: " + currentCostCode);
         descriptionLabel.setText("Description: " + databaseConn.name);
         periodLabel.setText("Month: " + getPeriod(period));
         departmentCard.remove(scrollPane2);

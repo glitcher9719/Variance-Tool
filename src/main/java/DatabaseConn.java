@@ -26,7 +26,7 @@ class DatabaseConn {
     private Vector<Vector<String>> databaseEntries = new Vector<>();
     private Vector<Vector<String>> previousDatabaseEntries = new Vector<>();
     private Vector<Vector<String>> sortedVector = new Vector<>();
-    private Vector<String> hd = new Vector<>();
+    Vector<String> hd = new Vector<>();
 
     LinkedHashSet<Object> ccNames = new LinkedHashSet<>();
     LinkedHashSet<Object> periodNames = new LinkedHashSet<>();
@@ -216,8 +216,7 @@ class DatabaseConn {
         }
 
         catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
+            JOptionPane.showMessageDialog(null, se);
         }
 
         return new JTable(databaseEntries, hd);
@@ -471,6 +470,251 @@ class DatabaseConn {
 
     }
 
+    // Total class for PAY, NON PAY, INCOME, RECHARGE and GRAND TOTAL
+    private class Total {
+
+        private String name;
+
+        private int index;
+
+        private boolean isInserted;
+
+        private double budget;
+        private double actual;
+        private double variance;
+
+        private double YTDBudget;
+        private double YTDActual;
+        private double YTDVariance;
+
+        private double WTEBudget;
+        private double WTEContracted;
+        private double WTEWorked;
+
+        private Total(String n) {
+            this.name = n;
+            this.isInserted = false;
+            this.budget = 0;
+            this.actual = 0;
+            this.variance = 0;
+            this.YTDBudget = 0;
+            this.YTDActual = 0;
+            this.YTDVariance = 0;
+            this.WTEBudget = 0;
+            this.WTEContracted = 0;
+            this.WTEWorked = 0;
+        }
+
+        private void budgetAdd(double b) {
+            budget += b;
+        }
+
+        private void actualAdd(double a) {
+            actual += a;
+        }
+
+        private void varianceAdd(double v) {
+            variance += v;
+        }
+
+        private void YTDBudgetAdd(double yb) {
+            YTDBudget += yb;
+        }
+
+        private void YTDActualAdd(double ya) {
+            YTDActual += ya;
+        }
+
+        private void YTDVarianceAdd(double yv) {
+            YTDVariance += yv;
+        }
+
+        private void WTEBudgetAdd(double wb) {
+            WTEBudget += wb;
+        }
+
+        private void WTEContractedAdd(double wc) {
+            WTEContracted += wc;
+        }
+
+        private void WTEWorkedAdd(double ww) {
+            WTEWorked += ww;
+        }
+
+        private Vector<String> getTotal(Total object) {
+            Vector<String> vector = new Vector<>();
+            vector.add(null);
+            vector.add(object.name);
+            vector.add(null);
+            vector.add(null);
+            vector.add(null);
+            vector.add(null);
+            vector.add(nf.format(Double.parseDouble(String.valueOf(object.budget))));
+            vector.add(nf.format((Double.parseDouble(String.valueOf(object.actual)))));
+            vector.add(nf.format((Double.parseDouble(String.valueOf(object.variance)))));
+            vector.add(nf.format((Double.parseDouble(String.valueOf(object.YTDBudget)))));
+            vector.add(nf.format((Double.parseDouble(String.valueOf(object.YTDActual)))));
+            vector.add(nf.format((Double.parseDouble(String.valueOf(object.YTDVariance)))));
+            vector.add(nf.format((Double.parseDouble(String.valueOf(object.WTEBudget)))));
+            vector.add(nf.format((Double.parseDouble(String.valueOf(object.WTEContracted)))));
+            vector.add(nf.format((Double.parseDouble(String.valueOf(object.WTEWorked)))));
+            vector.add(null);
+            vector.add(null);
+            vector.add(null);
+            vector.add(null);
+            vector.add(null);
+            vector.add(null);
+            vector.add(null);
+            vector.add(null);
+            vector.add(null);
+            vector.add(null);
+            vector.add(null);
+            vector.add(null);
+            return vector;
+        }
+
+        private Vector<String> getSummaryTotal(Total object) {
+            Vector<String> vector = new Vector<>();
+            vector.add(null);
+            vector.add(null);
+            vector.add(null);
+            vector.add(null);
+            vector.add(nf.format(Double.parseDouble(String.valueOf(object.budget))));
+            vector.add(nf.format((Double.parseDouble(String.valueOf(object.actual)))));
+            vector.add(nf.format((Double.parseDouble(String.valueOf(object.variance)))));
+            vector.add(nf.format((Double.parseDouble(String.valueOf(object.YTDBudget)))));
+            vector.add(nf.format((Double.parseDouble(String.valueOf(object.YTDActual)))));
+            vector.add(nf.format((Double.parseDouble(String.valueOf(object.YTDVariance)))));
+            vector.add(nf.format((Double.parseDouble(String.valueOf(object.WTEBudget)))));
+            vector.add(nf.format((Double.parseDouble(String.valueOf(object.WTEContracted)))));
+            vector.add(nf.format((Double.parseDouble(String.valueOf(object.WTEWorked)))));
+            return vector;
+        }
+
+        private void clear(){
+            this.isInserted = false;
+            this.index = 0;
+            this.budget = 0;
+            this.actual = 0;
+            this.variance = 0;
+            this.YTDBudget = 0;
+            this.YTDActual = 0;
+            this.YTDVariance = 0;
+            this.WTEBudget = 0;
+            this.WTEContracted = 0;
+            this.WTEWorked = 0;
+        }
+
+        private void setInserted(int counter) {
+            this.isInserted = true;
+            this.index = counter;
+        }
+
+        private boolean isInserted() {
+            return isInserted;
+        }
+
+        private int getIndex() {
+            return index;
+        }
+
+    }
+
+    JTable createSummaryTable(Object period) throws ParseException {
+        Vector<String> headers = new Vector<>();
+        headers.add("CDG");
+        headers.add("Cost Code");
+        headers.add("Period");
+        headers.add("Description");
+        headers.add("Budget");
+        headers.add("Actuals");
+        headers.add("Variance");
+        headers.add("Budget YTD");
+        headers.add("Actuals YTD");
+        headers.add("Variance YTD");
+        headers.add("WTE Bud");
+        headers.add("WTE Con");
+        headers.add("WTE Work");
+        Vector<Vector<String>> grandTotalVectors = new Vector<>();
+        String currentCode = databaseEntries.get(0).get(1);
+        String currentPeriod = databaseEntries.get(0).get(3);
+        Total grandTotal = new Total("GRAND TOTAL");
+        for (Vector<String> aVector : databaseEntries) {
+            if (period == null) {
+                if (aVector.get(1).equals(currentCode) && aVector.get(3).equals(currentPeriod)) {
+                    grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
+                    grandTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
+                    grandTotal.varianceAdd(nf.parse(aVector.get(8)).doubleValue());
+                    grandTotal.YTDBudgetAdd(nf.parse(aVector.get(9)).doubleValue());
+                    grandTotal.YTDActualAdd(nf.parse(aVector.get(10)).doubleValue());
+                    grandTotal.YTDVarianceAdd(nf.parse(aVector.get(11)).doubleValue());
+                    grandTotal.WTEBudgetAdd(nf.parse(aVector.get(12)).doubleValue());
+                    grandTotal.WTEContractedAdd(nf.parse(aVector.get(13)).doubleValue());
+                    grandTotal.WTEWorkedAdd(nf.parse(aVector.get(14)).doubleValue());
+                }
+
+                else {
+                    Vector<String> costCodeVector = grandTotal.getSummaryTotal(grandTotal);
+                    costCodeVector.set(1, currentCode);
+                    costCodeVector.set(2, currentPeriod);
+                    costCodeVector.set(0, aVector.get(19));
+                    costCodeVector.set(3, aVector.get(16));
+                    grandTotalVectors.add(costCodeVector);
+                    grandTotal = new Total("GRAND TOTAL");
+                    currentCode = aVector.get(1);
+                    currentPeriod = aVector.get(3);
+                    grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
+                    grandTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
+                    grandTotal.varianceAdd(nf.parse(aVector.get(8)).doubleValue());
+                    grandTotal.YTDBudgetAdd(nf.parse(aVector.get(9)).doubleValue());
+                    grandTotal.YTDActualAdd(nf.parse(aVector.get(10)).doubleValue());
+                    grandTotal.YTDVarianceAdd(nf.parse(aVector.get(11)).doubleValue());
+                    grandTotal.WTEBudgetAdd(nf.parse(aVector.get(12)).doubleValue());
+                    grandTotal.WTEContractedAdd(nf.parse(aVector.get(13)).doubleValue());
+                    grandTotal.WTEWorkedAdd(nf.parse(aVector.get(14)).doubleValue());
+                }
+            }
+
+            else {
+                if (aVector.get(3).equals(period.toString())) {
+                    if (aVector.get(1).equals(currentCode)) {
+                        grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
+                        grandTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
+                        grandTotal.varianceAdd(nf.parse(aVector.get(8)).doubleValue());
+                        grandTotal.YTDBudgetAdd(nf.parse(aVector.get(9)).doubleValue());
+                        grandTotal.YTDActualAdd(nf.parse(aVector.get(10)).doubleValue());
+                        grandTotal.YTDVarianceAdd(nf.parse(aVector.get(11)).doubleValue());
+                        grandTotal.WTEBudgetAdd(nf.parse(aVector.get(12)).doubleValue());
+                        grandTotal.WTEContractedAdd(nf.parse(aVector.get(13)).doubleValue());
+                        grandTotal.WTEWorkedAdd(nf.parse(aVector.get(14)).doubleValue());
+                    }
+
+                    else {
+                        Vector<String> costCodeVector = grandTotal.getSummaryTotal(grandTotal);
+                        costCodeVector.set(1, currentCode);
+                        costCodeVector.set(2, currentPeriod);
+                        costCodeVector.set(0, aVector.get(19));
+                        costCodeVector.set(3, aVector.get(16));
+                        grandTotalVectors.add(costCodeVector);
+                        grandTotal = new Total("GRAND TOTAL");
+                        currentCode = aVector.get(1);
+                        grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
+                        grandTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
+                        grandTotal.varianceAdd(nf.parse(aVector.get(8)).doubleValue());
+                        grandTotal.YTDBudgetAdd(nf.parse(aVector.get(9)).doubleValue());
+                        grandTotal.YTDActualAdd(nf.parse(aVector.get(10)).doubleValue());
+                        grandTotal.YTDVarianceAdd(nf.parse(aVector.get(11)).doubleValue());
+                        grandTotal.WTEBudgetAdd(nf.parse(aVector.get(12)).doubleValue());
+                        grandTotal.WTEContractedAdd(nf.parse(aVector.get(13)).doubleValue());
+                        grandTotal.WTEWorkedAdd(nf.parse(aVector.get(14)).doubleValue());
+                    }
+                }
+            }
+        }
+
+        return new JTable(grandTotalVectors, headers);
+    }
+
     /***
      *
      * @param vector - the initial vector with the data collected from excel spreadsheets
@@ -479,138 +723,6 @@ class DatabaseConn {
      * @throws ParseException - specific format
      */
     private Vector<Vector<String>> addTotals(Vector<Vector<String>> vector) throws ParseException {
-
-        // Total class for PAY, NON PAY, INCOME, RECHARGE and GRAND TOTAL
-        class Total {
-
-            private String name;
-
-            private int index;
-
-            private boolean isInserted;
-
-            private double budget;
-            private double actual;
-            private double variance;
-
-            private double YTDBudget;
-            private double YTDActual;
-            private double YTDVariance;
-
-            private double WTEBudget;
-            private double WTEContracted;
-            private double WTEWorked;
-
-            private Total(String n) {
-                this.name = n;
-                this.isInserted = false;
-                this.budget = 0;
-                this.actual = 0;
-                this.variance = 0;
-                this.YTDBudget = 0;
-                this.YTDActual = 0;
-                this.YTDVariance = 0;
-                this.WTEBudget = 0;
-                this.WTEContracted = 0;
-                this.WTEWorked = 0;
-            }
-
-            private void budgetAdd(double b) {
-                budget += b;
-            }
-
-            private void actualAdd(double a) {
-                actual += a;
-            }
-
-            private void varianceAdd(double v) {
-                variance += v;
-            }
-
-            private void YTDBudgetAdd(double yb) {
-                YTDBudget += yb;
-            }
-
-            private void YTDActualAdd(double ya) {
-                YTDActual += ya;
-            }
-
-            private void YTDVarianceAdd(double yv) {
-                YTDVariance += yv;
-            }
-
-            private void WTEBudgetAdd(double wb) {
-                WTEBudget += wb;
-            }
-
-            private void WTEContractedAdd(double wc) {
-                WTEContracted += wc;
-            }
-
-            private void WTEWorkedAdd(double ww) {
-                WTEWorked += ww;
-            }
-
-            private Vector<String> getTotal(Total object) {
-                Vector<String> vector = new Vector<>();
-                vector.add(null);
-                vector.add(object.name);
-                vector.add(null);
-                vector.add(null);
-                vector.add(null);
-                vector.add(null);
-                vector.add(nf.format(Double.parseDouble(String.valueOf(object.budget))));
-                vector.add(nf.format((Double.parseDouble(String.valueOf(object.actual)))));
-                vector.add(nf.format((Double.parseDouble(String.valueOf(object.variance)))));
-                vector.add(nf.format((Double.parseDouble(String.valueOf(object.YTDBudget)))));
-                vector.add(nf.format((Double.parseDouble(String.valueOf(object.YTDActual)))));
-                vector.add(nf.format((Double.parseDouble(String.valueOf(object.YTDVariance)))));
-                vector.add(nf.format((Double.parseDouble(String.valueOf(object.WTEBudget)))));
-                vector.add(nf.format((Double.parseDouble(String.valueOf(object.WTEContracted)))));
-                vector.add(nf.format((Double.parseDouble(String.valueOf(object.WTEWorked)))));
-                vector.add(null);
-                vector.add(null);
-                vector.add(null);
-                vector.add(null);
-                vector.add(null);
-                vector.add(null);
-                vector.add(null);
-                vector.add(null);
-                vector.add(null);
-                vector.add(null);
-                vector.add(null);
-                vector.add(null);
-                return vector;
-            }
-
-            private void clear(){
-                this.isInserted = false;
-                this.index = 0;
-                this.budget = 0;
-                this.actual = 0;
-                this.variance = 0;
-                this.YTDBudget = 0;
-                this.YTDActual = 0;
-                this.YTDVariance = 0;
-                this.WTEBudget = 0;
-                this.WTEContracted = 0;
-                this.WTEWorked = 0;
-            }
-
-            private void setInserted(int counter) {
-                this.isInserted = true;
-                this.index = counter;
-            }
-
-            private boolean isInserted() {
-                return isInserted;
-            }
-
-            private int getIndex() {
-                return index;
-            }
-
-        }
 
         // The totals
         Total income = new Total("INCOME");
