@@ -7,19 +7,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ec3fa37-6308-4677-acb1-392265eb16cf" name="Default" comment="initial commit (3)">
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/Variance_Tool_jar.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/DatabaseConn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DatabaseConn.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/UserInterface.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/DatabaseConn$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DatabaseConn$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/DatabaseConn$Total.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DatabaseConn$Total.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/DatabaseConn.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DatabaseConn.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$3.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$4.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$5.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$BoardTableCellRenderer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$BoardTableCellRenderer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -68,17 +65,8 @@
       <file leaf-file-name="UserInterface.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/UserInterface.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="127">
-              <caret line="491" column="44" lean-forward="true" selection-start-line="491" selection-start-column="44" selection-end-line="491" selection-end-column="44" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="JComboBox.java" pinned="false" current-in-tab="false">
-        <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/javax/swing/JComboBox.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="713" column="16" selection-start-line="713" selection-start-column="16" selection-end-line="713" selection-end-column="16" />
+            <state relative-caret-position="510">
+              <caret line="30" column="36" selection-start-line="30" selection-start-column="36" selection-end-line="30" selection-end-column="36" />
             </state>
           </provider>
         </entry>
@@ -86,49 +74,8 @@
       <file leaf-file-name="DatabaseConn.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/DatabaseConn.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2808">
-              <caret line="783" column="9" lean-forward="true" selection-start-line="783" selection-start-column="9" selection-end-line="783" selection-end-column="9" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#24413#24414#0" expanded="true" />
-                <element signature="e#24448#24449#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TableRowFilterSupport.class" pinned="false" current-in-tab="false">
-        <entry file="jar://$MAVEN_REPOSITORY$/org/bidib/org/oxbow/swingbits/1.2.2/swingbits-1.2.2.jar!/org/oxbow/swingbits/table/filter/TableRowFilterSupport.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="21" column="19" selection-start-line="21" selection-start-column="19" selection-end-line="21" selection-end-column="19" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="JList.java" pinned="false" current-in-tab="false">
-        <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/javax/swing/JList.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="7412">
-              <caret line="488" column="11" selection-start-line="488" selection-start-column="11" selection-end-line="488" selection-end-column="11" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" selection-start-line="5" selection-end-line="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Vector.java" pinned="false" current-in-tab="false">
-        <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/java/util/Vector.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="18105">
-              <caret line="1136" selection-start-line="1136" selection-end-line="1136" />
+            <state relative-caret-position="221">
+              <caret line="1080" column="48" lean-forward="true" selection-start-line="1080" selection-start-column="48" selection-end-line="1080" selection-end-column="48" />
             </state>
           </provider>
         </entry>
@@ -258,11 +205,11 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-100" />
-    <option name="y" value="-16" />
-    <option name="width" value="1940" />
-    <option name="height" value="1100" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="647" />
+    <option name="y" value="212" />
+    <option name="width" value="960" />
+    <option name="height" value="790" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -271,40 +218,7 @@
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes>
-      <pane id="AndroidView" />
-      <pane id="Scope" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Variance Tool" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Variance Tool" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Variance Tool" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Variance Tool" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="PackagesPane" />
-    </panes>
+    <panes />
   </component>
   <component name="PropertiesComponent">
     <property name="Downloaded.Files.Path.Enabled" value="true" />
@@ -599,7 +513,13 @@
       <workItem from="1538045879830" duration="7732000" />
       <workItem from="1538058030694" duration="2337000" />
       <workItem from="1538125505371" duration="381000" />
-      <workItem from="1538125909335" duration="1811000" />
+      <workItem from="1538125909335" duration="3996000" />
+      <workItem from="1538134567489" duration="259000" />
+      <workItem from="1538136827346" duration="208000" />
+      <workItem from="1538139665320" duration="115000" />
+      <workItem from="1538139895624" duration="366000" />
+      <workItem from="1538140297587" duration="290000" />
+      <workItem from="1538140745576" duration="725000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit (2)">
       <created>1525109752678</created>
@@ -619,7 +539,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="600754000" />
+    <option name="totallyTimeSpent" value="604902000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -631,21 +551,20 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="672" y="63" width="960" height="790" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="bottom" id="TODO" order="7" weight="0.32026145" />
-      <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.4977778" weight="0.26252723" />
+      <window_info anchor="bottom" id="TODO" order="7" weight="0.31991053" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50319827" side_tool="true" weight="0.375817" />
       <window_info anchor="right" id="Maven Projects" order="8" weight="0.32889125" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="12" weight="0.3278328" />
-      <window_info anchor="bottom" id="Run" order="3" sideWeight="0.4968017" weight="0.503268" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4977778" weight="0.15686275" />
+      <window_info anchor="bottom" id="Version Control" order="12" weight="0.3277405" />
+      <window_info anchor="bottom" id="Run" order="3" sideWeight="0.4968017" weight="0.83557045" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4977778" weight="0.15659955" />
       <window_info id="Capture Tool" order="6" />
       <window_info id="Designer" order="3" />
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49782136" weight="0.31663114" />
@@ -656,6 +575,7 @@
       <window_info anchor="right" id="Theme Preview" order="5" />
       <window_info id="Favorites" order="5" sideWeight="0.50217867" side_tool="true" weight="0.3033049" />
       <window_info anchor="bottom" id="Debug" order="4" sideWeight="0.49840087" weight="0.2777778" />
+      <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.4977778" weight="0.26174498" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="bottom" id="Database Console" order="13" weight="0.3278867" />
@@ -1030,17 +950,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/java/util/Vector.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18105">
-          <caret line="1136" selection-start-line="1136" selection-end-line="1136" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/javax/swing/JList.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="7412">
           <caret line="488" column="11" selection-start-line="488" selection-start-column="11" selection-end-line="488" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/javax/swing/JComboBox.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="713" column="16" selection-start-line="713" selection-start-column="16" selection-end-line="713" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/UserInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="510">
+          <caret line="30" column="36" selection-start-line="30" selection-start-column="36" selection-end-line="30" selection-end-column="36" />
         </state>
       </provider>
     </entry>
@@ -1058,29 +985,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/javax/swing/JComboBox.java">
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/java/util/Vector.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="713" column="16" selection-start-line="713" selection-start-column="16" selection-end-line="713" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/UserInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="127">
-          <caret line="491" column="44" lean-forward="true" selection-start-line="491" selection-start-column="44" selection-end-line="491" selection-end-column="44" />
+        <state relative-caret-position="836">
+          <caret line="1136" selection-start-line="1136" selection-end-line="1136" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/DatabaseConn.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2808">
-          <caret line="783" column="9" lean-forward="true" selection-start-line="783" selection-start-column="9" selection-end-line="783" selection-end-column="9" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#24413#24414#0" expanded="true" />
-            <element signature="e#24448#24449#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="221">
+          <caret line="1080" column="48" lean-forward="true" selection-start-line="1080" selection-start-column="48" selection-end-line="1080" selection-end-column="48" />
         </state>
       </provider>
     </entry>
@@ -1089,7 +1004,14 @@
     <states>
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
-          <artifact-editor />
+          <artifact-editor>
+            <show-content>
+              <type id="artifact" />
+              <type id="library" />
+              <type id="javaee-facet-resources" />
+              <type id="jpa-descriptors" />
+            </show-content>
+          </artifact-editor>
           <last-edited>Variance Tool:jar</last-edited>
           <splitter-proportions>
             <option name="proportions">

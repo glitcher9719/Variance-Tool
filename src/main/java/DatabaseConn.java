@@ -22,13 +22,11 @@ class DatabaseConn {
 
     // JDBC driver name and database URL
     final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    final String DB_URL = "jdbc:mysql://localhost:3306/experimental-db?useSSL=false";
+    final String DB_URL = "jdbc:mysql://10.43.136.208:3306/experimental-db?useSSL=false";
     private Vector<Vector<String>> databaseEntries = new Vector<>();
     private Vector<Vector<String>> previousDatabaseEntries = new Vector<>();
     private Vector<Vector<String>> sortedVector = new Vector<>();
-    Vector<Vector<String>> grandTotalVectors;
-    Vector<String> hd = new Vector<>();
-    Vector<String> headers;
+    private Vector<String> hd = new Vector<>();
 
     LinkedHashSet<Object> ccNames = new LinkedHashSet<>();
     LinkedHashSet<Object> periodNames = new LinkedHashSet<>();
@@ -67,7 +65,7 @@ class DatabaseConn {
             databaseEntries.clear();
             previousDatabaseEntries.clear();
             Class.forName(JDBC_DRIVER);
-            conn = DriverManager.getConnection(DB_URL, "dan", "ParolaMea123");
+            conn = DriverManager.getConnection(DB_URL, "root", "some pass");
             stmt = conn.createStatement();
             String dataSQL;
             String previousDataSQL;
@@ -329,7 +327,7 @@ class DatabaseConn {
 
         try {
             Class.forName(JDBC_DRIVER);
-            conn = DriverManager.getConnection(DB_URL, "dan", "ParolaMea123");
+            conn = DriverManager.getConnection(DB_URL, "root", "some pass");
 
             stmt = conn.createStatement();
             String checkSQL;
@@ -455,7 +453,7 @@ class DatabaseConn {
             conn.close();
         } catch (Exception e) {
             //Handle errors for Class.forName
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e);
         } finally {
             //finally block used to close resources
 
@@ -463,7 +461,7 @@ class DatabaseConn {
             try {
                 if (conn != null) conn.close();
             } catch (SQLException se) {
-                se.printStackTrace();
+                JOptionPane.showMessageDialog(null, se);
             }
         }
         long finish = System.currentTimeMillis();
@@ -623,7 +621,7 @@ class DatabaseConn {
 
     @SuppressWarnings("Duplicates")
     JTable createSummaryTable(Object period, Object CDG) throws ParseException {
-        headers = new Vector<>();
+        Vector<String> headers = new Vector<>();
         headers.add("CDG");
         headers.add("Cost Code");
         headers.add("Description");
@@ -636,7 +634,7 @@ class DatabaseConn {
         headers.add("WTE Bud");
         headers.add("WTE Con");
         headers.add("WTE Work");
-        grandTotalVectors = new Vector<>();
+        Vector<Vector<String>> grandTotalVectors = new Vector<>();
         String currentCode = databaseEntries.get(0).get(1);
         String currentPeriod = databaseEntries.get(0).get(3);
         Total grandTotal = new Total("GRAND TOTAL");

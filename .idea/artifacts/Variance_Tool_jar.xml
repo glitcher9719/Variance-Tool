@@ -1,23 +1,22 @@
 <component name="ArtifactManager">
-  <artifact name="Variance Tool:jar">
+  <artifact type="jar" build-on-make="true" name="Variance Tool:jar">
     <output-path>$USER_HOME$/Desktop/build</output-path>
-    <root id="root">
-      <element id="archive" name="Variance Tool.jar">
-        <element id="directory" name="META-INF">
-          <element id="file-copy" path="$USER_HOME$/Desktop/build/META-INF/MANIFEST.MF" />
-        </element>
-        <element id="module-output" name="Variance Tool" />
+    <root id="archive" name="Variance Tool.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$USER_HOME$/Desktop/build/META-INF/MANIFEST.MF" />
       </element>
-      <element id="library" level="project" name="Maven: org.apache.poi:poi-ooxml:3.17" />
-      <element id="library" level="project" name="Maven: org.apache.poi:poi-ooxml-schemas:3.17" />
-      <element id="library" level="project" name="Maven: com.github.virtuald:curvesapi:1.04" />
-      <element id="library" level="project" name="Maven: com.google.collections:google-collections:1.0" />
-      <element id="library" level="project" name="Maven: org.apache.commons:commons-collections4:4.1" />
-      <element id="library" level="project" name="mysql:mysql-connector-java:8.0.11" />
-      <element id="library" level="project" name="Maven: stax:stax-api:1.0.1" />
-      <element id="library" level="project" name="Maven: org.apache.poi:poi:3.17" />
-      <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.10" />
-      <element id="library" level="project" name="Maven: org.apache.xmlbeans:xmlbeans:2.6.0" />
+      <element id="module-output" name="Variance Tool" />
+      <element id="module-test-output" name="Variance Tool" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/commons-codec/commons-codec/1.10/commons-codec-1.10.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/xmlbeans/xmlbeans/2.6.0/xmlbeans-2.6.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/collections/google-collections/1.0/google-collections-1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/mysql-connector-java-8.0.11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/poi/poi/3.17/poi-3.17.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/poi/poi-ooxml/3.17/poi-ooxml-3.17.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/virtuald/curvesapi/1.04/curvesapi-1.04.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/poi/poi-ooxml-schemas/3.17/poi-ooxml-schemas-3.17.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/stax/stax-api/1.0.1/stax-api-1.0.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-collections4/4.1/commons-collections4-4.1.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
