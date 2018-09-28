@@ -26,7 +26,9 @@ class DatabaseConn {
     private Vector<Vector<String>> databaseEntries = new Vector<>();
     private Vector<Vector<String>> previousDatabaseEntries = new Vector<>();
     private Vector<Vector<String>> sortedVector = new Vector<>();
+    Vector<Vector<String>> grandTotalVectors;
     Vector<String> hd = new Vector<>();
+    Vector<String> headers;
 
     LinkedHashSet<Object> ccNames = new LinkedHashSet<>();
     LinkedHashSet<Object> periodNames = new LinkedHashSet<>();
@@ -578,7 +580,6 @@ class DatabaseConn {
             vector.add(null);
             vector.add(null);
             vector.add(null);
-            vector.add(null);
             vector.add(nf.format(Double.parseDouble(String.valueOf(object.budget))));
             vector.add(nf.format((Double.parseDouble(String.valueOf(object.actual)))));
             vector.add(nf.format((Double.parseDouble(String.valueOf(object.variance)))));
@@ -620,11 +621,11 @@ class DatabaseConn {
 
     }
 
-    JTable createSummaryTable(Object period) throws ParseException {
-        Vector<String> headers = new Vector<>();
+    @SuppressWarnings("Duplicates")
+    JTable createSummaryTable(Object period, Object CDG) throws ParseException {
+        headers = new Vector<>();
         headers.add("CDG");
         headers.add("Cost Code");
-        headers.add("Period");
         headers.add("Description");
         headers.add("Budget");
         headers.add("Actuals");
@@ -635,12 +636,12 @@ class DatabaseConn {
         headers.add("WTE Bud");
         headers.add("WTE Con");
         headers.add("WTE Work");
-        Vector<Vector<String>> grandTotalVectors = new Vector<>();
+        grandTotalVectors = new Vector<>();
         String currentCode = databaseEntries.get(0).get(1);
         String currentPeriod = databaseEntries.get(0).get(3);
         Total grandTotal = new Total("GRAND TOTAL");
         for (Vector<String> aVector : databaseEntries) {
-            if (period == null) {
+            if (period == null && CDG == null) {
                 if (aVector.get(1).equals(currentCode) && aVector.get(3).equals(currentPeriod)) {
                     grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
                     grandTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
@@ -656,9 +657,8 @@ class DatabaseConn {
                 else {
                     Vector<String> costCodeVector = grandTotal.getSummaryTotal(grandTotal);
                     costCodeVector.set(1, currentCode);
-                    costCodeVector.set(2, currentPeriod);
                     costCodeVector.set(0, aVector.get(19));
-                    costCodeVector.set(3, aVector.get(16));
+                    costCodeVector.set(2, aVector.get(16));
                     grandTotalVectors.add(costCodeVector);
                     grandTotal = new Total("GRAND TOTAL");
                     currentCode = aVector.get(1);
@@ -675,7 +675,7 @@ class DatabaseConn {
                 }
             }
 
-            else {
+            else if (period != null && CDG == null) {
                 if (aVector.get(3).equals(period.toString())) {
                     if (aVector.get(1).equals(currentCode)) {
                         grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
@@ -692,9 +692,78 @@ class DatabaseConn {
                     else {
                         Vector<String> costCodeVector = grandTotal.getSummaryTotal(grandTotal);
                         costCodeVector.set(1, currentCode);
-                        costCodeVector.set(2, currentPeriod);
                         costCodeVector.set(0, aVector.get(19));
-                        costCodeVector.set(3, aVector.get(16));
+                        costCodeVector.set(2, aVector.get(16));
+                        grandTotalVectors.add(costCodeVector);
+                        grandTotal = new Total("GRAND TOTAL");
+                        currentCode = aVector.get(1);
+                        grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
+                        grandTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
+                        grandTotal.varianceAdd(nf.parse(aVector.get(8)).doubleValue());
+                        grandTotal.YTDBudgetAdd(nf.parse(aVector.get(9)).doubleValue());
+                        grandTotal.YTDActualAdd(nf.parse(aVector.get(10)).doubleValue());
+                        grandTotal.YTDVarianceAdd(nf.parse(aVector.get(11)).doubleValue());
+                        grandTotal.WTEBudgetAdd(nf.parse(aVector.get(12)).doubleValue());
+                        grandTotal.WTEContractedAdd(nf.parse(aVector.get(13)).doubleValue());
+                        grandTotal.WTEWorkedAdd(nf.parse(aVector.get(14)).doubleValue());
+                    }
+                }
+            }
+
+            else if (period == null) {
+                if (aVector.get(19).equals(CDG.toString())) {
+                    if (aVector.get(1).equals(currentCode)) {
+                        grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
+                        grandTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
+                        grandTotal.varianceAdd(nf.parse(aVector.get(8)).doubleValue());
+                        grandTotal.YTDBudgetAdd(nf.parse(aVector.get(9)).doubleValue());
+                        grandTotal.YTDActualAdd(nf.parse(aVector.get(10)).doubleValue());
+                        grandTotal.YTDVarianceAdd(nf.parse(aVector.get(11)).doubleValue());
+                        grandTotal.WTEBudgetAdd(nf.parse(aVector.get(12)).doubleValue());
+                        grandTotal.WTEContractedAdd(nf.parse(aVector.get(13)).doubleValue());
+                        grandTotal.WTEWorkedAdd(nf.parse(aVector.get(14)).doubleValue());
+                    }
+
+                    else {
+                        Vector<String> costCodeVector = grandTotal.getSummaryTotal(grandTotal);
+                        costCodeVector.set(1, currentCode);
+                        costCodeVector.set(0, aVector.get(19));
+                        costCodeVector.set(2, aVector.get(16));
+                        grandTotalVectors.add(costCodeVector);
+                        grandTotal = new Total("GRAND TOTAL");
+                        currentCode = aVector.get(1);
+                        grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
+                        grandTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
+                        grandTotal.varianceAdd(nf.parse(aVector.get(8)).doubleValue());
+                        grandTotal.YTDBudgetAdd(nf.parse(aVector.get(9)).doubleValue());
+                        grandTotal.YTDActualAdd(nf.parse(aVector.get(10)).doubleValue());
+                        grandTotal.YTDVarianceAdd(nf.parse(aVector.get(11)).doubleValue());
+                        grandTotal.WTEBudgetAdd(nf.parse(aVector.get(12)).doubleValue());
+                        grandTotal.WTEContractedAdd(nf.parse(aVector.get(13)).doubleValue());
+                        grandTotal.WTEWorkedAdd(nf.parse(aVector.get(14)).doubleValue());
+                    }
+                }
+            }
+
+            else {
+                if (aVector.get(3).equals(period.toString()) && aVector.get(19).equals(CDG.toString())) {
+                    if (aVector.get(1).equals(currentCode)) {
+                        grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
+                        grandTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
+                        grandTotal.varianceAdd(nf.parse(aVector.get(8)).doubleValue());
+                        grandTotal.YTDBudgetAdd(nf.parse(aVector.get(9)).doubleValue());
+                        grandTotal.YTDActualAdd(nf.parse(aVector.get(10)).doubleValue());
+                        grandTotal.YTDVarianceAdd(nf.parse(aVector.get(11)).doubleValue());
+                        grandTotal.WTEBudgetAdd(nf.parse(aVector.get(12)).doubleValue());
+                        grandTotal.WTEContractedAdd(nf.parse(aVector.get(13)).doubleValue());
+                        grandTotal.WTEWorkedAdd(nf.parse(aVector.get(14)).doubleValue());
+                    }
+
+                    else {
+                        Vector<String> costCodeVector = grandTotal.getSummaryTotal(grandTotal);
+                        costCodeVector.set(1, currentCode);
+                        costCodeVector.set(0, aVector.get(19));
+                        costCodeVector.set(2, aVector.get(16));
                         grandTotalVectors.add(costCodeVector);
                         grandTotal = new Total("GRAND TOTAL");
                         currentCode = aVector.get(1);
@@ -722,6 +791,7 @@ class DatabaseConn {
      * (uncomment the prints for better understanding of the method)
      * @throws ParseException - specific format
      */
+    @SuppressWarnings("Duplicates")
     private Vector<Vector<String>> addTotals(Vector<Vector<String>> vector) throws ParseException {
 
         // The totals

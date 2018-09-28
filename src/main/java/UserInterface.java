@@ -33,6 +33,9 @@ public class UserInterface extends JFrame {
     private JPanel departmentCard;
     private JPanel summaryCard;
 
+    private Object currentPeriod = null;
+    private Object currentCDG = null;
+
     private JComboBox<Object> costCodeList;
     private Object[] ccNames;
     private Object[] periodNames;
@@ -58,7 +61,8 @@ public class UserInterface extends JFrame {
     private UserInterface() throws ClassNotFoundException, ParseException {
         databaseConn = new DatabaseConn();
         table = databaseConn.generateDataFromDB();
-        summaryCostCodeTable = databaseConn.createSummaryTable(null);
+        summaryCostCodeTable = databaseConn.createSummaryTable(currentPeriod, currentCDG);
+        summaryCostCodeTable.setDefaultRenderer(Object.class, new SummaryTableCellRenderer());
         ccNames = databaseConn.ccNames.toArray();
         periodNames = databaseConn.periodNames.toArray();
         try {
@@ -210,8 +214,16 @@ public class UserInterface extends JFrame {
 
         scrollPane3 = new JScrollPane(summaryCostCodeTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         summaryCard.add(scrollPane3);
-        JComboBox<Object> periods = new JComboBox<>(periodNames);
-        summaryCard.add(periods, BorderLayout.LINE_START);
+        JComboBox<Object> periods = new JComboBox<>();
+        periods.addItem("Period");
+        for (Object x : periodNames) {
+            periods.addItem(x);
+        }
+        JComboBox<Object> summaryCDG = new JComboBox<>(databaseConn.CDGs.toArray());
+        JPanel buttonTable = new JPanel();
+        buttonTable.add(periods);
+        buttonTable.add(summaryCDG);
+        summaryCard.add(buttonTable, BorderLayout.NORTH);
 
         /*
         Card Layout
@@ -455,16 +467,39 @@ public class UserInterface extends JFrame {
         });
 
         periods.addActionListener(e -> {
-            Object currentPeriod = periods.getSelectedItem();
+            if (periods.getSelectedItem() == "Period") currentPeriod = null;
+            else {
+                currentPeriod = periods.getSelectedItem();
+            }
             summaryCard.remove(scrollPane3);
             try {
-                summaryCostCodeTable = databaseConn.createSummaryTable(currentPeriod);
+                summaryCostCodeTable = databaseConn.createSummaryTable(currentPeriod, currentCDG);
             } catch (ParseException e1) {
                 e1.printStackTrace();
             }
             scrollPane3 = new JScrollPane(summaryCostCodeTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                     JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             summaryCard.add(scrollPane3);
+            summaryCostCodeTable.setDefaultRenderer(Object.class, new SummaryTableCellRenderer());
+            tableRenew();
+        });
+
+        summaryCDG.addActionListener(e -> {
+            if (summaryCDG.getSelectedItem() == "CDG") currentPeriod = null;
+            else {
+                currentCDG = summaryCDG.getSelectedItem();
+            }
+            summaryCard.remove(scrollPane3);
+            try {
+                summaryCostCodeTable = databaseConn.createSummaryTable(currentPeriod, currentCDG);
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+            }
+            scrollPane3 = new JScrollPane(summaryCostCodeTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            summaryCard.add(scrollPane3);
+            summaryCostCodeTable.setDefaultRenderer(Object.class, new SummaryTableCellRenderer());
+            tableRenew();
         });
 
         nextMonth.addActionListener(e -> {
@@ -802,6 +837,41 @@ public class UserInterface extends JFrame {
 
             catch (ParseException e) {
                 e.printStackTrace();
+            }
+
+            if (isSelected) {
+                c.setBackground(table.getSelectionBackground());
+                c.setForeground(table.getSelectionForeground());
+            }
+
+            return c;
+        }
+    }
+
+    public class SummaryTableCellRenderer extends DefaultTableCellRenderer {
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+            DecimalFormat nf = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
+            DecimalFormatSymbols symbols = nf.getDecimalFormatSymbols();
+            Object s = table.getModel().getValueAt(row, col);
+            symbols.setCurrencySymbol(""); // Don't use null.
+            nf.setDecimalFormatSymbols(symbols);
+            nf.setMaximumFractionDigits(0);
+
+            try {
+                int roundedValue = Math.toIntExact(Math.round(databaseConn.nf.parse(s.toString()).doubleValue()));
+                if ((col == 5 || col == 8) && roundedValue<0) c.setForeground(Color.RED);
+
+                else {
+                    c.setBackground(table.getBackground());
+                    c.setForeground(table.getForeground());
+                }
+
+            }
+
+            catch (ParseException e) {
+                c.setBackground(table.getBackground());
+                c.setForeground(table.getForeground());
             }
 
             if (isSelected) {
