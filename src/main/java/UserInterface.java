@@ -22,27 +22,28 @@ public class UserInterface extends JFrame {
 
     // default values for department view
     private JTable departmentTable;
-    private JTable summaryCostCodeTable;
+/*    private JTable summaryCostCodeTable;*/
     private JScrollPane scrollPane2;
-    private JScrollPane scrollPane3;
+/*    private JScrollPane scrollPane3;*/
     private CardLayout cardLayout = new CardLayout();
     private JLabel ccLabel;
     private JLabel periodLabel;
     private JLabel descriptionLabel;
     private JTable table;
     private JPanel departmentCard;
-    private JPanel summaryCard;
+  /*  private JPanel summaryCard;
 
     private Object currentPeriod = null;
-    private Object currentCDG = null;
+    private Object currentCDG = null;*/
 
-    private JComboBox<Object> costCodeList;
-    private Object[] ccNames;
-    private Object[] periodNames;
-
-    private JComboBox<Object> nameList;
-    private JComboBox<Object> cdgList;
-    private JComboBox<Object> divisionList;
+    private JComboBox<Object> costCodeComboBox;
+    private JComboBox<Object> namesComboBox;
+    private JComboBox<Object> cdgComboBox;
+    private JComboBox<Object> divisionsComboBox;
+    private boolean isTableFiltered = false;
+    private boolean nameFilter = false;
+    private boolean cdgFilter = false;
+    private boolean divisionFilter = false;
 
     private int ccCounter = 0;
     private int pCounter = 0;
@@ -61,24 +62,17 @@ public class UserInterface extends JFrame {
     private UserInterface() throws ClassNotFoundException, ParseException {
         databaseConn = new DatabaseConn();
         table = databaseConn.generateDataFromDB();
-        summaryCostCodeTable = databaseConn.createSummaryTable(currentPeriod, currentCDG);
-        summaryCostCodeTable.setDefaultRenderer(Object.class, new SummaryTableCellRenderer());
-        ccNames = databaseConn.ccNames.toArray();
-        periodNames = databaseConn.periodNames.toArray();
-        try {
-            currentCostCode = ccNames[ccCounter];
-            period = periodNames[pCounter];
-        }
-
-        catch (ArrayIndexOutOfBoundsException | NullPointerException e){
-            ccNames = new Object[]{"No cost codes available"};
-            periodNames = new Object[]{"No periods available"};
-        }
-
+        /*summaryCostCodeTable = databaseConn.createSummaryTable(currentPeriod, currentCDG);*/
+/*        summaryCostCodeTable.setDefaultRenderer(Object.class, new SummaryTableCellRenderer());*/
+        costCodeComboBox = new JComboBox<>(databaseConn.ccNames.toArray());
+        costCodeComboBox.setSelectedIndex(0);
+        currentCostCode = costCodeComboBox.getSelectedItem();
+        pCounter = databaseConn.periodNames.toArray().length-1;
+        period = databaseConn.periodNames.toArray()[pCounter];
         contentPanel = new JPanel(cardLayout);
         JPanel overviewCard = new JPanel(new BorderLayout());
         departmentCard = new JPanel(new BorderLayout());
-        summaryCard = new JPanel(new BorderLayout());
+        /*summaryCard = new JPanel(new BorderLayout());*/
         JPanel north = new JPanel(new BorderLayout());
 
          /*
@@ -86,15 +80,15 @@ public class UserInterface extends JFrame {
          */
         final JRadioButton overview = new JRadioButton("Overview", true);
         final JRadioButton departmentView = new JRadioButton("Department View");
-        final JRadioButton summaryView = new JRadioButton("Summary View");
+   /*     final JRadioButton summaryView = new JRadioButton("Summary View");*/
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(overview);
         buttonGroup.add(departmentView);
-        buttonGroup.add(summaryView);
+      /*  buttonGroup.add(summaryView);*/
         final JPanel radioButtons = new JPanel();
         radioButtons.add(overview);
         radioButtons.add(departmentView);
-        radioButtons.add(summaryView);
+/*        radioButtons.add(summaryView);*/
 
         /*
             -------- Overview ---------
@@ -117,7 +111,7 @@ public class UserInterface extends JFrame {
            -------- Department view ---------
         */
 
-        departmentTable = databaseConn.createSpecificTable(currentCostCode, period, 1);
+        departmentTable = databaseConn.generateTable(currentCostCode, period, 1);
         dataWithDecimal.clear();
         departmentTable.setDefaultRenderer(Object.class, new BoardTableCellRenderer());
         departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -131,31 +125,28 @@ public class UserInterface extends JFrame {
         scrollPane2 = new JScrollPane(departmentTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-        costCodeList = new JComboBox<>(ccNames);
-        costCodeList.setSelectedIndex(0);
+        namesComboBox = new JComboBox<>(databaseConn.names.toArray());
+        namesComboBox.setSelectedIndex(0);
 
-        nameList = new JComboBox<>(databaseConn.names.toArray());
-        nameList.setSelectedIndex(0);
+        divisionsComboBox = new JComboBox<>(databaseConn.divisions.toArray());
+        divisionsComboBox.setSelectedIndex(0);
 
-        divisionList = new JComboBox<>(databaseConn.divisions.toArray());
-        divisionList.setSelectedIndex(0);
+        cdgComboBox = new JComboBox<>(databaseConn.CDGs.toArray());
+        cdgComboBox.setSelectedIndex(0);
 
-        cdgList = new JComboBox<>(databaseConn.CDGs.toArray());
-        cdgList.setSelectedIndex(0);
-
-        currentSelectedName = null;
-        currentSelectedDivision = null;
-        currentSelectedCDG = null;
+        currentSelectedName = namesComboBox.getSelectedItem();
+        currentSelectedDivision = divisionsComboBox.getSelectedItem();
+        currentSelectedCDG = cdgComboBox.getSelectedItem();
 
         JLabel costCode  = new JLabel("Cost code: ");
         JLabel filters = new JLabel("Filter by: ");
         JPanel listView= new JPanel();
         listView.add(costCode);
-        listView.add(costCodeList);
+        listView.add(costCodeComboBox);
         listView.add(filters);
-        listView.add(nameList);
-        listView.add(divisionList);
-        listView.add(cdgList);
+        listView.add(namesComboBox);
+        listView.add(divisionsComboBox);
+        listView.add(cdgComboBox);
 
         add(departmentTable.getTableHeader());
         scrollPane2.setPreferredSize(new Dimension(1900, 950));
@@ -170,41 +161,41 @@ public class UserInterface extends JFrame {
         label.add(periodLabel);
         JPanel labelPanel = new JPanel();
         labelPanel.add(label);
-        JButton importSpreadsheet = new JButton("Import Spreadsheet");
+        JButton importButton = new JButton("Import Spreadsheet");
 
-        radioButtons.add(importSpreadsheet, BorderLayout.SOUTH);
+        radioButtons.add(importButton, BorderLayout.SOUTH);
         add(radioButtons, BorderLayout.NORTH);
         north.add(labelPanel, BorderLayout.CENTER);
         departmentCard.add(scrollPane2, BorderLayout.CENTER);
 
         JLabel month = new JLabel("Month");
-        JButton previousMonth = new JButton("Previous");
-        JButton nextMonth = new JButton("Next");
+        JButton previousMonthButton = new JButton("Previous");
+        JButton nextMonthButton = new JButton("Next");
 
         final boolean[] current = {true};
-        JButton checkPrevious = new JButton("Current data");
+        JButton dataButton = new JButton("Current data");
 
         final JPanel eastPanel = new JPanel();
-        eastPanel.add(checkPrevious);
+        eastPanel.add(dataButton);
         eastPanel.add(month);
-        eastPanel.add(previousMonth);
-        eastPanel.add(nextMonth);
+        eastPanel.add(previousMonthButton);
+        eastPanel.add(nextMonthButton);
 
         JLabel department = new JLabel("Department");
-        JButton previousDepartment = new JButton("Previous");
-        JButton nextDepartment = new JButton("Next");
+        JButton previousDepartmentButton = new JButton("Previous");
+        JButton nextDepartmentButton = new JButton("Next");
 
-        JButton clear = new JButton("Clear");
+        JButton clearButton = new JButton("Clear");
 
         final JPanel westPanel = new JPanel();
         westPanel.add(department);
-        westPanel.add(previousDepartment);
-        westPanel.add(nextDepartment);
+        westPanel.add(previousDepartmentButton);
+        westPanel.add(nextDepartmentButton);
         north.add(eastPanel, BorderLayout.EAST);
         JPanel westP = new JPanel();
         westP.add(westPanel);
         westP.add(listView);
-        westP.add(clear);
+        westP.add(clearButton);
         north.add(westP, BorderLayout.WEST);
         departmentCard.add(north, BorderLayout.NORTH);
 
@@ -212,7 +203,7 @@ public class UserInterface extends JFrame {
         Summary layout
          */
 
-        scrollPane3 = new JScrollPane(summaryCostCodeTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+/*        scrollPane3 = new JScrollPane(summaryCostCodeTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         summaryCard.add(scrollPane3);
         JComboBox<Object> periods = new JComboBox<>();
         periods.addItem("Period");
@@ -223,7 +214,7 @@ public class UserInterface extends JFrame {
         JPanel buttonTable = new JPanel();
         buttonTable.add(periods);
         buttonTable.add(summaryCDG);
-        summaryCard.add(buttonTable, BorderLayout.NORTH);
+        summaryCard.add(buttonTable, BorderLayout.NORTH);*/
 
         /*
         Card Layout
@@ -231,7 +222,7 @@ public class UserInterface extends JFrame {
 
         contentPanel.add(overviewCard, "1");
         contentPanel.add(departmentCard, "2");
-        contentPanel.add(summaryCard, "3");
+     /*   contentPanel.add(summaryCard, "3");*/
 
         contentPanel.setLayout(cardLayout);
         add(contentPanel, BorderLayout.CENTER);
@@ -244,7 +235,7 @@ public class UserInterface extends JFrame {
         setTitle("VAT: Variance Analysis Tool");
 
         // LISTENERS
-        importSpreadsheet.addActionListener(e -> {
+        importButton.addActionListener(e -> {
             final JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
             int returnValue = fileChooser.showOpenDialog(null);
@@ -279,25 +270,25 @@ public class UserInterface extends JFrame {
             }
         });
 
-        costCodeList.addActionListener(e -> {
-            ccCounter = costCodeList.getSelectedIndex();
-            currentCostCode = costCodeList.getSelectedItem();
+        costCodeComboBox.addActionListener(e -> {
+            ccCounter = costCodeComboBox.getSelectedIndex();
+            currentCostCode = costCodeComboBox.getSelectedItem();
             departmentCard.remove(scrollPane2);
             try {
-                departmentTable = databaseConn.createSpecificTable(currentCostCode, period, 1);
+                if (isTableFiltered) {
+                    departmentTable = databaseConn.generateTable(currentCostCode, period, 1);
+                    databaseConn.filterTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
+                }
+
+                else {
+                    departmentTable = databaseConn.generateTable(currentCostCode, period, 1);
+                }
+                departmentTable = databaseConn.generateTable(currentCostCode, period, 1);
             } catch (ParseException e1) {
                 e1.printStackTrace();
             }
             dataWithDecimal.clear();
             departmentTable.setDefaultRenderer(Object.class, new BoardTableCellRenderer());
-            if (Objects.isNull(currentSelectedCDG)) cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCDGs.toArray()));
-            if (Objects.isNull(currentSelectedName)) nameList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedNames.toArray()));
-            if (Objects.isNull(currentSelectedDivision)) divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedDivisions.toArray()));
-            if (Objects.isNull(currentSelectedDivision) && Objects.isNull(currentSelectedCDG) && Objects.isNull(currentSelectedName)) {
-                nameList.setModel(new DefaultComboBoxModel<>(databaseConn.names.toArray()));
-                divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.divisions.toArray()));
-                cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.CDGs.toArray()));
-            }
             departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
             departmentTable.getColumnModel().getColumn(14).setMinWidth(200);
             departmentTable.getColumnModel().getColumn(13).setMinWidth(50);
@@ -348,32 +339,23 @@ public class UserInterface extends JFrame {
             });
         });
 
-        nameList.addActionListener(e -> {
-            if (Objects.requireNonNull(nameList.getSelectedItem()).toString().equals("Name")) {
-                currentSelectedName = null;
-            }
-            else {
-                currentSelectedName = nameList.getSelectedItem();
-            }
+        namesComboBox.addActionListener(e -> {
+            currentSelectedName = namesComboBox.getSelectedItem();
             try {
-                databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
-                if (Objects.nonNull(currentCostCode)) {
-                    ccNames = databaseConn.sortedCostCentreNames.toArray();
-                    costCodeList.setModel(new DefaultComboBoxModel<>(ccNames));
+                databaseConn.filterTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
+                if (!isTableFiltered) {
+                    isTableFiltered = true;
+                    nameFilter = true;
+                    costCodeComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
+                    divisionsComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedDivisions.toArray()));
+                    cdgComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCDGs.toArray()));
                 }
 
                 else {
-                    ccNames = databaseConn.ccNames.toArray();
-                    costCodeList.setModel(new DefaultComboBoxModel<>(ccNames));
-                }
-
-                if (Objects.isNull(currentSelectedCDG)) cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCDGs.toArray()));
-                if (Objects.isNull(currentSelectedDivision)) divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedDivisions.toArray()));
-                if (Objects.isNull(currentSelectedDivision) && Objects.isNull(currentSelectedCDG) && Objects.isNull(currentSelectedName)) {
-                    costCodeList.setModel(new DefaultComboBoxModel<>(databaseConn.ccNames.toArray()));
-                    nameList.setModel(new DefaultComboBoxModel<>(databaseConn.names.toArray()));
-                    divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.divisions.toArray()));
-                    cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.CDGs.toArray()));
+                    nameFilter = true;
+                    costCodeComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
+                    if (!divisionFilter) divisionsComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedDivisions.toArray()));
+                    if (!cdgFilter) cdgComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCDGs.toArray()));
                 }
             }
 
@@ -383,32 +365,23 @@ public class UserInterface extends JFrame {
 
         });
 
-        divisionList.addActionListener(e -> {
-            if (Objects.requireNonNull(divisionList.getSelectedItem()).toString().equals("Division")) {
-                currentSelectedDivision = null;
-            }
-            else {
-                currentSelectedDivision = divisionList.getSelectedItem();
-            }
+        divisionsComboBox.addActionListener(e -> {
+            currentSelectedDivision = divisionsComboBox.getSelectedItem();
             try {
-                databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
-                if (Objects.nonNull(currentCostCode)) {
-                    ccNames = databaseConn.sortedCostCentreNames.toArray();
-                    costCodeList.setModel(new DefaultComboBoxModel<>(ccNames));
+                databaseConn.filterTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
+                if (!isTableFiltered) {
+                    isTableFiltered = true;
+                    divisionFilter = true;
+                    costCodeComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
+                    cdgComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCDGs.toArray()));
+                    namesComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedNames.toArray()));
                 }
 
                 else {
-                    ccNames = databaseConn.ccNames.toArray();
-                    costCodeList.setModel(new DefaultComboBoxModel<>(ccNames));
-                }
-
-                if (Objects.isNull(currentSelectedCDG)) cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCDGs.toArray()));
-                if (Objects.isNull(currentSelectedName)) nameList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedNames.toArray()));
-                if (Objects.isNull(currentSelectedDivision) && Objects.isNull(currentSelectedCDG) && Objects.isNull(currentSelectedName)) {
-                    costCodeList.setModel(new DefaultComboBoxModel<>(databaseConn.ccNames.toArray()));
-                    nameList.setModel(new DefaultComboBoxModel<>(databaseConn.names.toArray()));
-                    divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.divisions.toArray()));
-                    cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.CDGs.toArray()));
+                    divisionFilter = true;
+                    costCodeComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
+                    if (!nameFilter) namesComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedNames.toArray()));
+                    if (!cdgFilter) cdgComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCDGs.toArray()));
                 }
             }
 
@@ -417,43 +390,33 @@ public class UserInterface extends JFrame {
             }
         });
 
-        cdgList.addActionListener(e -> {
-            if (Objects.requireNonNull(cdgList.getSelectedItem()).toString().equals("CDG")) {
-                currentSelectedCDG = null;
-            }
-
-            else {
-                currentSelectedCDG = cdgList.getSelectedItem();
-            }
-
+        cdgComboBox.addActionListener(e -> {
+            currentSelectedCDG = cdgComboBox.getSelectedItem();
             try {
-                databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
-                if (Objects.nonNull(currentCostCode)) {
-                    ccNames = databaseConn.sortedCostCentreNames.toArray();
-                    costCodeList.setModel(new DefaultComboBoxModel<>(ccNames));
+                databaseConn.filterTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
+                if (!isTableFiltered) {
+                    isTableFiltered = true;
+                    cdgFilter = true;
+                    costCodeComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
+                    divisionsComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedDivisions.toArray()));
+                    namesComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedNames.toArray()));
                 }
 
                 else {
-                    ccNames = databaseConn.ccNames.toArray();
-                    costCodeList.setModel(new DefaultComboBoxModel<>(ccNames));
+                    cdgFilter = true;
+                    costCodeComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
+                    if (!nameFilter) namesComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedNames.toArray()));
+                    if (!divisionFilter) divisionsComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedDivisions.toArray()));
                 }
 
-                if (Objects.isNull(currentSelectedDivision)) divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedDivisions.toArray()));
-                if (Objects.isNull(currentSelectedName)) nameList.setModel(new DefaultComboBoxModel<>(databaseConn.sortedNames.toArray()));
-                if (Objects.isNull(currentSelectedDivision) && Objects.isNull(currentSelectedCDG) && Objects.isNull(currentSelectedName)) {
-                    costCodeList.setModel(new DefaultComboBoxModel<>(databaseConn.ccNames.toArray()));
-                    nameList.setModel(new DefaultComboBoxModel<>(databaseConn.names.toArray()));
-                    divisionList.setModel(new DefaultComboBoxModel<>(databaseConn.divisions.toArray()));
-                    cdgList.setModel(new DefaultComboBoxModel<>(databaseConn.CDGs.toArray()));
-                }
-        }
+            }
 
             catch (ParseException e1) {
                 e1.printStackTrace();
             }
         });
 
-        previousMonth.addActionListener(e -> {
+        previousMonthButton.addActionListener(e -> {
 
             try {
                 pCounter--;
@@ -466,7 +429,7 @@ public class UserInterface extends JFrame {
             }
         });
 
-        periods.addActionListener(e -> {
+      /*  periods.addActionListener(e -> {
             if (periods.getSelectedItem() == "Period") currentPeriod = null;
             else {
                 currentPeriod = periods.getSelectedItem();
@@ -500,9 +463,9 @@ public class UserInterface extends JFrame {
             summaryCard.add(scrollPane3);
             summaryCostCodeTable.setDefaultRenderer(Object.class, new SummaryTableCellRenderer());
             tableRenew();
-        });
+        });*/
 
-        nextMonth.addActionListener(e -> {
+        nextMonthButton.addActionListener(e -> {
             try {
                 pCounter++;
                 tableRenew();
@@ -514,28 +477,31 @@ public class UserInterface extends JFrame {
             }
         });
 
-        checkPrevious.addActionListener(e -> {
+        dataButton.addActionListener(e -> {
             try {
-                costCodeList.setSelectedIndex(ccCounter);
+                costCodeComboBox.setSelectedIndex(ccCounter);
             }
 
             catch (IllegalArgumentException exc) {
                 ccCounter = 0;
-                costCodeList.setSelectedIndex(ccCounter);
+                costCodeComboBox.setSelectedIndex(ccCounter);
 
             }
 
-            currentCostCode = ccNames[ccCounter];
-            period = periodNames[pCounter];
+            currentCostCode = costCodeComboBox.getSelectedItem();
+            period = databaseConn.periodNames.toArray()[pCounter];
             ccLabel.setText("Cost code: " + currentCostCode.toString());
             descriptionLabel.setText("Description: " + databaseConn.name);
             periodLabel.setText("Month: " + getPeriod(period));
             departmentCard.remove(scrollPane2);
             if (current[0]) {
                 try {
-                    departmentTable = databaseConn.createSpecificTable(currentCostCode, period, 0);
+                    departmentTable = databaseConn.generateTable(currentCostCode, period, 0);
+                    if (isTableFiltered) {
+                        databaseConn.filterTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
+                    }
                     current[0] = false;
-                    checkPrevious.setText("Previous data");
+                    dataButton.setText("Previous data");
                 } catch (ParseException e1) {
                     e1.printStackTrace();
                 }
@@ -543,21 +509,17 @@ public class UserInterface extends JFrame {
 
             else {
                 try {
-                    departmentTable = databaseConn.createSpecificTable(currentCostCode, period, 1);
+                    departmentTable = databaseConn.generateTable(currentCostCode, period, 1);
+                    if (isTableFiltered) {
+                        databaseConn.filterTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
+                    }
                     current[0] = true;
-                    checkPrevious.setText("Current data");
+                    dataButton.setText("Current data");
                 } catch (ParseException e1) {
                     e1.printStackTrace();
                 }
             }
-            if (Objects.nonNull(currentSelectedDivision) || Objects.nonNull(currentSelectedName) || Objects.nonNull(currentSelectedCDG)) {
-                try {
-                    databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
 
-            }
             dataWithDecimal.clear();
             departmentTable.setDefaultRenderer(Object.class, new BoardTableCellRenderer());
             departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -586,7 +548,7 @@ public class UserInterface extends JFrame {
                         protected Void doInBackground() {
                             try {
                                 Class.forName(databaseConn.JDBC_DRIVER);
-                                conn[0] = DriverManager.getConnection(databaseConn.DB_URL, "dan", "ParolaMea123");
+                                conn[0] = DriverManager.getConnection(databaseConn.DB_URL, databaseConn.USER_NAME, databaseConn.PASSWORD);
                                 stmt[0] = conn[0].createStatement();
                                 String noteSQL;
                                 noteSQL =   "UPDATE data " +
@@ -608,9 +570,9 @@ public class UserInterface extends JFrame {
             });
         });
 
-        previousDepartment.addActionListener(e -> {
+        previousDepartmentButton.addActionListener(e -> {
             if (ccCounter == 0) {
-                ccCounter = costCodeList.getItemCount()-1;
+                ccCounter = costCodeComboBox.getItemCount()-1;
                 tableRenew();
             }
 
@@ -620,7 +582,7 @@ public class UserInterface extends JFrame {
             }
         });
 
-        nextDepartment.addActionListener(e -> {
+        nextDepartmentButton.addActionListener(e -> {
             try {
                 ccCounter++;
                 tableRenew();
@@ -632,13 +594,18 @@ public class UserInterface extends JFrame {
             }
         });
 
-        clear.addActionListener(e -> {
-            if (!(currentCostCode.equals("ALL")) || Objects.nonNull(currentSelectedName) || Objects.nonNull(currentSelectedDivision) || Objects.nonNull(currentSelectedCDG)) {
+        clearButton.addActionListener(e -> {
+            boolean isAlreadyCleared = currentCostCode.toString().equals("ALL") && currentSelectedDivision.toString().equals("Division") && currentSelectedName.toString().equals("Name") && currentSelectedCDG.toString().equals("CDG");
+            if (!isAlreadyCleared) {
                 ccCounter = 0;
-                divisionList.setSelectedIndex(0);
-                nameList.setSelectedIndex(0);
-                cdgList.setSelectedIndex(0);
                 tableRenew();
+                isTableFiltered = false;
+                nameFilter = false;
+                divisionFilter = false;
+                cdgFilter = false;
+                currentSelectedName = namesComboBox.getSelectedItem();
+                currentSelectedDivision = divisionsComboBox.getSelectedItem();
+                currentSelectedCDG = cdgComboBox.getSelectedItem();
             }
         });
 
@@ -646,7 +613,9 @@ public class UserInterface extends JFrame {
 
         departmentView.addActionListener(e -> cardLayout.show(contentPanel, "2"));
 
+/*
         summaryView.addActionListener(e -> cardLayout.show(contentPanel, "3"));
+*/
 
         departmentTable.getModel().addTableModelListener(e -> {
             if (e.getColumn() == 27) {
@@ -662,7 +631,7 @@ public class UserInterface extends JFrame {
                     protected Void doInBackground() {
                         try {
                             Class.forName(databaseConn.JDBC_DRIVER);
-                            conn[0] = DriverManager.getConnection(databaseConn.DB_URL, "dan", "ParolaMea123");
+                            conn[0] = DriverManager.getConnection(databaseConn.DB_URL, databaseConn.USER_NAME, databaseConn.PASSWORD);
                             stmt[0] = conn[0].createStatement();
                             String noteSQL;
                             noteSQL =   "UPDATE data " +
@@ -685,23 +654,39 @@ public class UserInterface extends JFrame {
     }
 
     private void tableRenew() {
-        costCodeList.setSelectedIndex(ccCounter);
-        currentCostCode = costCodeList.getSelectedItem();
-        period = periodNames[pCounter];
-        ccLabel.setText("Cost code: " + currentCostCode);
-        descriptionLabel.setText("Description: " + databaseConn.name);
-        periodLabel.setText("Month: " + getPeriod(period));
-        departmentCard.remove(scrollPane2);
-        try {
-            departmentTable = databaseConn.createSpecificTable(currentCostCode, period, 1);
-            if (Objects.nonNull(currentSelectedDivision) || Objects.nonNull(currentSelectedName) || Objects.nonNull(currentSelectedCDG)) {
-                databaseConn.drillTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
-
+        if (!isTableFiltered) {
+            costCodeComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.ccNames.toArray()));
+            costCodeComboBox.setSelectedIndex(ccCounter);
+            currentCostCode = costCodeComboBox.getSelectedItem();
+            period = databaseConn.periodNames.toArray()[pCounter];
+            ccLabel.setText("Cost code: " + currentCostCode);
+            descriptionLabel.setText("Description: " + databaseConn.name);
+            periodLabel.setText("Month: " + getPeriod(period));
+            departmentCard.remove(scrollPane2);
+            try {
+                departmentTable = databaseConn.generateTable(currentCostCode, period, 1);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
+            divisionsComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.divisions.toArray()));
+            namesComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.names.toArray()));
+            cdgComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.CDGs.toArray()));
         }
 
-        catch (ParseException e) {
-            e.printStackTrace();
+        else {
+            costCodeComboBox.setSelectedIndex(ccCounter);
+            currentCostCode = costCodeComboBox.getSelectedItem();
+            period = databaseConn.periodNames.toArray()[pCounter];
+            ccLabel.setText("Cost code: " + currentCostCode);
+            descriptionLabel.setText("Description: " + databaseConn.name);
+            periodLabel.setText("Month: " + getPeriod(period));
+            departmentCard.remove(scrollPane2);
+            try {
+                departmentTable = databaseConn.generateTable(currentCostCode, period, 1);
+                databaseConn.filterTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         dataWithDecimal.clear();
         departmentTable.setDefaultRenderer(Object.class, new BoardTableCellRenderer());
@@ -731,7 +716,7 @@ public class UserInterface extends JFrame {
                     protected Void doInBackground() {
                         try {
                             Class.forName(databaseConn.JDBC_DRIVER);
-                            conn[0] = DriverManager.getConnection(databaseConn.DB_URL, "dan", "ParolaMea123");
+                            conn[0] = DriverManager.getConnection(databaseConn.DB_URL, databaseConn.USER_NAME, databaseConn.PASSWORD);
                             stmt[0] = conn[0].createStatement();
                             String noteSQL;
                             noteSQL =   "UPDATE data " +
@@ -848,7 +833,7 @@ public class UserInterface extends JFrame {
         }
     }
 
-    public class SummaryTableCellRenderer extends DefaultTableCellRenderer {
+  /*  public class SummaryTableCellRenderer extends DefaultTableCellRenderer {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
             DecimalFormat nf = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
@@ -881,7 +866,7 @@ public class UserInterface extends JFrame {
 
             return c;
         }
-    }
+    }*/
 
     public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

@@ -22,7 +22,9 @@ class DatabaseConn {
 
     // JDBC driver name and database URL
     final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    final String DB_URL = "jdbc:mysql://10.43.136.208:3306/experimental-db?useSSL=false";
+    final String DB_URL = "jdbc:mysql://localhost:3306/experimental-db?useSSL=false";
+    final String USER_NAME = "dan";
+    final String PASSWORD = "ParolaMea123";
     private Vector<Vector<String>> databaseEntries = new Vector<>();
     private Vector<Vector<String>> previousDatabaseEntries = new Vector<>();
     private Vector<Vector<String>> sortedVector = new Vector<>();
@@ -65,7 +67,7 @@ class DatabaseConn {
             databaseEntries.clear();
             previousDatabaseEntries.clear();
             Class.forName(JDBC_DRIVER);
-            conn = DriverManager.getConnection(DB_URL, "root", "some pass");
+            conn = DriverManager.getConnection(DB_URL, USER_NAME, PASSWORD);
             stmt = conn.createStatement();
             String dataSQL;
             String previousDataSQL;
@@ -327,8 +329,7 @@ class DatabaseConn {
 
         try {
             Class.forName(JDBC_DRIVER);
-            conn = DriverManager.getConnection(DB_URL, "root", "some pass");
-
+            conn = DriverManager.getConnection(DB_URL, USER_NAME, PASSWORD);
             stmt = conn.createStatement();
             String checkSQL;
             checkSQL = "SELECT DISTINCT `Period and Month` FROM data;";
@@ -470,6 +471,7 @@ class DatabaseConn {
 
     }
 
+    //TODO: Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException when you try to see all cost centres within a new 18-19 year
     // Total class for PAY, NON PAY, INCOME, RECHARGE and GRAND TOTAL
     private class Total {
 
@@ -619,7 +621,7 @@ class DatabaseConn {
 
     }
 
-    @SuppressWarnings("Duplicates")
+    /*@SuppressWarnings("Duplicates")
     JTable createSummaryTable(Object period, Object CDG) throws ParseException {
         Vector<String> headers = new Vector<>();
         headers.add("CDG");
@@ -780,7 +782,7 @@ class DatabaseConn {
         }
 
         return new JTable(grandTotalVectors, headers);
-    }
+    }*/
 
     /***
      *
@@ -804,7 +806,7 @@ class DatabaseConn {
         totalTreeMap.put("Income", income);
         totalTreeMap.put("Pay", pay);
         totalTreeMap.put("Non Pay", nonPay);
-        totalTreeMap.put("Recharge", recharge);
+        totalTreeMap.put("Recharges", recharge);
         totalTreeMap.put("Grand Total", grandTotal);
 
         // New vector for inserting the totals at the indexes iterated here
@@ -1017,7 +1019,7 @@ class DatabaseConn {
     }
 
     // @param currentPrevious -> 0 for current database entries, 1 for previous database entries
-    JTable createSpecificTable(Object costCode, Object period, int currentPrevious) throws ParseException {
+    JTable generateTable(Object costCode, Object period, int currentPrevious) throws ParseException {
         Vector<Vector<String>> databaseEntries;
 
         if (currentPrevious == 0) {
@@ -1092,10 +1094,10 @@ class DatabaseConn {
         });
     }
 
-    void drillTable(JTable table, Object name, Object division, Object cdg) throws ParseException {
+    void filterTable(JTable table, Object name, Object division, Object cdg) throws ParseException {
         Vector<Vector<String>> newVector = new Vector<>();
         boolean returnNewVector = true;
-        if (Objects.isNull(name) && Objects.isNull(cdg) && Objects.isNull(division)) {
+        if (name == "Name" && cdg == "CDG" && division == "Division") {
             Vector<Vector<String>> finalVector = addTotals(sortedVector);
             model = new DefaultTableModel(finalVector, hd);
             table.setModel(model);
@@ -1103,7 +1105,7 @@ class DatabaseConn {
             returnNewVector = false;
         }
 
-        else if (Objects.isNull(division) && Objects.isNull(cdg)) {
+        else if (cdg == "CDG" && division == "Division") {
             sortedCostCentreNames.clear();
             sortedCostCentreNames.add("ALL");
             sortedDivisions.clear();
@@ -1122,7 +1124,7 @@ class DatabaseConn {
             }
         }
 
-        else if (Objects.isNull(division) && Objects.isNull(name)) {
+        else if (division == "Division" && name == "Name") {
             sortedCostCentreNames.clear();
             sortedCostCentreNames.add("ALL");
             sortedDivisions.clear();
@@ -1141,7 +1143,7 @@ class DatabaseConn {
             }
         }
 
-        else if (Objects.isNull(name) && Objects.isNull(cdg)) {
+        else if (name == "Name" && cdg == "CDG") {
             sortedCostCentreNames.clear();
             sortedCostCentreNames.add("ALL");
             sortedCDGs.clear();
@@ -1161,7 +1163,7 @@ class DatabaseConn {
             }
         }
 
-        else if (Objects.isNull(division)) {
+        else if (division == "Division") {
             sortedCostCentreNames.clear();
             sortedCostCentreNames.add("ALL");
             sortedDivisions.clear();
@@ -1179,7 +1181,7 @@ class DatabaseConn {
             }
         }
 
-        else if (Objects.isNull(name)) {
+        else if (name == "Name") {
             sortedCostCentreNames.clear();
             sortedCostCentreNames.add("ALL");
             sortedNames.clear();
@@ -1197,7 +1199,7 @@ class DatabaseConn {
             }
         }
 
-        else if (Objects.isNull(cdg)) {
+        else if (cdg == "CDG") {
             sortedCostCentreNames.clear();
             sortedCostCentreNames.add("ALL");
             sortedCDGs.clear();
