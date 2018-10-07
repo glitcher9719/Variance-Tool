@@ -343,7 +343,13 @@ public class UserInterface extends JFrame {
             currentSelectedName = namesComboBox.getSelectedItem();
             try {
                 databaseConn.filterTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
-                if (!isTableFiltered) {
+
+                if (currentSelectedName.equals("Name")) {
+                    nameFilter = false;
+                    if (currentSelectedDivision.equals("Division") && currentSelectedCDG.equals("CDG")) isTableFiltered = false;
+                }
+
+                else if (!isTableFiltered) {
                     isTableFiltered = true;
                     nameFilter = true;
                     costCodeComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
@@ -369,7 +375,13 @@ public class UserInterface extends JFrame {
             currentSelectedDivision = divisionsComboBox.getSelectedItem();
             try {
                 databaseConn.filterTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
-                if (!isTableFiltered) {
+
+                if (currentSelectedDivision.equals("Division")) {
+                    divisionFilter = false;
+                    if (currentSelectedName.equals("Name") && currentSelectedCDG.equals("CDG")) isTableFiltered = false;
+                }
+
+                else if (!isTableFiltered) {
                     isTableFiltered = true;
                     divisionFilter = true;
                     costCodeComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
@@ -394,7 +406,13 @@ public class UserInterface extends JFrame {
             currentSelectedCDG = cdgComboBox.getSelectedItem();
             try {
                 databaseConn.filterTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
-                if (!isTableFiltered) {
+
+                if (currentSelectedCDG.equals("CDG")) {
+                    cdgFilter = false;
+                    if (currentSelectedName.equals("Name") && currentSelectedDivision.equals("Division")) isTableFiltered = false;
+                }
+
+                else if (!isTableFiltered) {
                     isTableFiltered = true;
                     cdgFilter = true;
                     costCodeComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
