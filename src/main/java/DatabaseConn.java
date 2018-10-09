@@ -23,7 +23,7 @@ class DatabaseConn {
     // JDBC driver name and database URL
     final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     final String DB_URL = "jdbc:mysql://10.43.136.208:3306/experimental-db?useSSL=false";
-    final String USER_NAME = "root ";
+    final String USER_NAME = "root";
     final String PASSWORD = "some pass";
     private Vector<Vector<String>> databaseEntries = new Vector<>();
     private Vector<Vector<String>> previousDatabaseEntries = new Vector<>();
