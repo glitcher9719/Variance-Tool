@@ -22,9 +22,9 @@ class DatabaseConn {
 
     // JDBC driver name and database URL
     final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    final String DB_URL = "jdbc:mysql://localhost:3306/experimental-db?useSSL=false";
-    final String USER_NAME = "dan";
-    final String PASSWORD = "ParolaMea123";
+    final String DB_URL = "jdbc:mysql://10.43.136.208:3306/experimental-db?useSSL=false";
+    final String USER_NAME = "root ";
+    final String PASSWORD = "some pass";
     private Vector<Vector<String>> databaseEntries = new Vector<>();
     private Vector<Vector<String>> previousDatabaseEntries = new Vector<>();
     private Vector<Vector<String>> sortedVector = new Vector<>();
@@ -1068,7 +1068,7 @@ class DatabaseConn {
             model = new DefaultTableModel(finalVector, hd);
         }
 
-        catch (ArrayIndexOutOfBoundsException e) {
+        catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
             String noEntries = "No entries available!";
             Vector<String> vvv = new Vector<>();
             vvv.add(noEntries);
@@ -1076,6 +1076,7 @@ class DatabaseConn {
             vvvv.add(vvv);
             model = new DefaultTableModel(vvvv, hd);
         }
+
         return removeColumns(new JTable(model){
             //Implement table cell tool tips.
             public String getToolTipText(MouseEvent e) {

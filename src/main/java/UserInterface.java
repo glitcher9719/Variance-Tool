@@ -762,24 +762,31 @@ public class UserInterface extends JFrame {
         }
 
         else {
-            String current = o.toString();
-            String year = current.substring(0, 4);
-            String month = current.substring(4, 6);
-            String fullYear = "20" + year.substring(0, 2) + "-" + "20" + year.substring(2, 4);
-            HashMap<String, String> monthsMap = new HashMap<>();
-            monthsMap.put("01", "April");
-            monthsMap.put("02", "May");
-            monthsMap.put("03", "June");
-            monthsMap.put("04", "July");
-            monthsMap.put("05", "August");
-            monthsMap.put("06", "September");
-            monthsMap.put("07", "October");
-            monthsMap.put("08", "November");
-            monthsMap.put("09", "December");
-            monthsMap.put("10", "January");
-            monthsMap.put("11", "February");
-            monthsMap.put("12", "March");
-            return monthsMap.get(month) + " " + fullYear;
+
+            try {
+                String current = o.toString();
+                String year = current.substring(0, 4);
+                String month = current.substring(4, 6);
+                String fullYear = "20" + year.substring(0, 2) + "-" + "20" + year.substring(2, 4);
+                HashMap<String, String> monthsMap = new HashMap<>();
+                monthsMap.put("01", "April");
+                monthsMap.put("02", "May");
+                monthsMap.put("03", "June");
+                monthsMap.put("04", "July");
+                monthsMap.put("05", "August");
+                monthsMap.put("06", "September");
+                monthsMap.put("07", "October");
+                monthsMap.put("08", "November");
+                monthsMap.put("09", "December");
+                monthsMap.put("10", "January");
+                monthsMap.put("11", "February");
+                monthsMap.put("12", "March");
+                return monthsMap.get(month) + " " + fullYear;
+            }
+
+            catch (StringIndexOutOfBoundsException e) {
+                return "No periods available";
+            }
         }
     }
 
