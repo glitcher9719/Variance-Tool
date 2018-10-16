@@ -6,7 +6,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,10 +24,10 @@ class DatabaseConn {
 
     // JDBC driver name and database URL
     final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    final String DB_URL = "jdbc:mysql://10.43.136.208:3306/experimental-db?useSSL=false";
-    final String USER_NAME = "root";
-    final String PASSWORD = "some pass";
-    private Vector<Vector<String>> databaseEntries = new Vector<>();
+    final String DB_URL = "jdbc:mysql://localhost:3306/experimental-db?useSSL=false";
+    final String USER_NAME = "dan";
+    final String PASSWORD = "ParolaMea123";
+    Vector<Vector<String>> databaseEntries = new Vector<>();
     private Vector<Vector<String>> previousDatabaseEntries = new Vector<>();
     private Vector<Vector<String>> sortedVector = new Vector<>();
     private Vector<String> hd = new Vector<>();
@@ -58,7 +60,7 @@ class DatabaseConn {
         return String.format("%.2f", val).replace(',', '.');
     }
 
-    JTable generateDataFromDB() throws ClassNotFoundException {
+    JTable generateOverviewTableFromDB() throws ClassNotFoundException {
         Connection conn;
         Statement stmt;
         symbols.setCurrencySymbol(""); // Don't use null.
@@ -471,7 +473,6 @@ class DatabaseConn {
 
     }
 
-    //TODO: Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException when you try to see all cost centres within a new 18-19 year
     // Total class for PAY, NON PAY, INCOME, RECHARGE and GRAND TOTAL
     private class Total {
 
@@ -621,7 +622,7 @@ class DatabaseConn {
 
     }
 
-    /*@SuppressWarnings("Duplicates")
+    @SuppressWarnings("Duplicates")
     JTable createSummaryTable(Object period, Object CDG) throws ParseException {
         Vector<String> headers = new Vector<>();
         headers.add("CDG");
@@ -782,7 +783,7 @@ class DatabaseConn {
         }
 
         return new JTable(grandTotalVectors, headers);
-    }*/
+    }
 
     /***
      *
@@ -1077,7 +1078,7 @@ class DatabaseConn {
             model = new DefaultTableModel(vvvv, hd);
         }
 
-        return removeColumns(new JTable(model){
+        JTable table = new JTable(model){
             //Implement table cell tool tips.
             public String getToolTipText(MouseEvent e) {
                 String tip = null;
@@ -1092,7 +1093,10 @@ class DatabaseConn {
 
                 return tip;
             }
-        });
+        };
+
+        table.moveColumn(27, 25);
+        return removeColumns(table);
     }
 
     void filterTable(JTable table, Object name, Object division, Object cdg) throws ParseException {
@@ -1250,13 +1254,13 @@ class DatabaseConn {
 
             model = new DefaultTableModel(newVector, hd);
             table.setModel(model);
+            table.moveColumn(27, 25);
             removeColumns(table);
         }
 
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        table.getColumnModel().getColumn(14).setMinWidth(200);
-        table.getColumnModel().getColumn(13).setMinWidth(50);
-        table.getColumnModel().getColumn(12).setMinWidth(150);
+        table.getColumnModel().getColumn(13).setMinWidth(80);
+        table.getColumnModel().getColumn(12).setMinWidth(200);
         table.getColumnModel().getColumn(11).setMinWidth(150);
         table.getColumnModel().getColumn(10).setMinWidth(30);
         table.getColumnModel().getColumn(9).setMinWidth(30);
@@ -1282,6 +1286,7 @@ class DatabaseConn {
         table.removeColumn(table.getColumn("Name"));
         table.removeColumn(table.getColumn("Investigation Limit"));
         table.removeColumn(table.getColumn("WTE Paid"));
+        table.removeColumn(table.getColumn("Expense Type"));
 
         return table;
     }

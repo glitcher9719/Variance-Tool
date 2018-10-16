@@ -7,9 +7,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ec3fa37-6308-4677-acb1-392265eb16cf" name="Default" comment="initial commit (3)">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_coderazzi_tablefilter_swing_5_4_0.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/artifacts/Variance_Tool_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/Variance_Tool_jar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Variance Tool.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Variance Tool.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/DatabaseConn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DatabaseConn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/UserInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/DatabaseConn$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DatabaseConn$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/DatabaseConn$Total.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DatabaseConn$Total.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/DatabaseConn.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DatabaseConn.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$BoardTableCellRenderer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$BoardTableCellRenderer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -58,8 +72,32 @@
       <file leaf-file-name="UserInterface.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/UserInterface.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2003">
-              <caret line="787" column="46" selection-start-line="787" selection-start-column="46" selection-end-line="787" selection-end-column="46" />
+            <state relative-caret-position="95">
+              <caret line="454" column="37" selection-start-line="454" selection-start-column="37" selection-end-line="454" selection-end-column="37" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#13649#14825#0" expanded="true" />
+                <element signature="e#14824#14825#0" expanded="true" />
+                <element signature="e#25298#26498#0" expanded="true" />
+                <element signature="e#26497#26498#0" expanded="true" />
+                <element signature="e#28839#29959#0" expanded="true" />
+                <element signature="e#29958#29959#0" expanded="true" />
+                <element signature="e#33443#34563#0" expanded="true" />
+                <element signature="e#34562#34563#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="JTable.java" pinned="false" current-in-tab="false">
+        <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/javax/swing/JTable.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="316">
+              <caret line="1837" column="16" selection-start-line="1837" selection-start-column="16" selection-end-line="1837" selection-end-column="16" />
+              <folding>
+                <element signature="e#109613#109614#0" expanded="true" />
+                <element signature="e#109678#109679#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -67,8 +105,20 @@
       <file leaf-file-name="DatabaseConn.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/DatabaseConn.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="25" column="34" lean-forward="true" selection-start-line="25" selection-start-column="34" selection-end-line="25" selection-end-column="34" />
+            <state relative-caret-position="9996">
+              <caret line="632" column="32" lean-forward="true" selection-start-line="632" selection-start-column="32" selection-end-line="632" selection-end-column="32" />
+              <folding>
+                <element signature="e#28371#28402#1" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="714">
+              <caret line="42" column="21" selection-start-line="42" selection-start-column="21" selection-end-line="42" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -84,17 +134,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>previousMonth</find>
-      <find>System.out</find>
-      <find>YTD</find>
-      <find>addTotals</find>
-      <find>radiob</find>
-      <find>grand total</find>
-      <find>ccName</find>
-      <find>nextDepartment</find>
-      <find>createSumm</find>
-      <find>summary</find>
-      <find>tABLE</find>
       <find>headers</find>
       <find>summaryCostCodeTable</find>
       <find>periods</find>
@@ -110,10 +149,21 @@
       <find>costcode</find>
       <find>clearbutton</find>
       <find>tableren</find>
-      <find>clear</find>
       <find>current</find>
       <find>dataButton</find>
       <find>Listeners</find>
+      <find>generateT</find>
+      <find>filterTable</find>
+      <find>setTool</find>
+      <find>generate</find>
+      <find>Model</find>
+      <find>table</find>
+      <find>getValue</find>
+      <find>GENE</find>
+      <find>summary</find>
+      <find>clear</find>
+      <find>resize</find>
+      <find>summaryPer</find>
     </findStrings>
     <replaceStrings>
       <replace>Income</replace>
@@ -174,6 +224,7 @@
         <option value="$PROJECT_DIR$/src/main/java/DataProcessing.java" />
         <option value="$PROJECT_DIR$/src/main/java/DatabaseConnectivity.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/OverviewTableModel.java" />
         <option value="$PROJECT_DIR$/src/main/java/UserInterface.java" />
         <option value="$PROJECT_DIR$/src/main/java/DatabaseConn.java" />
       </list>
@@ -199,10 +250,10 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="267" />
-    <option name="y" value="45" />
-    <option name="width" value="1505" />
-    <option name="height" value="1096" />
+    <option name="x" value="452" />
+    <option name="y" value="42" />
+    <option name="width" value="1162" />
+    <option name="height" value="1047" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -211,7 +262,40 @@
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes />
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Variance Tool" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Variance Tool" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Variance Tool" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Variance Tool" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Variance Tool" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="AndroidView" />
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
+    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="Downloaded.Files.Path.Enabled" value="true" />
@@ -525,7 +609,9 @@
       <workItem from="1538940922093" duration="1224000" />
       <workItem from="1539089331787" duration="400000" />
       <workItem from="1539090029452" duration="648000" />
-      <workItem from="1539091141067" duration="2759000" />
+      <workItem from="1539091141067" duration="2926000" />
+      <workItem from="1539614191527" duration="8446000" />
+      <workItem from="1539680815543" duration="9500000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit (2)">
       <created>1525109752678</created>
@@ -545,7 +631,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="642146000" />
+    <option name="totallyTimeSpent" value="660259000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -557,11 +643,12 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="452" y="42" width="1162" height="1047" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="7" weight="0.31808278" />
-      <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.4977778" weight="0.25412542" />
+      <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.4977778" weight="0.2472767" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
@@ -569,11 +656,11 @@
       <window_info anchor="right" id="Maven Projects" order="8" weight="0.32889125" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="12" weight="0.3267974" />
-      <window_info anchor="bottom" id="Run" order="3" sideWeight="0.4968017" weight="0.3256785" />
+      <window_info anchor="bottom" id="Run" order="3" sideWeight="0.4968017" weight="0.35729846" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4977778" weight="0.15577342" />
       <window_info id="Capture Tool" order="6" />
       <window_info id="Designer" order="3" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49782136" weight="0.29637527" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49782136" visible="true" weight="0.2413793" />
       <window_info anchor="right" id="Database" order="6" weight="0.32942432" />
       <window_info id="Structure" order="1" sideWeight="0.50085473" side_tool="true" weight="0.30863538" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -614,6 +701,14 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/DatabaseConn.java</url>
+          <line>624</line>
+          <properties />
+          <option name="timeStamp" value="1014" />
+        </line-breakpoint>
+      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
@@ -625,7 +720,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="1000" />
+      <option name="time" value="1015" />
     </breakpoint-manager>
   </component>
   <component name="antWorkspaceConfiguration">
@@ -682,20 +777,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/jre/lib/rt.jar!/sun/misc/FloatingDecimal.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5032">
-          <caret line="296" selection-start-line="296" selection-end-line="296" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/java/lang/Runtime.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="56" column="26" selection-start-line="56" selection-start-column="26" selection-end-line="56" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/lib/mysql-connector-java-8.0.11.jar!/com/mysql/cj/jdbc/StatementImpl.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15810">
@@ -875,13 +956,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/javax/swing/JTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="859">
-          <caret line="2715" column="18" selection-start-line="2715" selection-start-column="18" selection-end-line="2715" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/javax/swing/JList.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="7412">
@@ -966,13 +1040,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="18" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/javax/swing/table/TableRowSorter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2244">
@@ -995,13 +1062,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/UserInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2003">
-          <caret line="787" column="46" selection-start-line="787" selection-start-column="46" selection-end-line="787" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/java/lang/String.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="186">
@@ -1009,10 +1069,72 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/java/awt/event/MouseEvent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-68">
+          <caret line="189" column="13" selection-start-line="189" selection-start-column="13" selection-end-line="189" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="714">
+          <caret line="42" column="21" selection-start-line="42" selection-start-column="21" selection-end-line="42" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/javax/swing/JTable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="316">
+          <caret line="1837" column="16" selection-start-line="1837" selection-start-column="16" selection-end-line="1837" selection-end-column="16" />
+          <folding>
+            <element signature="e#109613#109614#0" expanded="true" />
+            <element signature="e#109678#109679#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/OverviewTableModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="13" selection-start-line="3" selection-start-column="13" selection-end-line="3" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#150#151#0" expanded="true" />
+            <element signature="e#174#175#0" expanded="true" />
+            <element signature="e#396#397#0" expanded="true" />
+            <element signature="e#432#433#0" expanded="true" />
+            <element signature="e#521#522#0" expanded="true" />
+            <element signature="e#578#579#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/UserInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="95">
+          <caret line="454" column="37" selection-start-line="454" selection-start-column="37" selection-end-line="454" selection-end-column="37" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#13649#14825#0" expanded="true" />
+            <element signature="e#14824#14825#0" expanded="true" />
+            <element signature="e#25298#26498#0" expanded="true" />
+            <element signature="e#26497#26498#0" expanded="true" />
+            <element signature="e#28839#29959#0" expanded="true" />
+            <element signature="e#29958#29959#0" expanded="true" />
+            <element signature="e#33443#34563#0" expanded="true" />
+            <element signature="e#34562#34563#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/DatabaseConn.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="25" column="34" lean-forward="true" selection-start-line="25" selection-start-column="34" selection-end-line="25" selection-end-column="34" />
+        <state relative-caret-position="9996">
+          <caret line="632" column="32" lean-forward="true" selection-start-line="632" selection-start-column="32" selection-end-line="632" selection-end-column="32" />
+          <folding>
+            <element signature="e#28371#28402#1" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

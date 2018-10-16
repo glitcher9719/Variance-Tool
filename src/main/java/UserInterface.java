@@ -1,8 +1,12 @@
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import net.coderazzi.filters.gui.AutoChoices;
+import net.coderazzi.filters.gui.TableFilterHeader;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.io.File;
@@ -22,19 +26,19 @@ public class UserInterface extends JFrame {
 
     // default values for department view
     private JTable departmentTable;
-/*    private JTable summaryCostCodeTable;*/
+    private JTable summaryCostCodeTable;
     private JScrollPane scrollPane2;
-/*    private JScrollPane scrollPane3;*/
+    private JScrollPane scrollPane3;
     private CardLayout cardLayout = new CardLayout();
     private JLabel ccLabel;
     private JLabel periodLabel;
     private JLabel descriptionLabel;
     private JTable table;
     private JPanel departmentCard;
-  /*  private JPanel summaryCard;
+    private JPanel summaryCard;
 
     private Object currentPeriod = null;
-    private Object currentCDG = null;*/
+    private Object currentCDG = null;
 
     private JComboBox<Object> costCodeComboBox;
     private JComboBox<Object> namesComboBox;
@@ -61,9 +65,10 @@ public class UserInterface extends JFrame {
 
     private UserInterface() throws ClassNotFoundException, ParseException {
         databaseConn = new DatabaseConn();
-        table = databaseConn.generateDataFromDB();
-        /*summaryCostCodeTable = databaseConn.createSummaryTable(currentPeriod, currentCDG);*/
-/*        summaryCostCodeTable.setDefaultRenderer(Object.class, new SummaryTableCellRenderer());*/
+        table = databaseConn.generateOverviewTableFromDB();
+        TableFilterHeader filterHeader = new TableFilterHeader(table, AutoChoices.ENABLED);
+        summaryCostCodeTable = databaseConn.createSummaryTable(currentPeriod, currentCDG);
+        summaryCostCodeTable.setDefaultRenderer(Object.class, new SummaryTableCellRenderer());
         costCodeComboBox = new JComboBox<>(databaseConn.ccNames.toArray());
         costCodeComboBox.setSelectedIndex(0);
         currentCostCode = costCodeComboBox.getSelectedItem();
@@ -72,7 +77,7 @@ public class UserInterface extends JFrame {
         contentPanel = new JPanel(cardLayout);
         JPanel overviewCard = new JPanel(new BorderLayout());
         departmentCard = new JPanel(new BorderLayout());
-        /*summaryCard = new JPanel(new BorderLayout());*/
+        summaryCard = new JPanel(new BorderLayout());
         JPanel north = new JPanel(new BorderLayout());
 
          /*
@@ -80,15 +85,15 @@ public class UserInterface extends JFrame {
          */
         final JRadioButton overview = new JRadioButton("Overview", true);
         final JRadioButton departmentView = new JRadioButton("Department View");
-   /*     final JRadioButton summaryView = new JRadioButton("Summary View");*/
+        final JRadioButton summaryView = new JRadioButton("Summary View");
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(overview);
         buttonGroup.add(departmentView);
-      /*  buttonGroup.add(summaryView);*/
+        buttonGroup.add(summaryView);
         final JPanel radioButtons = new JPanel();
         radioButtons.add(overview);
         radioButtons.add(departmentView);
-/*        radioButtons.add(summaryView);*/
+        radioButtons.add(summaryView);
 
         /*
             -------- Overview ---------
@@ -115,9 +120,8 @@ public class UserInterface extends JFrame {
         dataWithDecimal.clear();
         departmentTable.setDefaultRenderer(Object.class, new BoardTableCellRenderer());
         departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        departmentTable.getColumnModel().getColumn(14).setMinWidth(200);
-        departmentTable.getColumnModel().getColumn(13).setMinWidth(50);
-        departmentTable.getColumnModel().getColumn(12).setMinWidth(150);
+        departmentTable.getColumnModel().getColumn(13).setMinWidth(80);
+        departmentTable.getColumnModel().getColumn(12).setMinWidth(200);
         departmentTable.getColumnModel().getColumn(11).setMinWidth(150);
         departmentTable.getColumnModel().getColumn(10).setMinWidth(30);
         departmentTable.getColumnModel().getColumn(9).setMinWidth(30);
@@ -203,18 +207,18 @@ public class UserInterface extends JFrame {
         Summary layout
          */
 
-/*        scrollPane3 = new JScrollPane(summaryCostCodeTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane3 = new JScrollPane(summaryCostCodeTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         summaryCard.add(scrollPane3);
-        JComboBox<Object> periods = new JComboBox<>();
-        periods.addItem("Period");
-        for (Object x : periodNames) {
-            periods.addItem(x);
+        JComboBox<Object> summaryPeriods = new JComboBox<>();
+        summaryPeriods.addItem("Period");
+        for (Object x : databaseConn.periodNames) {
+            summaryPeriods.addItem(x);
         }
         JComboBox<Object> summaryCDG = new JComboBox<>(databaseConn.CDGs.toArray());
         JPanel buttonTable = new JPanel();
-        buttonTable.add(periods);
+        buttonTable.add(summaryPeriods);
         buttonTable.add(summaryCDG);
-        summaryCard.add(buttonTable, BorderLayout.NORTH);*/
+        summaryCard.add(buttonTable, BorderLayout.NORTH);
 
         /*
         Card Layout
@@ -222,7 +226,7 @@ public class UserInterface extends JFrame {
 
         contentPanel.add(overviewCard, "1");
         contentPanel.add(departmentCard, "2");
-     /*   contentPanel.add(summaryCard, "3");*/
+        contentPanel.add(summaryCard, "3");
 
         contentPanel.setLayout(cardLayout);
         add(contentPanel, BorderLayout.CENTER);
@@ -290,9 +294,8 @@ public class UserInterface extends JFrame {
             dataWithDecimal.clear();
             departmentTable.setDefaultRenderer(Object.class, new BoardTableCellRenderer());
             departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-            departmentTable.getColumnModel().getColumn(14).setMinWidth(200);
-            departmentTable.getColumnModel().getColumn(13).setMinWidth(50);
-            departmentTable.getColumnModel().getColumn(12).setMinWidth(150);
+            departmentTable.getColumnModel().getColumn(13).setMinWidth(80);
+            departmentTable.getColumnModel().getColumn(12).setMinWidth(200);
             departmentTable.getColumnModel().getColumn(11).setMinWidth(150);
             departmentTable.getColumnModel().getColumn(10).setMinWidth(30);
             departmentTable.getColumnModel().getColumn(9).setMinWidth(30);
@@ -326,7 +329,7 @@ public class UserInterface extends JFrame {
                                 stmt[0].executeUpdate(noteSQL);
                                 stmt[0].close();
                                 conn[0].close();
-                                table = databaseConn.generateDataFromDB();
+                                table = databaseConn.generateOverviewTableFromDB();
                             } catch (ClassNotFoundException | SQLException e1) {
                                 e1.printStackTrace();
                             }
@@ -447,10 +450,12 @@ public class UserInterface extends JFrame {
             }
         });
 
-      /*  periods.addActionListener(e -> {
-            if (periods.getSelectedItem() == "Period") currentPeriod = null;
+        summaryPeriods.addActionListener(e -> {
+            if (summaryPeriods.getSelectedItem() == "Period") {
+                currentPeriod = null;
+            }
             else {
-                currentPeriod = periods.getSelectedItem();
+                currentPeriod = summaryPeriods.getSelectedItem();
             }
             summaryCard.remove(scrollPane3);
             try {
@@ -466,7 +471,10 @@ public class UserInterface extends JFrame {
         });
 
         summaryCDG.addActionListener(e -> {
-            if (summaryCDG.getSelectedItem() == "CDG") currentPeriod = null;
+            if (summaryCDG.getSelectedItem() == "CDG") {
+                currentCDG = null;
+            }
+
             else {
                 currentCDG = summaryCDG.getSelectedItem();
             }
@@ -481,7 +489,7 @@ public class UserInterface extends JFrame {
             summaryCard.add(scrollPane3);
             summaryCostCodeTable.setDefaultRenderer(Object.class, new SummaryTableCellRenderer());
             tableRenew();
-        });*/
+        });
 
         nextMonthButton.addActionListener(e -> {
             try {
@@ -541,9 +549,8 @@ public class UserInterface extends JFrame {
             dataWithDecimal.clear();
             departmentTable.setDefaultRenderer(Object.class, new BoardTableCellRenderer());
             departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-            departmentTable.getColumnModel().getColumn(14).setMinWidth(200);
-            departmentTable.getColumnModel().getColumn(13).setMinWidth(50);
-            departmentTable.getColumnModel().getColumn(12).setMinWidth(150);
+            departmentTable.getColumnModel().getColumn(13).setMinWidth(80);
+            departmentTable.getColumnModel().getColumn(12).setMinWidth(200);
             departmentTable.getColumnModel().getColumn(11).setMinWidth(150);
             departmentTable.getColumnModel().getColumn(10).setMinWidth(30);
             departmentTable.getColumnModel().getColumn(9).setMinWidth(30);
@@ -575,7 +582,7 @@ public class UserInterface extends JFrame {
                                 stmt[0].executeUpdate(noteSQL);
                                 stmt[0].close();
                                 conn[0].close();
-                                table = databaseConn.generateDataFromDB();
+                                table = databaseConn.generateOverviewTableFromDB();
                             } catch (ClassNotFoundException | SQLException e1) {
                                 e1.printStackTrace();
                             }
@@ -631,9 +638,7 @@ public class UserInterface extends JFrame {
 
         departmentView.addActionListener(e -> cardLayout.show(contentPanel, "2"));
 
-/*
         summaryView.addActionListener(e -> cardLayout.show(contentPanel, "3"));
-*/
 
         departmentTable.getModel().addTableModelListener(e -> {
             if (e.getColumn() == 27) {
@@ -658,7 +663,7 @@ public class UserInterface extends JFrame {
                             stmt[0].executeUpdate(noteSQL);
                             stmt[0].close();
                             conn[0].close();
-                            table = databaseConn.generateDataFromDB();
+                            table = databaseConn.generateOverviewTableFromDB();
                         } catch (ClassNotFoundException | SQLException e1) {
                             e1.printStackTrace();
                         }
@@ -709,9 +714,8 @@ public class UserInterface extends JFrame {
         dataWithDecimal.clear();
         departmentTable.setDefaultRenderer(Object.class, new BoardTableCellRenderer());
         departmentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        departmentTable.getColumnModel().getColumn(14).setMinWidth(200);
-        departmentTable.getColumnModel().getColumn(13).setMinWidth(50);
-        departmentTable.getColumnModel().getColumn(12).setMinWidth(150);
+        departmentTable.getColumnModel().getColumn(13).setMinWidth(80);
+        departmentTable.getColumnModel().getColumn(12).setMinWidth(200);
         departmentTable.getColumnModel().getColumn(11).setMinWidth(150);
         departmentTable.getColumnModel().getColumn(10).setMinWidth(30);
         departmentTable.getColumnModel().getColumn(9).setMinWidth(30);
@@ -743,7 +747,7 @@ public class UserInterface extends JFrame {
                             stmt[0].executeUpdate(noteSQL);
                             stmt[0].close();
                             conn[0].close();
-                            table = databaseConn.generateDataFromDB();
+                            table = databaseConn.generateOverviewTableFromDB();
                         } catch (ClassNotFoundException | SQLException e1) {
                             e1.printStackTrace();
                         }
@@ -790,7 +794,6 @@ public class UserInterface extends JFrame {
         }
     }
 
-
     public class BoardTableCellRenderer extends DefaultTableCellRenderer {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
@@ -816,6 +819,9 @@ public class UserInterface extends JFrame {
             }
             boolean isLimitExceeded;
             try {
+                if (col == 4 || col == 7) {
+                    c.setFont(this.getFont().deriveFont(Font.BOLD));
+                }
 
                 if (col>=6 && col <=11 && Objects.nonNull(s)) {
                     int roundedValue = Math.toIntExact(Math.round(databaseConn.nf.parse(s.toString()).doubleValue()));
@@ -827,6 +833,7 @@ public class UserInterface extends JFrame {
                 if (isTotal) {
                     c.setBackground(lightGray);
                     c.setForeground(Color.BLACK);
+                    c.setFont(this.getFont().deriveFont(Font.BOLD));
                 }
 
                 else if (hasNote && isLimitExceeded) {
@@ -858,7 +865,7 @@ public class UserInterface extends JFrame {
         }
     }
 
-  /*  public class SummaryTableCellRenderer extends DefaultTableCellRenderer {
+    public class SummaryTableCellRenderer extends DefaultTableCellRenderer {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
             DecimalFormat nf = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
@@ -891,7 +898,22 @@ public class UserInterface extends JFrame {
 
             return c;
         }
-    }*/
+    }
+
+    public void resizeColumnWidth(JTable table) {
+        final TableColumnModel columnModel = table.getColumnModel();
+        for (int column = 0; column < table.getColumnCount(); column++) {
+            int width = 15; // Min width
+            for (int row = 0; row < table.getRowCount(); row++) {
+                TableCellRenderer renderer = table.getCellRenderer(row, column);
+                Component comp = table.prepareRenderer(renderer, row, column);
+                width = Math.max(comp.getPreferredSize().width +1 , width);
+            }
+            if(width > 300)
+                width=300;
+            columnModel.getColumn(column).setPreferredWidth(width);
+        }
+    }
 
     public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

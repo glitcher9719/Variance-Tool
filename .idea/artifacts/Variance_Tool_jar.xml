@@ -1,10 +1,10 @@
 <component name="ArtifactManager">
   <artifact build-on-make="true" name="Variance Tool:jar">
-    <output-path />
+    <output-path>$USER_HOME$/Desktop/newBuild</output-path>
     <root id="root">
       <element id="archive" name="Variance Tool.jar">
         <element id="directory" name="META-INF">
-          <element id="file-copy" path="$USER_HOME$/Desktop/New folder/META-INF/MANIFEST.MF" />
+          <element id="file-copy" path="$USER_HOME$/Desktop/build/META-INF/MANIFEST.MF" />
         </element>
         <element id="module-output" name="Variance Tool" />
       </element>
