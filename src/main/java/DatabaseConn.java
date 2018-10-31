@@ -6,9 +6,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,10 +22,11 @@ class DatabaseConn {
 
     // JDBC driver name and database URL
     final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    final String DB_URL = "jdbc:mysql://10.43.136.208:3306/experimental-db?useSSL=false";
-    final String USER_NAME = "root";
-    final String PASSWORD = "some pass";
-    Vector<Vector<String>> databaseEntries = new Vector<>();
+    final String DB_URL = "jdbc:mysql://localhost:3306/experimental-db?useSSL=false";
+    final String USER_NAME = "dan";
+    final String PASSWORD = "ParolaMea123";
+
+    private Vector<Vector<String>> databaseEntries = new Vector<>();
     private Vector<Vector<String>> previousDatabaseEntries = new Vector<>();
     private Vector<Vector<String>> sortedVector = new Vector<>();
     private Vector<String> hd = new Vector<>();
@@ -271,10 +270,10 @@ class DatabaseConn {
             tableData.add(y, currentRow);
 
             // Calculating variance
-            double budget = Double.parseDouble(tableData.get(y).get(5));
-            double actual = Double.parseDouble(tableData.get(y).get(6));
+            double budget = Double.parseDouble(tableData.get(y).get(4));
+            double actual = Double.parseDouble(tableData.get(y).get(5));
             double variance = budget - actual;
-            tableData.get(y).add(7, roundOffTo2DecPlaces(variance));
+            tableData.get(y).add(6, roundOffTo2DecPlaces(variance));
 
             // Calculating YTD
             if (head.containsKey(tableData.get(y).get(0) + tableData.get(y).get(1))) {
@@ -283,8 +282,8 @@ class DatabaseConn {
                 double actualYTD = currentValues.get(1);
                 double varianceYTD = currentValues.get(2);
 
-                double currentBudget = Double.parseDouble(tableData.get(y).get(5));
-                double currentActual = Double.parseDouble(tableData.get(y).get(6));
+                double currentBudget = Double.parseDouble(tableData.get(y).get(4));
+                double currentActual = Double.parseDouble(tableData.get(y).get(5));
 
                 budgetYTD += currentBudget;
                 actualYTD += currentActual;
@@ -295,14 +294,14 @@ class DatabaseConn {
                 head.get(tableData.get(y).get(0) + tableData.get(y).get(1)).add(actualYTD);
                 head.get(tableData.get(y).get(0) + tableData.get(y).get(1)).add(varianceYTD);
 
-                tableData.get(y).add(8, roundOffTo2DecPlaces(budgetYTD));
-                tableData.get(y).add(9, roundOffTo2DecPlaces(actualYTD));
-                tableData.get(y).add(10, roundOffTo2DecPlaces(varianceYTD));
+                tableData.get(y).add(7, roundOffTo2DecPlaces(budgetYTD));
+                tableData.get(y).add(8, roundOffTo2DecPlaces(actualYTD));
+                tableData.get(y).add(9, roundOffTo2DecPlaces(varianceYTD));
             }
 
             else {
-                double budgetYTD = Double.parseDouble(tableData.get(y).get(5));
-                double actualYTD = Double.parseDouble(tableData.get(y).get(6));
+                double budgetYTD = Double.parseDouble(tableData.get(y).get(4));
+                double actualYTD = Double.parseDouble(tableData.get(y).get(5));
                 double varianceYTD = (budgetYTD - actualYTD);
                 Vector<Double> newYTD = new Vector<>();
                 newYTD.add(budgetYTD);
@@ -310,9 +309,9 @@ class DatabaseConn {
                 newYTD.add(varianceYTD);
                 head.put(tableData.get(y).get(0) + tableData.get(y).get(1), newYTD);
 
-                tableData.get(y).add(8, roundOffTo2DecPlaces(budgetYTD));
-                tableData.get(y).add(9, roundOffTo2DecPlaces(actualYTD));
-                tableData.get(y).add(10, roundOffTo2DecPlaces(varianceYTD));
+                tableData.get(y).add(7, roundOffTo2DecPlaces(budgetYTD));
+                tableData.get(y).add(8, roundOffTo2DecPlaces(actualYTD));
+                tableData.get(y).add(9, roundOffTo2DecPlaces(varianceYTD));
             }
 
             y++;
@@ -325,7 +324,7 @@ class DatabaseConn {
         }
 
         long process = System.currentTimeMillis();
-        System.out.println("Processing time: " + (process - start));
+        /*System.out.println("Processing time: " + (process - start));*/
         Connection conn = null;
         Statement stmt;
 
@@ -377,19 +376,19 @@ class DatabaseConn {
                     insertPreparedStatement.setString(1, aTableData.get(15));
                     insertPreparedStatement.setString(2, aTableData.get(0));
                     insertPreparedStatement.setString(3, aTableData.get(1));
-                    insertPreparedStatement.setInt(4, (int) Math.round(Double.parseDouble(aTableData.get(2))));
-                    insertPreparedStatement.setInt(5, (int) Math.round(Double.parseDouble(aTableData.get(3))));
-                    insertPreparedStatement.setInt(6, (int) Math.round(Double.parseDouble(aTableData.get(4))));
-                    insertPreparedStatement.setDouble(7, Double.parseDouble(aTableData.get(5)));
-                    insertPreparedStatement.setDouble(8, Double.parseDouble(aTableData.get(6)));
-                    insertPreparedStatement.setDouble(9, Double.parseDouble(aTableData.get(7)));
-                    insertPreparedStatement.setDouble(10, Double.parseDouble(aTableData.get(8)));
-                    insertPreparedStatement.setDouble(11, Double.parseDouble(aTableData.get(9)));
-                    insertPreparedStatement.setDouble(12, Double.parseDouble(aTableData.get(10)));
-                    insertPreparedStatement.setDouble(13, Double.parseDouble(aTableData.get(11)));
-                    insertPreparedStatement.setDouble(14, Double.parseDouble(aTableData.get(12)));
-                    insertPreparedStatement.setDouble(15, Double.parseDouble(aTableData.get(13)));
-                    insertPreparedStatement.setDouble(16, Double.parseDouble(aTableData.get(14)));
+                    insertPreparedStatement.setInt(4, (int) Math.round(Double.parseDouble(aTableData.get(14))));
+                    insertPreparedStatement.setInt(5, (int) Math.round(Double.parseDouble(aTableData.get(2))));
+                    insertPreparedStatement.setInt(6, (int) Math.round(Double.parseDouble(aTableData.get(3))));
+                    insertPreparedStatement.setDouble(7, Double.parseDouble(aTableData.get(4)));
+                    insertPreparedStatement.setDouble(8, Double.parseDouble(aTableData.get(5)));
+                    insertPreparedStatement.setDouble(9, Double.parseDouble(aTableData.get(6)));
+                    insertPreparedStatement.setDouble(10, Double.parseDouble(aTableData.get(7)));
+                    insertPreparedStatement.setDouble(11, Double.parseDouble(aTableData.get(8)));
+                    insertPreparedStatement.setDouble(12, Double.parseDouble(aTableData.get(9)));
+                    insertPreparedStatement.setDouble(13, Double.parseDouble(aTableData.get(10)));
+                    insertPreparedStatement.setDouble(14, Double.parseDouble(aTableData.get(11)));
+                    insertPreparedStatement.setDouble(15, Double.parseDouble(aTableData.get(12)));
+                    insertPreparedStatement.setDouble(16, Double.parseDouble(aTableData.get(13)));
                     insertPreparedStatement.setString(17, aTableData.get(16));
                     insertPreparedStatement.setString(18, aTableData.get(17));
                     insertPreparedStatement.setString(19, aTableData.get(18));
@@ -412,19 +411,19 @@ class DatabaseConn {
                     insertPreparedStatement.setString(1, aTableData.get(15));
                     insertPreparedStatement.setString(2, aTableData.get(0));
                     insertPreparedStatement.setString(3, aTableData.get(1));
-                    insertPreparedStatement.setInt(4, (int) Math.round(Double.parseDouble(aTableData.get(2))));
-                    insertPreparedStatement.setInt(5, (int) Math.round(Double.parseDouble(aTableData.get(3))));
-                    insertPreparedStatement.setInt(6, (int) Math.round(Double.parseDouble(aTableData.get(4))));
-                    insertPreparedStatement.setDouble(7, Double.parseDouble(aTableData.get(5)));
-                    insertPreparedStatement.setDouble(8, Double.parseDouble(aTableData.get(6)));
-                    insertPreparedStatement.setDouble(9, Double.parseDouble(aTableData.get(7)));
-                    insertPreparedStatement.setDouble(10, Double.parseDouble(aTableData.get(8)));
-                    insertPreparedStatement.setDouble(11, Double.parseDouble(aTableData.get(9)));
-                    insertPreparedStatement.setDouble(12, Double.parseDouble(aTableData.get(10)));
-                    insertPreparedStatement.setDouble(13, Double.parseDouble(aTableData.get(11)));
-                    insertPreparedStatement.setDouble(14, Double.parseDouble(aTableData.get(12)));
-                    insertPreparedStatement.setDouble(15, Double.parseDouble(aTableData.get(13)));
-                    insertPreparedStatement.setDouble(16, Double.parseDouble(aTableData.get(14)));
+                    insertPreparedStatement.setInt(4, (int) Math.round(Double.parseDouble(aTableData.get(14))));
+                    insertPreparedStatement.setInt(5, (int) Math.round(Double.parseDouble(aTableData.get(2))));
+                    insertPreparedStatement.setInt(6, (int) Math.round(Double.parseDouble(aTableData.get(3))));
+                    insertPreparedStatement.setDouble(7, Double.parseDouble(aTableData.get(4)));
+                    insertPreparedStatement.setDouble(8, Double.parseDouble(aTableData.get(5)));
+                    insertPreparedStatement.setDouble(9, Double.parseDouble(aTableData.get(6)));
+                    insertPreparedStatement.setDouble(10, Double.parseDouble(aTableData.get(7)));
+                    insertPreparedStatement.setDouble(11, Double.parseDouble(aTableData.get(8)));
+                    insertPreparedStatement.setDouble(12, Double.parseDouble(aTableData.get(9)));
+                    insertPreparedStatement.setDouble(13, Double.parseDouble(aTableData.get(10)));
+                    insertPreparedStatement.setDouble(14, Double.parseDouble(aTableData.get(11)));
+                    insertPreparedStatement.setDouble(15, Double.parseDouble(aTableData.get(12)));
+                    insertPreparedStatement.setDouble(16, Double.parseDouble(aTableData.get(13)));
                     insertPreparedStatement.setString(17, aTableData.get(16));
                     insertPreparedStatement.setString(18, aTableData.get(17));
                     insertPreparedStatement.setString(19, aTableData.get(18));
@@ -445,7 +444,7 @@ class DatabaseConn {
             }
 
             long connectionTime = System.currentTimeMillis();
-            System.out.println("Preparing time: " + (connectionTime-process));
+            /*System.out.println("Preparing time: " + (connectionTime-process));*/
 
             insertPreparedStatement.executeBatch();
             conn.commit();
@@ -468,8 +467,8 @@ class DatabaseConn {
             }
         }
         long finish = System.currentTimeMillis();
-        System.out.println("Database fetching: " + (finish - process));
-        System.out.println("Total time: " + (finish - start));
+       /* System.out.println("Database fetching: " + (finish - process));
+        System.out.println("Total time: " + (finish - start));*/
 
     }
 
@@ -623,7 +622,7 @@ class DatabaseConn {
     }
 
     @SuppressWarnings("Duplicates")
-    JTable createSummaryTable(Object period, Object CDG) throws ParseException {
+    JTable createSummaryTable(Object period, Object CDG, Object division) throws ParseException {
         Vector<String> headers = new Vector<>();
         headers.add("CDG");
         headers.add("Cost Code");
@@ -642,7 +641,7 @@ class DatabaseConn {
         String currentPeriod = databaseEntries.get(0).get(3);
         Total grandTotal = new Total("GRAND TOTAL");
         for (Vector<String> aVector : databaseEntries) {
-            if (period == null && CDG == null) {
+            if (period == null && CDG == null && division == null) {
                 if (aVector.get(1).equals(currentCode) && aVector.get(3).equals(currentPeriod)) {
                     grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
                     grandTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
@@ -676,7 +675,7 @@ class DatabaseConn {
                 }
             }
 
-            else if (period != null && CDG == null) {
+            else if (period != null && CDG == null && division == null) {
                 if (aVector.get(3).equals(period.toString())) {
                     if (aVector.get(1).equals(currentCode)) {
                         grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
@@ -711,7 +710,7 @@ class DatabaseConn {
                 }
             }
 
-            else if (period == null) {
+            else if (period == null && CDG != null && division == null) {
                 if (aVector.get(19).equals(CDG.toString())) {
                     if (aVector.get(1).equals(currentCode)) {
                         grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
@@ -746,8 +745,150 @@ class DatabaseConn {
                 }
             }
 
+            else if (period == null && CDG == null && division != null) {
+                if (aVector.get(18).equals(division.toString())) {
+                    if (aVector.get(1).equals(currentCode)) {
+                        grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
+                        grandTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
+                        grandTotal.varianceAdd(nf.parse(aVector.get(8)).doubleValue());
+                        grandTotal.YTDBudgetAdd(nf.parse(aVector.get(9)).doubleValue());
+                        grandTotal.YTDActualAdd(nf.parse(aVector.get(10)).doubleValue());
+                        grandTotal.YTDVarianceAdd(nf.parse(aVector.get(11)).doubleValue());
+                        grandTotal.WTEBudgetAdd(nf.parse(aVector.get(12)).doubleValue());
+                        grandTotal.WTEContractedAdd(nf.parse(aVector.get(13)).doubleValue());
+                        grandTotal.WTEWorkedAdd(nf.parse(aVector.get(14)).doubleValue());
+                    }
+
+                    else {
+                        Vector<String> costCodeVector = grandTotal.getSummaryTotal(grandTotal);
+                        costCodeVector.set(1, currentCode);
+                        costCodeVector.set(0, aVector.get(19));
+                        costCodeVector.set(2, aVector.get(16));
+                        grandTotalVectors.add(costCodeVector);
+                        grandTotal = new Total("GRAND TOTAL");
+                        currentCode = aVector.get(1);
+                        grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
+                        grandTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
+                        grandTotal.varianceAdd(nf.parse(aVector.get(8)).doubleValue());
+                        grandTotal.YTDBudgetAdd(nf.parse(aVector.get(9)).doubleValue());
+                        grandTotal.YTDActualAdd(nf.parse(aVector.get(10)).doubleValue());
+                        grandTotal.YTDVarianceAdd(nf.parse(aVector.get(11)).doubleValue());
+                        grandTotal.WTEBudgetAdd(nf.parse(aVector.get(12)).doubleValue());
+                        grandTotal.WTEContractedAdd(nf.parse(aVector.get(13)).doubleValue());
+                        grandTotal.WTEWorkedAdd(nf.parse(aVector.get(14)).doubleValue());
+                    }
+                }
+            }
+
+            else if (period != null && CDG != null && division == null) {
+                if (aVector.get(19).equals(CDG.toString()) && aVector.get(3).equals(period.toString())) {
+                    if (aVector.get(1).equals(currentCode)) {
+                        grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
+                        grandTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
+                        grandTotal.varianceAdd(nf.parse(aVector.get(8)).doubleValue());
+                        grandTotal.YTDBudgetAdd(nf.parse(aVector.get(9)).doubleValue());
+                        grandTotal.YTDActualAdd(nf.parse(aVector.get(10)).doubleValue());
+                        grandTotal.YTDVarianceAdd(nf.parse(aVector.get(11)).doubleValue());
+                        grandTotal.WTEBudgetAdd(nf.parse(aVector.get(12)).doubleValue());
+                        grandTotal.WTEContractedAdd(nf.parse(aVector.get(13)).doubleValue());
+                        grandTotal.WTEWorkedAdd(nf.parse(aVector.get(14)).doubleValue());
+                    }
+
+                    else {
+                        Vector<String> costCodeVector = grandTotal.getSummaryTotal(grandTotal);
+                        costCodeVector.set(1, currentCode);
+                        costCodeVector.set(0, aVector.get(19));
+                        costCodeVector.set(2, aVector.get(16));
+                        grandTotalVectors.add(costCodeVector);
+                        grandTotal = new Total("GRAND TOTAL");
+                        currentCode = aVector.get(1);
+                        grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
+                        grandTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
+                        grandTotal.varianceAdd(nf.parse(aVector.get(8)).doubleValue());
+                        grandTotal.YTDBudgetAdd(nf.parse(aVector.get(9)).doubleValue());
+                        grandTotal.YTDActualAdd(nf.parse(aVector.get(10)).doubleValue());
+                        grandTotal.YTDVarianceAdd(nf.parse(aVector.get(11)).doubleValue());
+                        grandTotal.WTEBudgetAdd(nf.parse(aVector.get(12)).doubleValue());
+                        grandTotal.WTEContractedAdd(nf.parse(aVector.get(13)).doubleValue());
+                        grandTotal.WTEWorkedAdd(nf.parse(aVector.get(14)).doubleValue());
+                    }
+                }
+            }
+
+            else if (period != null && CDG == null && division != null) {
+                if (aVector.get(18).equals(division.toString()) && aVector.get(3).equals(period.toString())) {
+                    if (aVector.get(1).equals(currentCode)) {
+                        grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
+                        grandTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
+                        grandTotal.varianceAdd(nf.parse(aVector.get(8)).doubleValue());
+                        grandTotal.YTDBudgetAdd(nf.parse(aVector.get(9)).doubleValue());
+                        grandTotal.YTDActualAdd(nf.parse(aVector.get(10)).doubleValue());
+                        grandTotal.YTDVarianceAdd(nf.parse(aVector.get(11)).doubleValue());
+                        grandTotal.WTEBudgetAdd(nf.parse(aVector.get(12)).doubleValue());
+                        grandTotal.WTEContractedAdd(nf.parse(aVector.get(13)).doubleValue());
+                        grandTotal.WTEWorkedAdd(nf.parse(aVector.get(14)).doubleValue());
+                    }
+
+                    else {
+                        Vector<String> costCodeVector = grandTotal.getSummaryTotal(grandTotal);
+                        costCodeVector.set(1, currentCode);
+                        costCodeVector.set(0, aVector.get(19));
+                        costCodeVector.set(2, aVector.get(16));
+                        grandTotalVectors.add(costCodeVector);
+                        grandTotal = new Total("GRAND TOTAL");
+                        currentCode = aVector.get(1);
+                        grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
+                        grandTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
+                        grandTotal.varianceAdd(nf.parse(aVector.get(8)).doubleValue());
+                        grandTotal.YTDBudgetAdd(nf.parse(aVector.get(9)).doubleValue());
+                        grandTotal.YTDActualAdd(nf.parse(aVector.get(10)).doubleValue());
+                        grandTotal.YTDVarianceAdd(nf.parse(aVector.get(11)).doubleValue());
+                        grandTotal.WTEBudgetAdd(nf.parse(aVector.get(12)).doubleValue());
+                        grandTotal.WTEContractedAdd(nf.parse(aVector.get(13)).doubleValue());
+                        grandTotal.WTEWorkedAdd(nf.parse(aVector.get(14)).doubleValue());
+                    }
+                }
+            }
+
+
+            else if (period == null && CDG != null && division != null) {
+                if (aVector.get(18).equals(division.toString()) && aVector.get(19).equals(CDG.toString())) {
+                    if (aVector.get(1).equals(currentCode)) {
+                        grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
+                        grandTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
+                        grandTotal.varianceAdd(nf.parse(aVector.get(8)).doubleValue());
+                        grandTotal.YTDBudgetAdd(nf.parse(aVector.get(9)).doubleValue());
+                        grandTotal.YTDActualAdd(nf.parse(aVector.get(10)).doubleValue());
+                        grandTotal.YTDVarianceAdd(nf.parse(aVector.get(11)).doubleValue());
+                        grandTotal.WTEBudgetAdd(nf.parse(aVector.get(12)).doubleValue());
+                        grandTotal.WTEContractedAdd(nf.parse(aVector.get(13)).doubleValue());
+                        grandTotal.WTEWorkedAdd(nf.parse(aVector.get(14)).doubleValue());
+                    }
+
+                    else {
+                        Vector<String> costCodeVector = grandTotal.getSummaryTotal(grandTotal);
+                        costCodeVector.set(1, currentCode);
+                        costCodeVector.set(0, aVector.get(19));
+                        costCodeVector.set(2, aVector.get(16));
+                        grandTotalVectors.add(costCodeVector);
+                        grandTotal = new Total("GRAND TOTAL");
+                        currentCode = aVector.get(1);
+                        grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
+                        grandTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
+                        grandTotal.varianceAdd(nf.parse(aVector.get(8)).doubleValue());
+                        grandTotal.YTDBudgetAdd(nf.parse(aVector.get(9)).doubleValue());
+                        grandTotal.YTDActualAdd(nf.parse(aVector.get(10)).doubleValue());
+                        grandTotal.YTDVarianceAdd(nf.parse(aVector.get(11)).doubleValue());
+                        grandTotal.WTEBudgetAdd(nf.parse(aVector.get(12)).doubleValue());
+                        grandTotal.WTEContractedAdd(nf.parse(aVector.get(13)).doubleValue());
+                        grandTotal.WTEWorkedAdd(nf.parse(aVector.get(14)).doubleValue());
+                    }
+                }
+            }
+
+
             else {
-                if (aVector.get(3).equals(period.toString()) && aVector.get(19).equals(CDG.toString())) {
+                if (aVector.get(18).equals(division.toString()) && aVector.get(3).equals(period.toString()) &&  aVector.get(19).equals(CDG.toString())) {
                     if (aVector.get(1).equals(currentCode)) {
                         grandTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
                         grandTotal.actualAdd(nf.parse(aVector.get(7)).doubleValue());
@@ -891,7 +1032,7 @@ class DatabaseConn {
 
                 // Same expense type case
                 if (iteratedExpenseType.equals(currentType)) {
-                    /*System.out.println(currentType + " at index: " + counter);
+              /*      System.out.println(currentType + " at index: " + counter);
                     System.out.println("Adding value to " + currentType + " total.");*/
                     // Adding values to the total matching the currentType
                     Total varTotal = totalTreeMap.get(currentType);
@@ -909,14 +1050,14 @@ class DatabaseConn {
 
                 // Different expense type case
                 else {
-                    /*System.out.println("Expense type changed, inserting current vector of " + currentType + " at index " + counter);*/
+                   /* System.out.println("Expense type changed, inserting current vector of " + currentType + " at index " + counter);*/
                     Total insertTotal = totalTreeMap.get(currentType);
                     Vector<String> insertVector = insertTotal.getTotal(insertTotal);
                     newVector.insertElementAt(insertVector, counter+noOfTotals);
                     insertTotal.setInserted(counter+noOfTotals);
                     noOfTotals++;
                     currentType = iteratedExpenseType;
-                    /*System.out.println("Type change to " + currentType + " at index: " + counter);
+                  /*  System.out.println("Type change to " + currentType + " at index: " + counter);
                     System.out.println("Adding value to " + currentType + " instead");*/
                     Total varTotal = totalTreeMap.get(currentType);
                     varTotal.budgetAdd(nf.parse(aVector.get(6)).doubleValue());
@@ -934,7 +1075,7 @@ class DatabaseConn {
 
             // Different cost code case
             else {
-                /*System.out.println("Cost code possible changed, inserting grand total vector at index: " + (counter+1) + "and last vector at index: " + counter);*/
+   /*             System.out.println("Cost code possible changed, inserting grand total vector at index: " + (counter+1) + "and last vector at index: " + counter);*/
                 Total insertTotal = totalTreeMap.get(currentType);
                 Vector<String> insertVector = insertTotal.getTotal(insertTotal);
                 newVector.insertElementAt(insertVector, counter+noOfTotals);
@@ -957,7 +1098,7 @@ class DatabaseConn {
                 if (currentType == null) {
                     break;
                 }
-              /*  System.out.println("End of cost code, type change to " + currentType + " at index: " + counter);
+  /*              System.out.println("End of cost code, type change to " + currentType + " at index: " + counter);
                 System.out.println("Resetting all the totals.");*/
                 if (!(income.isInserted())) {
                     newVector.insertElementAt(income.getTotal(income), n);

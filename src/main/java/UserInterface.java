@@ -5,8 +5,6 @@ import net.coderazzi.filters.gui.TableFilterHeader;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.io.File;
@@ -37,8 +35,9 @@ public class UserInterface extends JFrame {
     private JPanel departmentCard;
     private JPanel summaryCard;
 
-    private Object currentPeriod = null;
-    private Object currentCDG = null;
+    private Object currentSummaryPeriod = null;
+    private Object currentSummaryCDG = null;
+    private Object currentSummaryDivision = null;
 
     private JComboBox<Object> costCodeComboBox;
     private JComboBox<Object> namesComboBox;
@@ -67,7 +66,7 @@ public class UserInterface extends JFrame {
         databaseConn = new DatabaseConn();
         table = databaseConn.generateOverviewTableFromDB();
         TableFilterHeader filterHeader = new TableFilterHeader(table, AutoChoices.ENABLED);
-        summaryCostCodeTable = databaseConn.createSummaryTable(currentPeriod, currentCDG);
+        summaryCostCodeTable = databaseConn.createSummaryTable(currentSummaryPeriod, currentSummaryCDG, currentSummaryDivision);
         summaryCostCodeTable.setDefaultRenderer(Object.class, new SummaryTableCellRenderer());
         costCodeComboBox = new JComboBox<>(databaseConn.ccNames.toArray());
         costCodeComboBox.setSelectedIndex(0);
@@ -215,9 +214,11 @@ public class UserInterface extends JFrame {
             summaryPeriods.addItem(x);
         }
         JComboBox<Object> summaryCDG = new JComboBox<>(databaseConn.CDGs.toArray());
+        JComboBox<Object> summaryDivision = new JComboBox<>(databaseConn.divisions.toArray());
         JPanel buttonTable = new JPanel();
         buttonTable.add(summaryPeriods);
         buttonTable.add(summaryCDG);
+        buttonTable.add(summaryDivision);
         summaryCard.add(buttonTable, BorderLayout.NORTH);
 
         /*
@@ -282,10 +283,12 @@ public class UserInterface extends JFrame {
                 if (isTableFiltered) {
                     departmentTable = databaseConn.generateTable(currentCostCode, period, 1);
                     databaseConn.filterTable(departmentTable, currentSelectedName, currentSelectedDivision, currentSelectedCDG);
+                    summaryView.setEnabled(false);
                 }
 
                 else {
                     departmentTable = databaseConn.generateTable(currentCostCode, period, 1);
+                    summaryView.setEnabled(true);
                 }
                 departmentTable = databaseConn.generateTable(currentCostCode, period, 1);
             } catch (ParseException e1) {
@@ -349,12 +352,14 @@ public class UserInterface extends JFrame {
 
                 if (currentSelectedName.equals("Name")) {
                     nameFilter = false;
+                    summaryView.setEnabled(true);
                     if (currentSelectedDivision.equals("Division") && currentSelectedCDG.equals("CDG")) isTableFiltered = false;
                 }
 
                 else if (!isTableFiltered) {
                     isTableFiltered = true;
                     nameFilter = true;
+                    summaryView.setEnabled(false);
                     costCodeComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
                     divisionsComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedDivisions.toArray()));
                     cdgComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCDGs.toArray()));
@@ -362,6 +367,7 @@ public class UserInterface extends JFrame {
 
                 else {
                     nameFilter = true;
+                    summaryView.setEnabled(false);
                     costCodeComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
                     if (!divisionFilter) divisionsComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedDivisions.toArray()));
                     if (!cdgFilter) cdgComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCDGs.toArray()));
@@ -381,12 +387,14 @@ public class UserInterface extends JFrame {
 
                 if (currentSelectedDivision.equals("Division")) {
                     divisionFilter = false;
+                    summaryView.setEnabled(true);
                     if (currentSelectedName.equals("Name") && currentSelectedCDG.equals("CDG")) isTableFiltered = false;
                 }
 
                 else if (!isTableFiltered) {
                     isTableFiltered = true;
                     divisionFilter = true;
+                    summaryView.setEnabled(false);
                     costCodeComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
                     cdgComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCDGs.toArray()));
                     namesComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedNames.toArray()));
@@ -394,6 +402,7 @@ public class UserInterface extends JFrame {
 
                 else {
                     divisionFilter = true;
+                    summaryView.setEnabled(false);
                     costCodeComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
                     if (!nameFilter) namesComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedNames.toArray()));
                     if (!cdgFilter) cdgComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCDGs.toArray()));
@@ -412,12 +421,14 @@ public class UserInterface extends JFrame {
 
                 if (currentSelectedCDG.equals("CDG")) {
                     cdgFilter = false;
+                    summaryView.setEnabled(true);
                     if (currentSelectedName.equals("Name") && currentSelectedDivision.equals("Division")) isTableFiltered = false;
                 }
 
                 else if (!isTableFiltered) {
                     isTableFiltered = true;
                     cdgFilter = true;
+                    summaryView.setEnabled(false);
                     costCodeComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
                     divisionsComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedDivisions.toArray()));
                     namesComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedNames.toArray()));
@@ -425,6 +436,7 @@ public class UserInterface extends JFrame {
 
                 else {
                     cdgFilter = true;
+                    summaryView.setEnabled(false);
                     costCodeComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedCostCentreNames.toArray()));
                     if (!nameFilter) namesComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedNames.toArray()));
                     if (!divisionFilter) divisionsComboBox.setModel(new DefaultComboBoxModel<>(databaseConn.sortedDivisions.toArray()));
@@ -452,14 +464,14 @@ public class UserInterface extends JFrame {
 
         summaryPeriods.addActionListener(e -> {
             if (summaryPeriods.getSelectedItem() == "Period") {
-                currentPeriod = null;
+                currentSummaryPeriod = null;
             }
             else {
-                currentPeriod = summaryPeriods.getSelectedItem();
+                currentSummaryPeriod = summaryPeriods.getSelectedItem();
             }
             summaryCard.remove(scrollPane3);
             try {
-                summaryCostCodeTable = databaseConn.createSummaryTable(currentPeriod, currentCDG);
+                summaryCostCodeTable = databaseConn.createSummaryTable(currentSummaryPeriod, currentSummaryCDG, currentSummaryDivision);
             } catch (ParseException e1) {
                 e1.printStackTrace();
             }
@@ -472,15 +484,36 @@ public class UserInterface extends JFrame {
 
         summaryCDG.addActionListener(e -> {
             if (summaryCDG.getSelectedItem() == "CDG") {
-                currentCDG = null;
+                currentSummaryCDG = null;
             }
 
             else {
-                currentCDG = summaryCDG.getSelectedItem();
+                currentSummaryCDG = summaryCDG.getSelectedItem();
             }
             summaryCard.remove(scrollPane3);
             try {
-                summaryCostCodeTable = databaseConn.createSummaryTable(currentPeriod, currentCDG);
+                summaryCostCodeTable = databaseConn.createSummaryTable(currentSummaryPeriod, currentSummaryCDG, currentSummaryDivision);
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+            }
+            scrollPane3 = new JScrollPane(summaryCostCodeTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            summaryCard.add(scrollPane3);
+            summaryCostCodeTable.setDefaultRenderer(Object.class, new SummaryTableCellRenderer());
+            tableRenew();
+        });
+
+        summaryDivision.addActionListener(e -> {
+            if (summaryDivision.getSelectedItem() == "Division") {
+                currentSummaryDivision = null;
+            }
+
+            else {
+                currentSummaryDivision = summaryDivision.getSelectedItem();
+            }
+            summaryCard.remove(scrollPane3);
+            try {
+                summaryCostCodeTable = databaseConn.createSummaryTable(currentSummaryPeriod, currentSummaryCDG, currentSummaryDivision);
             } catch (ParseException e1) {
                 e1.printStackTrace();
             }
@@ -819,14 +852,24 @@ public class UserInterface extends JFrame {
             }
             boolean isLimitExceeded;
             try {
+                if (col >= 2 && col<= 10) {
+                    this.setHorizontalAlignment(SwingConstants.RIGHT);
+                }
+
+                else {
+                    this.setHorizontalAlignment(SwingConstants.LEFT);
+                }
+
                 if (col == 4 || col == 7) {
                     c.setFont(this.getFont().deriveFont(Font.BOLD));
                 }
+
 
                 if (col>=6 && col <=11 && Objects.nonNull(s)) {
                     int roundedValue = Math.toIntExact(Math.round(databaseConn.nf.parse(s.toString()).doubleValue()));
                     table.getModel().setValueAt(nf.format(roundedValue), row, col);
                 }
+
                 isLimitExceeded = databaseConn.limitExceeded(row, departmentTable);
                 boolean isTotal = databaseConn.isTotal(row, departmentTable);
                 boolean hasNote = databaseConn.hasNote(row, departmentTable);
@@ -876,6 +919,14 @@ public class UserInterface extends JFrame {
             nf.setMaximumFractionDigits(0);
 
             try {
+                if (col >= 3 && col<= 11) {
+                    this.setHorizontalAlignment(SwingConstants.RIGHT);
+                }
+
+                else {
+                    this.setHorizontalAlignment(SwingConstants.LEFT);
+                }
+
                 int roundedValue = Math.toIntExact(Math.round(databaseConn.nf.parse(s.toString()).doubleValue()));
                 if ((col == 5 || col == 8) && roundedValue<0) c.setForeground(Color.RED);
 
@@ -897,21 +948,6 @@ public class UserInterface extends JFrame {
             }
 
             return c;
-        }
-    }
-
-    public void resizeColumnWidth(JTable table) {
-        final TableColumnModel columnModel = table.getColumnModel();
-        for (int column = 0; column < table.getColumnCount(); column++) {
-            int width = 15; // Min width
-            for (int row = 0; row < table.getRowCount(); row++) {
-                TableCellRenderer renderer = table.getCellRenderer(row, column);
-                Component comp = table.prepareRenderer(renderer, row, column);
-                width = Math.max(comp.getPreferredSize().width +1 , width);
-            }
-            if(width > 300)
-                width=300;
-            columnModel.getColumn(column).setPreferredWidth(width);
         }
     }
 

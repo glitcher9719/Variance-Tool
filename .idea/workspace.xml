@@ -2,11 +2,28 @@
 <project version="4">
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="Variance Tool:jar2" />
+      <artifact name="Variance Tool:jar" />
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ec3fa37-6308-4677-acb1-392265eb16cf" name="Default" comment="initial commit (3)" />
+    <list default="true" id="9ec3fa37-6308-4677-acb1-392265eb16cf" name="Default" comment="initial commit (3)">
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/Variance_Tool_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/Variance_Tool_jar2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/DatabaseConn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DatabaseConn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/UserInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/DatabaseConn$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DatabaseConn$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/DatabaseConn$Total.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DatabaseConn$Total.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/DatabaseConn.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DatabaseConn.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$BoardTableCellRenderer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$BoardTableCellRenderer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface$SummaryTableCellRenderer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface$SummaryTableCellRenderer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/UserInterface.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UserInterface.class" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -54,31 +71,10 @@
       <file leaf-file-name="UserInterface.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/UserInterface.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="95">
-              <caret line="454" column="37" selection-start-line="454" selection-start-column="37" selection-end-line="454" selection-end-column="37" />
+            <state relative-caret-position="1088">
+              <caret line="64" column="75" lean-forward="true" selection-start-line="64" selection-start-column="75" selection-end-line="64" selection-end-column="75" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#13649#14825#0" expanded="true" />
-                <element signature="e#14824#14825#0" expanded="true" />
-                <element signature="e#25298#26498#0" expanded="true" />
-                <element signature="e#26497#26498#0" expanded="true" />
-                <element signature="e#28839#29959#0" expanded="true" />
-                <element signature="e#29958#29959#0" expanded="true" />
-                <element signature="e#33443#34563#0" expanded="true" />
-                <element signature="e#34562#34563#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="JTable.java" pinned="false" current-in-tab="false">
-        <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/javax/swing/JTable.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="316">
-              <caret line="1837" column="16" selection-start-line="1837" selection-start-column="16" selection-end-line="1837" selection-end-column="16" />
-              <folding>
-                <element signature="e#109613#109614#0" expanded="true" />
-                <element signature="e#109678#109679#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -87,20 +83,12 @@
       <file leaf-file-name="DatabaseConn.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/DatabaseConn.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="26" column="49" selection-start-line="26" selection-start-column="40" selection-end-line="26" selection-end-column="49" />
+            <state relative-caret-position="199">
+              <caret line="1240" column="52" selection-start-line="1240" selection-start-column="52" selection-end-line="1240" selection-end-column="52" />
               <folding>
-                <element signature="e#28371#28402#1" expanded="true" />
+                <element signature="e#29285#29316#1" expanded="true" />
+                <element signature="e#49661#49692#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="714">
-              <caret line="42" column="21" selection-start-line="42" selection-start-column="21" selection-end-line="42" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -116,16 +104,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>headers</find>
-      <find>summaryCostCodeTable</find>
-      <find>periods</find>
-      <find>pass</find>
-      <find>DB_URL</find>
-      <find>period</find>
-      <find>cost code</find>
-      <find>Objects</find>
-      <find>divisionList</find>
-      <find>division</find>
       <find>costCode</find>
       <find>costCodeList</find>
       <find>costcode</find>
@@ -135,17 +113,27 @@
       <find>dataButton</find>
       <find>Listeners</find>
       <find>generateT</find>
-      <find>filterTable</find>
       <find>setTool</find>
-      <find>generate</find>
       <find>Model</find>
       <find>table</find>
       <find>getValue</find>
       <find>GENE</find>
-      <find>summary</find>
       <find>clear</find>
       <find>resize</find>
       <find>summaryPer</find>
+      <find>generateTab</find>
+      <find>summary</find>
+      <find>createSumm</find>
+      <find>filter</find>
+      <find>addTotals</find>
+      <find>createSummary</find>
+      <find>filterTable</find>
+      <find>summaryDivision</find>
+      <find>dataW</find>
+      <find>addT</find>
+      <find>import</find>
+      <find>generate</find>
+      <find>tooltip</find>
     </findStrings>
     <replaceStrings>
       <replace>Income</replace>
@@ -232,9 +220,9 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="543" />
-    <option name="y" value="33" />
-    <option name="width" value="1162" />
+    <option name="x" value="581" />
+    <option name="y" value="46" />
+    <option name="width" value="974" />
     <option name="height" value="1047" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -245,6 +233,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -274,9 +263,8 @@
           <select />
         </subPane>
       </pane>
-      <pane id="AndroidView" />
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -594,6 +582,16 @@
       <workItem from="1539091141067" duration="2926000" />
       <workItem from="1539614191527" duration="8446000" />
       <workItem from="1539680815543" duration="9566000" />
+      <workItem from="1539696210932" duration="1349000" />
+      <workItem from="1540129416462" duration="946000" />
+      <workItem from="1540252746725" duration="438000" />
+      <workItem from="1540333666368" duration="4000" />
+      <workItem from="1540486861935" duration="7717000" />
+      <workItem from="1540826911272" duration="1237000" />
+      <workItem from="1540832971466" duration="509000" />
+      <workItem from="1540903463675" duration="3205000" />
+      <workItem from="1540930529073" duration="1376000" />
+      <workItem from="1540982743840" duration="10079000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit (2)">
       <created>1525109752678</created>
@@ -613,7 +611,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="660325000" />
+    <option name="totallyTimeSpent" value="687185000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -625,12 +623,12 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="357" y="40" width="1162" height="1047" extended-state="0" />
+    <frame x="-7" y="0" width="974" height="1047" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="7" weight="0.31808278" />
-      <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.4977778" weight="0.2472767" />
+      <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.4977778" weight="0.24642465" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
@@ -638,11 +636,11 @@
       <window_info anchor="right" id="Maven Projects" order="8" weight="0.32889125" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="12" weight="0.3267974" />
-      <window_info anchor="bottom" id="Run" order="3" sideWeight="0.4968017" weight="0.35729846" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4977778" weight="0.15577342" />
+      <window_info active="true" anchor="bottom" id="Run" order="3" sideWeight="0.4968017" visible="true" weight="0.37073708" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4977778" weight="0.15511551" />
       <window_info id="Capture Tool" order="6" />
       <window_info id="Designer" order="3" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49782136" visible="true" weight="0.2413793" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49782136" weight="0.2563966" />
       <window_info anchor="right" id="Database" order="6" weight="0.32942432" />
       <window_info id="Structure" order="1" sideWeight="0.50085473" side_tool="true" weight="0.30863538" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -683,14 +681,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url />
-          <line>624</line>
-          <properties />
-          <option name="timeStamp" value="1014" />
-        </line-breakpoint>
-      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
@@ -702,7 +692,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="1015" />
+      <option name="time" value="1017" />
     </breakpoint-manager>
   </component>
   <component name="antWorkspaceConfiguration">
@@ -1067,55 +1057,29 @@
     </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/javax/swing/JTable.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
+        <state relative-caret-position="29529">
           <caret line="1837" column="16" selection-start-line="1837" selection-start-column="16" selection-end-line="1837" selection-end-column="16" />
-          <folding>
-            <element signature="e#109613#109614#0" expanded="true" />
-            <element signature="e#109678#109679#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/OverviewTableModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="13" selection-start-line="3" selection-start-column="13" selection-end-line="3" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#150#151#0" expanded="true" />
-            <element signature="e#174#175#0" expanded="true" />
-            <element signature="e#396#397#0" expanded="true" />
-            <element signature="e#432#433#0" expanded="true" />
-            <element signature="e#521#522#0" expanded="true" />
-            <element signature="e#578#579#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/OverviewTableModel.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/UserInterface.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="454" column="37" selection-start-line="454" selection-start-column="37" selection-end-line="454" selection-end-column="37" />
+        <state relative-caret-position="1088">
+          <caret line="64" column="75" lean-forward="true" selection-start-line="64" selection-start-column="75" selection-end-line="64" selection-end-column="75" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#13649#14825#0" expanded="true" />
-            <element signature="e#14824#14825#0" expanded="true" />
-            <element signature="e#25298#26498#0" expanded="true" />
-            <element signature="e#26497#26498#0" expanded="true" />
-            <element signature="e#28839#29959#0" expanded="true" />
-            <element signature="e#29958#29959#0" expanded="true" />
-            <element signature="e#33443#34563#0" expanded="true" />
-            <element signature="e#34562#34563#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/DatabaseConn.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="26" column="49" selection-start-line="26" selection-start-column="40" selection-end-line="26" selection-end-column="49" />
+        <state relative-caret-position="199">
+          <caret line="1240" column="52" selection-start-line="1240" selection-start-column="52" selection-end-line="1240" selection-end-column="52" />
           <folding>
-            <element signature="e#28371#28402#1" expanded="true" />
+            <element signature="e#29285#29316#1" expanded="true" />
+            <element signature="e#49661#49692#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1128,17 +1092,16 @@
           <artifact-editor>
             <show-content>
               <type id="artifact" />
-              <type id="jpa-descriptors" />
               <type id="library" />
               <type id="javaee-facet-resources" />
+              <type id="jpa-descriptors" />
             </show-content>
           </artifact-editor>
-          <last-edited>Variance Tool:jar2</last-edited>
+          <last-edited>Variance Tool:jar</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
                 <option value="0.2" />
-                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>
